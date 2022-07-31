@@ -1,0 +1,84 @@
+
+## ABC needs a radius of curvatrue to get concrete
+class _SCH(_bases.NonCartesianBase):
+
+    __metaclass__ = abc.ABCMeta
+
+    ## SCH Compononents
+    components = ('s', 'c', 'h')
+
+    ## Need to deal.
+    R = "abstract."
+
+    ## Conversion from Cartesian
+    # \returns \f$ s=\sqrt{x^2+y^2+(R+z)^2}\cdot \tan^{-1}{(\frac{x}{R+z})}\f$
+    # \returns \f$ c=\sqrt{x^2+y^2+(R+z)^2} \cdot
+    # \sin^{-1}{(\frac{y}{\sqrt{x^2+y^2+(R+z)^2}})}\f$
+    # \returns \f$ h=\sqrt{x^2+y^2+(R+z)^2} - R \f$
+    @classmethod
+    def _fromcart(cls, x, y, z):
+        from ....utils.trig import arctan2, arcsin, sqrt
+        rho = sqrt(x**2 + y**2 + (cls.R + z)**2)
+        return (cls.R * arctan2(x, cls.R + z),
+                cls.R * arcsin(y/rho),
+                rho - cls.R)
+
+    ## Conversion to Cartesian
+    # \return \f$x=(h+R)\sin{(\frac{\pi}{2}-\frac{c}{R})}\sin{\frac{s}{R}}\f$
+    # \return \f$ y=(h+R)\cos{(\frac{\pi}{2}-\frac{c}{R})} \f$
+    # \return \f$ z=(h+R)\sin{(\frac{\pi}{2}-\frac{c}{R})} -R \f$
+    @classmethod
+    def _tocart_func(cls, s, c, h):
+        from numpy import sin, cos, pi
+        return ((h + cls.R) * sin(pi/2 - c/cls.R) * sin(s/cls.R),
+                (h + cls.R) * cos(pi/2 - c/cls.R),
+                (h + cls.R) * sin(pi/2 - c/cls.R) - cls.R)
+
+
+## Make a concrete SCH style 3D coordinate (not and affine space..)
+class Sch(type):
+    """Sch = SCH(R) is the class,
+    sch = Sch(s, c, h) is the instance.
+
+    THis is not an affine space, this is just R3 in non-linear
+    coordiantes."""
+    def __new__(mcs, r):
+        return mcs.__base__('SCH', (_SCH,), {'R': r})
+
+
+## ABC needs a radius of curvatrue to get concrete
+class _Geo(_bases.NonCartesianBase):
+    """This can replace all the ellipsoid junk.
+
+    abstract props: e2,
+    """
+    e2 = None
+
+    components = ('lat', 'lon', 'hgt')
+
+    @classmethod
+    def N(cls):
+        """NotImplemented"""
+
+    @classmethod
+    def _fromcart(cls, x, y, z):
+        from ....detic.ellipsoid._datum import ecef2llh_iterative as ecef2llh
+        return ecef2llh(cls, x, y, z, iters=None)  # what is iters?
+
+    ## \returns \f$ x=(N+h)\cos{\varphi}\cos{\lambda}\f$
+    ## \returns \f$ y= (N+h)\cos{\varphi}\sin{\lambda}\f$
+    ## \returns  \f$ z= ((1-\epsilon^2)N+h) \sin{\varphi} \f$
+    @classmethod
+    def _tocart_func(cls, lat, lon, hgt):
+        from ....utils.trig import cosd, sind
+        N = cls.N(lat)
+        cos_lat = cosd(lat)
+        return (
+            cos_lat * cosd(lon) * (N + hgt),
+            cos_lat * sind(lon) * (N + hgt),
+            sind(lat) * ((1-cls.e2)*N + hgt)
+            )
+
+
+## Totally unknown what this is.
+GEO = 0

@@ -1,0 +1,1153 @@
+"""Number Triangles from the world of Combinatorics.
+
+What does this have to do with geometry? Well we need partitions of
+N to understand the symmetries of rank-N tensors. We also need
+the occasional binomial and Jacobi polynomial. Everything else is
+structurally related gravy.
+
+
+Classes represent the number triangles, and instances are a row (unlike
+tensors, number triangles have rows, diagonals, and infinite columns)
+
+Helper functions of note in combinatorics are also available:
+
+Pascal.subfactorial()        !n.
+Pascal.telephone()            T_n
+Pascal.franel()               f_n
+BernoulliFraction.number()    B_n
+Bell.number()                 B_n
+Catalan.number()              C_n
+
+Special Combinatoric Polynomials (numpy.poly1d) are computed, where
+applicable; c.f.:
+
+RisingFactorial.poly          (x)^n
+FallingFactorial.poly         (x)_n
+Pascal.poly()                 (x) choose (n)
+Pascal.jacobi(alpha, beta)(x) P_n^(alpha, beta)(x)
+Pascal.gegenbauer()           G_n(x)
+Pascal.chebyshevT             T_n(x)
+Pascal.chebyshevU             U_n(x)
+Pascal.zernike(m)             TBD
+Pascal.legendre()             P_n(cos theta)
+Pascal.bernstein(nu)          B_n^nu(x)
+BernoulliFraction.poly()      B_n(x)
+Stirling1.poly()              S_n(x)
+Stirling2.acturaial(beta)     a_n^beta(x)
+Bell.poly()                   B_n(x)
+Eulerian.poly()               A_n(x)
+bessel_poly()                 y_n(x)
+
+
+Partitions of Intergers:
+-------------------------
+P, Q, and q provide both the partition number and partitions of an integer.
+
+
+Degen(n)(j)    computes the degeneracy of weight j in the spherical form of
+.              a rank-n Cartesian tensor.
+"""
+## \namespace geo.metric.schur_weyl.pascal Combinatorics
+
+import abc
+import fractions
+import functools
+import itertools
+import operator
+
+#pylint: disable=W0613,C0103
+
+## <a href="http://en.wikipedia.org/wiki/Factorial">Factorial</a>
+# \param n integer
+# \return \f$ n! = n(n-1)\cdots 1\f$
+def factorial(n):
+    """n!, with guard on <0 ->0 (for spin combinatorics)"""
+    if n < 0:  # guard (for use in Clebsch Gordan, e.g.)
+        return 0
+    return FallingFactorial(int(n)).factorial()
+
+
+## <a href="http://mathworld.wolfram.com/DoubleFactorial.html">Double
+# Factorial</a>
+def factorial2(n):
+    """factorial2(n) = n!! =
+    1 * 3 * 5 * ... n  (n odd)
+    2 * 4 * 5 * ... n  (n even)
+    1                  (n in [-1, 0])"""
+    if n == 0 or n == -1:  # guard for special cases
+        return 1L
+    return reduce(operator.mul, xrange(2 - (int(n) % 2), int(n) + 1, 2), 1L)
+
+
+## <a href="http://mathworld.wolfram.com/Subfactorial.html">Subfactorial</a>
+# \returns \f$ !n = \sum_{k=0}^n{k!(-1)^{n-k}{n \choose k}} \f$
+def subfactorial(n):
+    """!n"""
+    return Binomial(n).subfactorial()
+
+
+## <a href="http://mathworld.wolfram.com/Hyperfactorial.html">Hyperfactorial
+# </a>
+# \returns \f$ \prod_{k=1}^n{k^k} \f$
+def hyperfactorial(n):
+    """hyperfactorial(n)"""
+    return reduce(operator.mul, (pow(k+1, k+1) for k in xrange(int(n))), 1L)
+
+
+## <a href="http://mathworld.wolfram.com/Superfactorial.html">Superfactorial
+# </a>
+# \returns \f$ \prod_{k=1}^n{k!} \f$
+def superfactorial(n):
+    """superfactorial(n)"""
+    return reduce(operator.mul, itertools.imap(factorial, xrange(1, 1+int(n))))
+
+
+## Non-negative Integer
+# <a href="http://en.wikipedia.org/wiki/Binomial_coefficient">
+# Binomial Coefficients</a>.
+def binomial(n, k):
+    """n choose k = binomial(n, k)."""
+    return Binomial(n)(k)
+
+
+## Class decorator memoizes the call function for classes with a recursion
+# method- saving a phenomenal number of recursive calls.
+# \param cls A class with a '__call__' method.
+# \return cls With '__call__' memoized in a class attribute
+# \sideeeffect Adds '_history' dictionary
+def memoizer(cls):
+    """@memoizer class decorator."""
+    from copy import deepcopy
+
+    ## Compute mangled name at import time
+    attr = "_{}__history_".format(cls.__name__)
+
+    ## Set the mangled name--a bit awkard- since this decorator is doing the
+    # mangling; this is now a static class attribute that is a dictionary of
+    # calculations that have already been done.
+    setattr(cls, attr, {})
+
+    # copy the non-memoized call function--we need to copy the call function
+    # so that is becomes independent.
+    call = deepcopy(cls.__call__)
+
+    # Create a memoized version of 'func'.
+    def memcall(self, k):
+        """Triangle(k) checks If (n, k) as been computed 1st."""
+        # The key is a tuple of (n, k) values that have been computed
+        key = (long(self), long(k))
+        # Look up precomputed result- get None if it hasn't been done.
+        result = getattr(self, attr).get(key)
+        # Check if the computation has been done.
+        if result is None:
+            # 1st time, use original (non memoized) call method
+            result = call(self, k)
+            # required to prevent subs from acting on super's data,
+            # b/c type(self) is not always cls--perhaps I can refactor
+            # with true name magling--the point of which is to know
+            # when "self" is the self whi created the data, and not
+            # some super class's data.
+            if type(self) == cls:  # note--this not an instance check
+                # to get here, "self" is updating its own classes dictionary
+                # and not one of its super classes'.
+                getattr(self, attr)[long(self), long(k)] = result
+        return result
+
+    # Now assign memoized call to magic method--so that function emulation
+    # calls it.
+    cls.__call__ = memcall
+
+    return cls
+
+
+## A Triangle is long integer that is callable.
+class Triangle(long):
+    """Base Class for Triangles in a TBD number triangle.
+
+    row = Triangle(n) is the n-th row in the number triangle.
+
+    row(k) is the k-th item in the n-th row.
+    row[k] is the same
+    row[k1:k2] spans row[k1] to row[k2-1] (Bug on end points?).
+
+    +row = list(row) is a list of all the values in the n-th row.
+    -row             is an ALTERNATING version of +row
+
+    abs(row) = sum(+row)
+
+    row + m         goes down 'm' rows
+    row - m         goes up 'm' rows
+
+    int(row) = long(row) = n
+
+    row.diagonal()  yield diagonals
+    row.diagonal_sum() sums the diagonals.
+
+    row.pascalL, pascalU, pascalS define pascal-like matrices
+    row.figurate returns a figurate like matrix"""
+
+    ## This is an ABC
+    __metaclass__ = abc.ABCMeta
+
+    ## All concrete sub classes need to be function emulators--this where
+    # the math of the thing is defined.
+    @abc.abstractmethod
+    def __call__(self, k):
+        """Concrete classes must be callable."""
+
+    ## Replace Size with this: (n, m) runs from m = _span(0) to n+_span(1)
+    # \todo this is a old construction, and needs some V&V.
+    _span = (0, 0)
+
+    ## Class Method for returning a number triangle from {n=1} to N
+    # \param n max row number
+    # \yields rows from 0 to n
+    @classmethod
+    def triangle(cls, n):
+        """triangle(n) returns a list of the 1st n-rows of the triangle.
+
+        e.g:
+        In [11]: list(Pascal.triangle(6))
+        Out[11]:
+        [[1L],
+         [1L, 1L],
+         [1L, 2L, 1L],
+         [1L, 3L, 3L, 1L],
+         [1L, 4L, 6L, 4L, 1L],
+         [1L, 5L, 10L, 10L, 5L, 1L],
+         [1L, 6L, 15L, 20L, 15L, 6L, 1L]]"""
+        return itertools.imap(list, itertools.imap(cls, xrange(n+1)))
+
+    ## Column Sequence Generator
+    # \param k Column
+    # \kwd stop =None maximum number of iterations.
+    # \yields \f$ T(k+i, i) \f$ for i = 0, 1, ...
+    @classmethod
+    def column_sequence(cls, k, stop=None):
+        """generate a so-called column sequence."""
+        return (cls(k+i)(k) for i in itertools.takewhile(functools.partial(
+            operator.ne, stop), itertools.count()))
+
+    ## Class Factory Method: Create Harmonic Inverse Class- dynamically.
+    @classmethod
+    def harmonic(cls):
+        """Harmonic Inverse Triangle."""
+        return type(
+            'harmonic_{}'.format(cls.__name__),
+            (cls,),
+            dict(__call__=lambda self, k: fractions.Fraction(
+                1, cls.__call__(self, k))))
+
+    ## ClassName(<n>, k)
+    def __str__(self, _func="{}({}, {})".format):
+        return _func(type(self).__name__.split('.')[-1],
+                     long(self), 'k')
+
+    ## Get items from the row, supporting slicing.
+    def __getitem__(self, index):
+        if isinstance(index, slice):  # guard on slice protocol
+            return [self[item] for item in range(len(self)+1)[index]]
+        if index > (self._span[1] + self):  # guard on range (clever!).
+            raise StopIteration
+        # indexing 'k' is the same as calling it with 'k'.
+        return self(index)
+
+    ## Length of Triangle \f$n+1\f$ (unless otherwise specified)
+    def __len__(self):
+        return 1 + int(self) + self._span[1] - self._span[0]
+
+    ## List of items in container-this is wanton operator overloading (WOO).
+    #  \returns [\f$ s^{n}_{0}, s^{n}_{1}, \cdots, s^{n}_{n-1}, s^{n}_{n} \f$]
+    def __pos__(self):
+        """return all items as a list """
+        return list(self)
+
+    ## Alternating list of item in container (also WOO).
+    # \returns [\f$ s^{n}_{0}, -s^{n}_{1}, \cdots,
+    # (-1)^{n-1} s^{n}_{n-1}, (-1)^n s^n_n\f$]
+    def __neg__(self):
+        """Alternating list of items:
+        [+(n,0), -(n, 1), +(n, 2), -(n, 3) ....]
+        """
+        return [pow(-1, k)*item for k, item in enumerate(self)]
+
+    ## Sum of items in self--possible WOO.
+    def __abs__(self):
+        """sum of row"""
+        return sum(+self)
+
+    ## array method makes a numpy array of the row.
+    def __array__(self):
+        from numpy import array
+        return array(+self)
+
+    ## Shift down k rows, \f$ n \rightarrow n+k \f$
+    def __add__(self, m):
+        """Triangle(n) + m == Triangle(n+m)"""
+        return type(self)(m + self)
+
+    ## Shift up k rows: \f$ n \rightarrow n+k \f$
+    def __sub__(self, m):
+        """Triangle(n) - m == Triangle(n-m)"""
+        return self.__add__(-m)
+
+    ## See, e.g: http://en.wikipedia.org/wiki/Pascal_matrix
+    @classmethod
+    def pascalL(cls, n):
+        """returns lower triangular list of list (rows)."""
+        return [+cls(i) + [0]*(n-i-1) for i in range(n)]
+
+    @classmethod
+    def pascalU(cls, n):
+        """Matrix transpose of pascalL."""
+        return map(list, zip(*cls.pascalL(n)))
+
+    @classmethod
+    def pascalS(cls, n):
+        """The S matrix (no not that one)
+
+        S = L*U (for Pascal's triangle).
+        """
+        return [[cls(i+j)(i) for j in xrange(n)] for i in xrange(n)]
+
+    ## <a href="http://mathworld.wolfram.com/FigurateNumberTriangle.html">
+    # Figurate Number Triangle</a>
+    # \yields list that are rows in the square.
+    @classmethod
+    def figurate(cls, n):
+        """Generator of Figurate's rows."""
+        for k in xrange(int(n) + 1):
+            yield list(cls(k)) + [0L] * (int(n)-k)
+
+    ## Rising diagonals from (n, 1) or is it (n, 0)?
+    # \todo Fix span- for  0 vs 1 starting T's.
+    # \yields diagonal elements
+    # \bug _span is ignored, and it shouldn't be.
+    def diagonal(self):
+        """row(n)(0), row(n-1)(1), ..., row(n-n//2+1)(n//2 - 1)"""
+        return ((self - n)(n) for n in range((1-int(self)%2) + len(self)//2))
+
+    ## Sum diagonals from (n, 1)
+    def diagonal_sum(self):
+        """sum(row.diagonal()))"""
+        return sum(self.diagonal())
+
+    ## Cumulative Sum of a row, up to k-th element: use caution when
+    # calling super.
+    def cumsum(self, k):
+        """Cumulative sum, up to k."""
+        return sum(map(self, xrange(k+1)))
+
+
+## <a href="http://en.wikipedia.org/wiki/Pochhammer_symbol">
+# Rising Factorial </a> (Is not technically, a triangle.).
+class RisingFactorial(Triangle):
+    u"""RisingFactorial(n, k) = = n(n+1)...(n+k-1)
+
+    n \u2208 [0, 1, ...]
+    k \u2208 [0, 1, ..., n]
+
+    poly() --> (x) ^ n"""
+
+    ## \returns \f (n)^k = $n(n+1)\cdots(n+k-1)\f$
+    def __call__(self, k):
+        """RisingFactorial(n)(k)  <==> scipy.special.poch(n, k)"""
+        return reduce(operator.mul, xrange(int(self), int(self)+k), 1L)
+
+    ## As a
+    # <a href=
+    # "http://docs.scipy.org/doc/numpy/reference/generated/numpy.poly1d.html">
+    # polynomial</a>.
+    # \returns \f$ (x)^n = x(x+1)\cdots(x+n-1)) \f$
+    def poly(self):
+        """Pochhammer polynomial"""
+        from numpy import polymul, poly1d
+        if int(self) or 1:  # guard
+            X = poly1d([1, 0])
+            return reduce(polymul, (X+k for k in xrange(int(self))))
+        return poly1d(1)
+
+    ## <a href="http://en.wikipedia.org/wiki/Generalized_Pochhammer_symbol"
+    # Generalized Pochhammer symbol</a>.
+    # \param args A partition \f$ \kappa = (\kappa_1, \ldots,\kappa_m) \f$
+    def generalized(self, *args):
+        """generalized(*args)
+        where args are a partion of an integer, alpha."""
+        alpha = sum(args)
+        return reduce(operator.mul,
+                      (reduce(operator.mul, (long(self) - float(i)/alpha + j
+                                             for j in range(kappa)))
+                       for i, kappa in enumerate(args)))
+
+
+## \f$ (x)^n \f$ is the Pochhammer Symbol.
+Pochhammer = RisingFactorial
+
+
+## <a href="http://mathworld.wolfram.com/FallingFactorial.html">Falling
+# Factorial.</a>.
+class FallingFactorial(Triangle):
+    u"""FallingFactorial(n, k) = (k+1)(k+2)...(n-1)n = n!/k!
+
+    n \u2208 [0, 1, ...]
+    k \u2208 [0, 1, ..., n].
+
+    factorial() --> n!
+    poly()      --> (x)_n"""
+
+    ## \param k \f$ 0\le k \le n \f$
+    # \returns \f$ k^{n} \equiv (k+1)(k+2)\cdots(n-1)n\f$
+    def __call__(self, k):
+        """FallingFactorial(n)(k)  <==>
+        scipy.special.poch(-n, n-k) * pow(-1, k)"""
+        return reduce(operator.mul, xrange((int(self)-int(k)) + 1,
+                                           int(self)+1), 1L)
+
+    ## The factorial, as only OO can do it.
+    def factorial(self):
+        """n! = (n)_n"""
+        return self(self)
+
+    ## As a
+    # <a href=
+    # "http://docs.scipy.org/doc/numpy/reference/generated/numpy.poly1d.html">
+    # polynomial</a>.
+    # \returns \f$ (x)_n = x(x-1)\cdots(x-(n-1)) \f$
+    def poly(self):
+        """Falling factorial polynomial"""
+        from numpy import polymul, poly1d
+        if int(self):  # guard
+            X = poly1d([1, 0])
+            return reduce(polymul, (X-k for k in xrange(int(self))))
+        return poly1d(1)
+
+    ## Connection coefficients in the polynomial ring.
+    def connection(self, m):
+        """connection(m) are the polynomial ring connection coefficients."""
+        return list(self.poly() * type(self)(m).poly())
+
+
+## <a href="http://mathworld.wolfram.com/PascalsTriangle.html">Pascal's
+# Triangle </a> is the source of Binomial Coefficients.
+class Pascal(FallingFactorial):
+    """Binomial Coefficient: Pascal(n)(k) = (n,k) = n!/(k!(n-k)!)
+
+    n.subfactorial() -->    !n.
+    n.poly()                (x) choose (n)
+    n.telephone()            T_n
+    n.franel()               f_n
+    n.jacobi(alpha, beta)(x) P_n^(alpha, beta)(x)
+    n.gegenbauer()           G_n(x)
+    n.chebyshevT             T_n(x)
+    n.chebyshevU             U_n(x)
+    n.zernike(m)             TBD
+    n.legendre()             P_n(cos theta)
+    n.bernstein(nu)          B_n^nu(x)
+    """
+    ## Binomial Coefficient as a regularized falling factorial.
+    # \param \f$ k \f$
+    # \returns  \f${n \choose m} = \frac{n!}{(n-k)!k!} \f$
+    def __call__(self, k):
+        m = int(self) - k
+        return super(Pascal, self).__call__(m) / factorial(m)
+
+    ## <a href="http://mathworld.wolfram.com/Subfactorial.html">
+    # Subfactorial</a>
+    # \returns \f$ !n = \sum_{k=0}^n{k!(-1)^{n-k}{n \choose k}} \f$
+    def subfactorial(self):
+        """!n"""
+        return sum(factorial(k) * pow(-1, int(self)-k) * self(k) for
+                   k in xrange(1+int(self)))
+
+    ## A regularized FallingFactorial.poly()
+    # \returns \f$ {x \choose n} = \frac{1}{n!}(x)_n \f$
+    def poly(self):
+        """Binomial as a polynomial:
+
+        note: this inverts n, x-choose-n, but allows fractional
+        arguments 'on top'."""
+        # call super (falling factorial) and use it to compute result.
+        super_ = super(Pascal, self)
+        return super_.poly() / super_.__call__(self)
+        
+    ## <a href="http://en.wikipedia.org/wiki/Telephone_number_(mathematics)">
+    # Telephone Number</a>.
+    # \returns \f$ T(n) = \sum_{k=0}^{[{\frac{n}{2}}]}{
+    # {n \choose 2k} (2k-1)!! } \f$
+    def telephone(self):
+        """T(n) = n.telephone()"""
+        return sum(self(k) * factorial2(k-1) for k in xrange(0, 1+self, 2))
+
+    ## <a href="http://mathworld.wolfram.com/FranelNumber.html">Franel
+    # number.</a>
+    # \returns \f$ Fr_n = \sum_{k=0}^n{{n \choose k}^3} \f$
+    def franel(self):
+        """Fr_n = n.franel()"""
+        return sum(item**3 for item in self)
+
+    ## (Real) Jacobi polynomials
+    # \param alpha \f$ \alpha \f$
+    # \param beta \f$ \beta \f$
+    # \returns \f$ P_n^{(\alpha, \beta)} = sum_{s=0}^n
+    # {{n+\alpha \choose s}{n+\beta \choose n-s} (\frac{x-1}{s})^{n-s}
+    # (\frac{x+1}{2})^s} \f$
+    def jacobi(self, alpha, beta):
+        """"P_n^(alpha beta)(x) = jacobi(alpha, beta)(x) -for real x."""
+        from numpy import polyadd, poly1d, polymul
+        # polynomial y(x) = x
+        x = poly1d([1, 0])
+        # [x - 1]/2 as a polynomial, and likewise for [x+1]/2
+        a = (x-1)/2
+        b = (x+1)/2
+        return reduce(polyadd,
+                      (polymul(
+                          type(self)(s).poly()(alpha + self) *
+                          type(self)(-s+self).poly()(beta + self),
+                          pow(a, int(self)-s) * pow(b, s))
+                       for s in xrange(1+self)))
+
+    ## <a href="http://en.wikipedia.org/wiki/Gegenbauer_polynomials">
+    # Gegenbauer Polynomials</a>
+    # \param alpha
+    # \returns \f$ f(x) = C_n^{(\alpha)}(x) \f$
+    def gegenbauer(self, alpha):
+        """C_n^(alpha) = n.gegenbauer(alpha)"""
+        from numpy import polymul
+        from scipy.special import gamma
+        return polymul(gamma(alpha + 0.5) / gamma(2 * alpha)  *
+                       gamma(2*alpha + self) / gamma(0.5 + alpha + self),
+                       self.jacobi(*([alpha - 0.5]*2)))
+
+    ## <a href="http://en.wikipedia.org/wiki/Chebyshev_polynomials">Chebyshev
+    # Polynomial</a>
+    # \returns \f$ f(x) = T_n(x) \f$
+    def chebyshevT(self):
+        """T_n(x) = n.chebyshevT()"""
+        # T is a jacobi polynomial with fixed alpha = beta = -1/2.
+        Pn = self.jacobi(-0.5, -0.5)
+        # and it is regularized with value at 1.
+        return Pn/Pn(1)
+
+    ## <a href="http://en.wikipedia.org/wiki/Chebyshev_polynomials">Chebyshev
+    # Polynomial</a>
+    # \returns \f$ f(x) = U_n(x) \f$
+    def chebyshevU(self):
+        """U_n(x) = n.chebyshevU()"""
+        # U is a jacobi polynomial with fixed alpha = beta = +1/2.
+        Pn = self.jacobi(0.5, 0.5)
+        # and it is regularized with value at 1.        
+        return Pn * (1 + self)/Pn(1)
+
+    ## <a href="http://mathworld.wolfram.com/ZernikePolynomial.html">
+    # Zernike Polynomial </a>.
+    # \param m
+    # \retruns \f$ f(x) = TODO \f$
+    def zernike(self, m):
+        """zernike(m)"""
+        from numpy import poly1d, polymul, polyadd
+        x = poly1d([1, 0])
+        n = int(self)
+        if (n-m) % 2:
+            return polymul(
+                pow(-1, n-m), polymul(pow(x, m),
+                                      type(self)(n-m).jacobi(m, 0)(
+                                          1 - polymul(2, x**2)
+                                      )))
+        else:
+            return reduce(
+                polyadd,
+                (polymul(operator.truediv(
+                    pow(-1, l) * factorial(n-l),
+                    factorial(l) * factorial(0.5*(n+m)-l) *
+                    factorial(0.5*(n-m)-l)),
+                         pow(x, n-2*l)) for l in xrange(1+(n-m)/2)))
+
+    ## <a href="http://en.wikipedia.org/wiki/Legendre_polynomials">
+    # Legendre polynomial </a>
+    # \returns \f$ f(x) = P_n(x) \f$
+    def legendre(self):
+        """P_n(x) = n.legendre()"""
+        # legendre polynomial is jacobi with alpha = beta = 0.
+        return self.jacobi(0, 0)
+
+    ## <a href="http://en.wikipedia.org/wiki/Bernstein_polynomial">
+    # Bernstein polynomial</a>
+    # \param nu
+    # \returns \f$ f(x) = b_{\nu, n}(x) \f$
+    def bernstein(self, nu):
+        """b_nu, n = n.bernstein(nu)"""
+        from numpy import poly1d, polymul
+        if nu % 1 or nu < 0 or nu > self:  # raise
+            raise ValueError("nu = 0, ..., n; got {}".format(nu))
+        return polymul(self(nu),
+                       polymul(pow(poly1d([1, 0], nu)),
+                               pow(poly1d([-1, 1], int(self)-nu))))
+
+
+## \f$ {n \choose m} \f$ generates Pascal's Triangle.
+Binomial = Pascal
+
+
+## <a href="http://mathworld.wolfram.com/LeibnizHarmonicTriangle.html">
+# Leibniz Harmonic Triangle</a>.
+LeibnizHarmonic = Pascal.harmonic()  # class method creates new class.
+
+
+## Degeneracy of weight j in a rank-n tensor
+class Degen(Pascal):
+    """Degen(n)(j) for 0 <= j <= n is the degeneracy of weight j in
+    the spherical form of a rank-n Cartesian tensor."""
+
+
+    ## Mutiplicity of a weight in a rank.
+    # \param n (implicit) Reducible Tensor Rank
+    # \param j Degree (or weight) of the irreducible component
+    # \returns \f$N_n^{(j)} = \sum_{k=0}^{[(n-j/3)]}{{n \choose k}{2n-3k-j-2
+    # \choose n-2}}  \f$
+    def __call__(self, j):
+        n = int(self)
+        n_choose_k = super(Degen, self).__call__
+        return long(round(sum(
+            pow(-1L, k) * n_choose_k(k) * binomial(2*n - 3*k - j - 2, n-2)
+            for k in xrange(1 + (n-j)//3))))
+
+
+    
+
+## <a href="http://mathworld.wolfram.com/BernoulliTriangle.html">
+# Bernoulii Triangle</a>
+class BernoulliTriangle(Pascal):
+    """Bernoulli Triangle is the partial sums of Pascal's Triangle."""
+
+    ## Note: Pascal.cumsum computes these, but we CANNOT use super().cumsum,
+    # because it binds the wrong call method-- hence we need to rewrite cumsum
+    # code and use super().__call__.
+    # \returns \f$ a_{n,k} = \sum_{i=0}^k{{n \choose i}} \f$
+    def __call__(self, k):
+        return sum(map(super(BernoulliTriangle, self).__call__, xrange(k+1)))
+
+
+## A Triangle comprising the Fractional Expansion of Bernoulli Numbers
+# (this is simply too cool for school).
+class BernoulliFractions(Pascal):
+    """b_n = +BernoulliFractions(n)
+
+    are the n+1 signed  fractions in the expansion of the Bernoulli Number:
+
+    Bn = abs(b_n)
+
+    E.g.:
+
+    >>>print abs(BernoulliFractions(8))
+    -1/30
+
+
+    n.poly()  --> B_n(x)
+    n.number()    B_n
+    """
+
+    ## Fractions Appearing in the Expansion of \f$ B_n \f$
+    # \param k
+    # \returns \f$ B_{n, (k)} =
+    # \frac{\sum_{m=0}^k{(-1)^m(m+1)^n{\k \choose m}}}{k+1}
+    # as  a <a
+    # href="https://docs.python.org/2/library/fractions.html#fractions.Fraction>
+    # Fraction</a>; the utter simplicity of this piece of code is phenomenal.
+    def __call__(self, k):
+        return fractions.Fraction(
+            sum(pow(1+m, int(self)) * bnk
+                for m, bnk in enumerate(-Binomial(k))),
+            k+1)
+
+    ## <a href="http://en.wikipedia.org/wiki/Bernoulli_polynomials">Bernoulli
+    # Polynomials.</a>
+    # \returns \f$ B_n(x)=\sum_{k=0}^n{{n \choose k}b_{n-k}x^k} \f$
+    def poly(self):
+        """_n(x) = n.poly()
+
+        Bernoulli Polynomials (w/ fractional coefficients)."""
+        from numpy import polyadd, poly1d
+        x = poly1d([fractions.Fraction(1), fractions.Fraction()])
+        n = int(self)
+        return pow(-1, n) * reduce(
+            polyadd,
+            (pow(-1, k) * abs(bernoulli(n-k)) * x**k * n_choose_k
+             for k, n_choose_k in
+             enumerate(itertools.imap(super(BernoulliFractions, self).__call__,
+                                      xrange(1+n)))))
+
+    ## <a href="http://en.wikipedia.org/wiki/Bernoulli_number">Bernoulli
+    # Number</a>
+    # \returns \f$ b_n \f$
+    def number(self):
+        """b_n = n.number()"""
+        return abs(self)
+
+
+## The <a href="http://en.wikipedia.org/wiki/Bernoulli_number">Bernoulli
+# Numbers</a>
+# \param n
+# \returns \f$ B_n \f$
+def bernoulli(n):
+    """n-th (fractions.Fraction) Bernoulli Number."""
+    return BernoulliFractions(n).number()
+
+
+## <a href="http://mathworld.wolfram.com/StirlingNumberoftheFirstKind.html">
+# Stirling Number of the 1st Kind</a>.
+@memoizer
+class Stirling1(Triangle):
+    """Stirling number of the 1st kind: S1(n,m) = Stirling1(n)(m)
+
+    n.poly()     S_n(x)
+    """
+
+    def __call__(self, m):
+        result = self._seed(m)
+        return self._recursion(m) if result is None else result
+
+    ## Note: for recursive computation, we return when we can-- so
+    # early returns are being accepted.
+    # \param n
+    # \returns 0  \f$ n < 1\f$ or \f$ m < 1 \f$ or \f$ m > n \f$
+    # \return 1 If \f$ m = 0 \f$ and \f$ m = 0 \f$
+    # \return 0 If \f$ m = 0 \f$ and \f$ m \ne 0 \f$
+    # \return \f$  - {2 \choose n}  \f$ If \f$ m = (n-1) \f$
+    # \return 1 \f$ m = n \f$
+    # \return _recursion() otherwise.
+    def _seed(self, m):
+        n = int(self)
+        if n < 1 or m < 0 or m > n:  # guard
+            result = 0L
+        elif m == 0:
+            result = long(n == 0)
+        elif m == (n-1):
+            # S(n, n-1) = -(n choose 2).
+            result = -abs(Binomial(n)(2))
+        elif m == n:
+            result = 1L
+        else:
+            raise RuntimeError("Failed to Process {}".format(m))
+        return result
+
+    ## \f$ s(n, m) = s(n-1, m-1) - (n-1)s(n-1, m) \f$
+    def _recursion(self, m):
+        # reduce row number by 1.
+        s1 = self - 1
+        return s1(m-1) - (long(self)-1)*s1(m)
+
+    ## <a href="http://en.wikipedia.org/wiki/Stirling_polynomials">Stirling
+    # polynomials</a>
+    # \return \f$S_n(x) = \sum_{k=0}^n{(-1)^k s_{n+k+1, k+1}
+    # \frac{{x-n \choose k}{x-n-k-1 \choose n-k}}{{n+k \choose n}}} \f$
+    def poly(self):
+        """Striling Polynomial..."""
+        from numpy import poly1d, polyadd
+        n = int(self)
+        x = poly1d([1, 0])
+        return reduce(
+            polyadd,
+            (pow(-1, k) *
+             (self + (k+1))(k+1) *  # Stirling1(k+n+1)(k+1) *
+             Binomial(k).poly()(x-n) *
+             Binomial(n-k).poly()(x-k-n-1) / binomial(k+n, n)
+             for k in range(n+1))
+            )
+
+
+## <a href="http://mathworld.wolfram.com/StirlingNumberoftheSecondKind.html">
+# Sterling Number of the 2nd kind</a>
+class Stirling2(Triangle):
+    """Stirling number of the 2nd kind: S2(n,m) = Stirling2(n)(m)
+
+    n.actuarial(beta)     a_n^beta(x)
+    """
+
+    ## S(n, 0) does not exist.
+    _span = (1, 0)
+
+    ## \f$ S(n, m) = \sum{ (-1)^k{m \choose k}(m-k)^n } \f$
+    def __call__(self, k):
+        """S(n, m) = n(m)"""
+        return (sum(
+            (a*b for a, b in itertools.izip(
+                -Binomial(k),
+                (pow(k-i, int(self)) for i in xrange(self)))))/factorial(k)
+                if 0 <= k <= int(self) else 0L) if int(self) else 1L
+
+    ## <a href="http://mathworld.wolfram.com/ActuarialPolynomial.html">
+    # Actuarial Polynomial</a>
+    # \param beta \f$ \beta \f$
+    # \returns \f$ a_nA^{(\beta)} = \sum_{k=0}^n{{\beta \choose k}
+    # \sum_{j=k}^n{S(n, j)(j)_k(-x)^{j-k}}} \f$
+    def actuarial(self, beta):
+        """a_n^(beta) = n.actuarial_poly(beta)."""
+        from numpy import poly1d
+        x = poly1d([1, 0])
+        result = poly1d(0)
+        for k in xrange(self+1):
+            subsum = poly1d(0)
+            for j in xrange(k, self+1):
+                subsum += self(j) * FallingFactorial(j)(k) * pow(-x, j-k)
+            subsum *= Binomial(k).poly()(beta)
+            result += subsum
+        return result
+
+
+## <a href="http://en.wikipedia.org/wiki/Bell_triangle">Bell Triangle.</a>
+@memoizer
+class Bell(Stirling2):
+    """Bell Triangle.
+
+    n.poly()   B_n(x)
+    n.number([False]) B_n (or complementary Bell numbers)
+    """
+
+    ## Default for recursive triangles (is overridden for non-recursive)
+    def __call__(self, m):
+        result = self._seed(m)
+        return self._recursion(m) if result is None else result
+
+    def _seed(self, m):
+        if m == 0:
+            return self.number() #bell(self)
+        elif m == int(self):
+            return (self + 1).number() #bell(int(self)+1)
+        else:
+            return self._recursion(m)
+
+    ## Recursion relation:
+    # \param m
+    # \return \f$ S(n, m) = S(n, m-1) + S(n-1, m-1)\f$
+    def _recursion(self, m):
+        return self(m-1) + (self - 1)(m-1)
+
+    ## Bell polynomials
+    # \returns \f$ B_n(x) = \sum_{k=0}^n{S(n, k)x^k} \f$
+    def poly(self):
+        """Bell polynomial:
+
+        B_n(x) = n.poly()
+        """
+        from numpy import poly1d
+        return poly1d(map(super(Bell, self).__call__,
+                          reversed(range(int(self)+1))))
+
+    ## <a href="http://mathworld.wolfram.com/BellNumber.html">Bell Numbers</a>
+    # \param n \f$ n \f$
+    # \kwd complement =False (True returns complementary numbers)
+    # \returns \f$ B_n = \sum_k^n{S(n, k)} \f$ or
+    # \f$ B_n = \sum_k^n{(-1)^kS(n, k)} \f$
+    def number(self, complement=False):
+        """B_n = Bell(n) are Bell numbers.
+        = Bell(n, complement=True) are complementary Bell numbers."""
+        f = -1 if complement else 1  # kwd
+        return sum(pow(f, k+1) * S_nk for k, S_nk in
+                   enumerate(itertools.imap(super(Bell, self).__call__,
+                                            xrange(1+int(self)))))
+
+
+## SunWu's <a href=
+# "http://www.sciencedirect.com/science/article/pii/S0195669810001502">
+# variant on the Bell triangle</a>: not memoized b/c super does the heavy
+# lifting.
+@memoizer
+class SunWu(Bell):
+    """Sun Wu variant on Bell triangle-- takes the difference of the
+    start and end of a row to start the next row."""
+
+    def __call__(self, m):
+        n = int(self)
+        if n == 0:
+            result = 1L
+        if m == n:
+            result = bell(n)
+        if m == 0:
+            # the defining property of the triangle.
+            s = (self - 1)
+            result = s(n-1) - s(0)
+        else:
+            # note: here call super uses Bell's recursion relation but
+            # with SunWu's call-- and that's why super is super.
+            result = super(SunWu, self).__call__(m)
+        return result
+
+
+## <a href="http://en.wikipedia.org/wiki/Eulerian_number">Eulerian number</a>.
+class Eulerian(Triangle):
+    """E(n, m) = Eulerian(n)(m)
+
+    n.poly()   A_n(x)"""
+
+    ## row run froms (1, \f$\ldots\f$, n).
+    _span = (0, -1)
+
+    ## n-th
+    # <a href="http://oeis.org/wiki/Triangle_of_Eulerian_numbers">Triangle</a>
+    # \f$ \sum_{k=0}^m {(-1)^k {n+1 \choose k} (m+1-k)^n } \f$
+    # \todo use genexp, not list comp.
+    def __call__(self, m):
+        B = Binomial(int(self) + 1)
+        return reduce(operator.add,
+                      [pow(-1, k) * B(k) * pow(m + 1L - k, int(self))
+                       for k in xrange(m+1)], 0L)
+
+    ## Euler Polynomial
+    # \returns \f$ A_n(x) = \sum_{k=0}^{n-1}A_{n, k}x^k \f$
+    def poly(self):
+        """Euler's polynomial."""
+        from numpy import poly1d
+        # reversed b/c that the def, symmetry or not.
+        return poly1d(list(reversed(+self)))
+
+
+## <a href="http://mathworld.wolfram.com/BellNumber.html">Bell Numbers</a>
+# \param n \f$ n \f$
+# \kwd complement =False (True returns complementary numbers)
+# \returns \f$ B_n = \sum_k^n{S(n, k)} \f$ or
+# \f$ B_n = \sum_k^n{(-1)^kS(n, k)} \f$
+def bell(n, complement=False):
+    """B_n = bell(n) are Bell numbers.
+    = bell(n, complement=True) are complementary Bell numbers."""
+    return Bell(n).number(complement=complement)
+
+
+## <a href="http://mathworld.wolfram.com/CatalansTriangle.html">Catalan's
+# Triangle</a>.
+class Catalan(Triangle):
+    """Catalan(n)(m) is Catalan's Triangle.
+
+    n.number()   C_n"""
+
+    ## Catalan Triangle
+    # \param k
+    # \returns \f$ c_{n, k} = \frac{(n+k)!(n-k+1)}{k!(n+1)!} \f$
+    def __call__(self, k):
+        """C(n, k) = n(k)"""
+        n = int(self)
+        return factorial(n+k)*(n-k+1)/factorial(k)/factorial(n+1)
+
+    ## <a href="http://mathworld.wolfram.com/CatalanNumber.html">Catalan
+    # Numbers</a>
+    # \returns \f$ C_n = \frac{1}{n+1}{2n \choose n} \f$
+    def number(self):
+        """C_n = n.number()"""
+        return abs(self - 1)
+
+
+## A questionable heritage.
+class Multinomial(long):
+    """Multinomial(n)(n1, n2, ...)
+
+    is a callable long integer.
+    """
+
+    ## Callable long integer- is not a triangle, rather a multi-dimension
+    # tetra-hyper-gon.
+    # \param args \f$ n_i \f$
+    # \returns \f$ \prod_{i=0}^{k-1}{n - \sum_{m=0}^i{n_m} \choose n_i} \f$
+    def __call__(self, *args):
+        """multinomial: n(n1, n2, ..., n_m)"""
+        return reduce(operator.mul,
+                      (Binomial(self - long(sum(args[:i])))(n_i)
+                       for i, n_i in enumerate(args)))
+
+
+## <a href="http://mathworld.wolfram.com/EntringerNumber.html">Entringer
+# Number</a>.
+@memoizer
+class Entringer(Triangle):
+    """Entringer(n)(m)  Entringer Numbers"""
+
+    ## \param k
+    # \returns \f$ E(n, k) \f$
+    def __call__(self, k):
+        if k:
+            return self._recursion(k)
+        return self._seed()
+
+    def _seed(self):
+        return long(self == 0)
+
+    ## Recursion Relation
+    # \param k
+    # \returns \f$ E(n, k) = E(n, k-1) + E(n-1, n-k) \f$
+    def _recursion(self, k):
+        # need explicit class b/c subs can't use this recursion relation
+        E = Entringer(int(self) - 1)
+        return Entringer.__call__(self, k-1) + E(long(self)-k)
+
+
+## <a href="http://mathworld.wolfram.com/Seidel-Entringer-ArnoldTriangle.html">
+# Seidel-Entringer-Arnold</a> Triangle.
+class SeidelEntrignerArnold(Entringer):
+    """SeidelEntrignerArnold(n) is a reordered Entringer(n)."""
+
+    def __call__(self, k):
+        if int(self) % 2 == 0:
+            k = int(self)-k
+        # Delicate call super here.
+        return super(SeidelEntrignerArnold, self).__call__(k)
+
+
+## <a href="http://mathworld.wolfram.com/Multichoose.html">Multichoose</a>.
+class Multichoose(RisingFactorial):
+    """Multichoose(n)(m) for m unbounded above.
+
+    It makes figurate numbers.
+    """
+
+    ## Multichoose is not a triangle, as the lower index is unbounded.
+    @classmethod
+    def triangle(cls, n, m):
+        """Generate 1st n m-portion of rows."""
+        for a in range(1, n+1):
+            yield map(cls(a), xrange(1, m+1))
+
+    ## Instance is unbounded, and thus we must 'cancel' the inherited __len__
+    def __len__(self):
+        return NotImplemented
+
+    ## From 1 to \f$\infty\f$-- since getitem never finishes, and len is
+    # NotImplemented, you must have __iter__ to control iteration.
+    def __iter__(self):
+        """Infinite iteration."""
+        return itertools.imap(self, itertools.count(1))
+
+    ## Regularized Rising Factorial
+    def __call__(self, r):
+        """n(r) --> [n]^(r) / r!"""
+        return super(Multichoose, self).__call__(r) / factorial(r)
+
+
+## <a href="http://mathworld.wolfram.com/FigurateNumber.html">
+# Figurate Numbers</a>.
+Figurate = Multichoose
+
+
+## <a href="http://en.wikipedia.org/wiki/Bessel_polynomials">Bessel
+# polynomial</a>
+# \param n
+# \returns \f$ y_n(x) = \sum_{k=0}^n{
+# \frac{(n+k)!}{(n-k)!k!} (\frac{x}{2})^k} \f$
+def bessel_poly(n):
+    """y_n(x) = bessel_poly(n)"""
+    from numpy import polyadd, poly1d
+    xh = poly1d([0.5, 0])
+    return reduce(polyadd,
+                  (factorial(n+k)/factorial(n-k)/factorial(k) * pow(xh, k)
+                   for k in xrange(n+1)))
+
+
+## Base for all partitions of an integer
+class _Partition(Triangle):
+    """Base class for Partition Functions."""
+
+    ## This might be an abstract method.
+    def partition(self, k):
+        """Subs need to compute k-length partitions"""
+        return NotImplementedError("{}({})".format(self, k))
+
+    ## Generate all Partitions (in an order that makes Young Tableaux).
+    # \yields list that is a partition
+    def partitions(self):
+        """yield all partitions."""
+        return itertools.imap(
+            list, itertools.imap(
+                reversed, itertools.chain(
+                    *itertools.imap(
+                        self.partition, xrange(1, 1+self)))))
+
+
+## Partions <a href="http://mathworld.wolfram.com/PartitionFunctionP.html">
+# P(n, k) of an integer</a>.
+@memoizer
+class P(_Partition):
+    """Partition P(n, k) = P(n)(k)"""
+
+    ## Partition Number
+    # \param k
+    # \return \f$ P(n, k) \f$
+    def __call__(self, k):
+        """P(n, k) = n(k)"""
+        result = self._seed(k)
+        return self._recursion(k) if result is None else result
+
+    def _seed(self, k):
+        n = int(self)
+        if k == 0 or k > n:
+            return 0L
+        elif k == n or k == 1:
+            return 1L
+        else:
+            pass
+
+    ## Recursion Relation
+    # \param k
+    # \returns \f$ P(n, k) = P(n-1)(k-1) + P(n-k)(k) \f$
+    def _recursion(self, k):
+        return (self - 1)(k-1) + (self - k)(k)
+
+    ## Generate Partitions (by brute force).
+    # \param k
+    # \yields tuple of k-length partitions of n (with replacement).
+    def partition(self, k):
+        for tuple_ in itertools.combinations_with_replacement(
+                xrange(1, 1 + self), k):
+            if sum(tuple_) == self:
+                yield tuple_
+
+    ## Yields Diagrams.
+    ## \yields young.Diagram
+    def young(self):
+        """Yield all Tableaux associated with partitions."""
+        from .young import Diagram
+        return itertools.starmap(Diagram, self.partitions())
+
+
+## Partions <a href="http://mathworld.wolfram.com/PartitionFunctionQ.html">
+# Q(n, k) of an integer</a>.
+@memoizer
+class Q(_Partition):
+    """Partition number Q(n, k) = Q(n)(k)"""
+
+    def __call__(self, k):
+        if self:
+            return long(k) if k in (0, 1) else P(int(self)-Binomial(k)(2))(k)
+        else:
+            return 0L
+
+    ## Generate Partitions of length k
+    # \param k
+    # \yields tuple of k-length partitions of n (with replacement).
+    def partition(self, k):
+        """partition(k) generates k-length partitions."""
+        for tuple_ in itertools.combinations(xrange(1, 1+self), k):
+            if sum(tuple_) == self:
+                yield tuple_
+
+
+
+## Partions <a href="http://mathworld.wolfram.com/PartitionFunctionq.html">
+# q(n, k) of an integer</a>.
+class q(Q):
+    """Partition number q(n, k) = q(n)(k)"""
+
+    ## Call super for all \f$m \le k \f$
+    # \param k
+    # \returns \f$ q(n, k) = \sum_{m=1}^k Q(n, k) \f$
+    def __call__(self, k):
+        return sum(map(super(q, self).__call__, xrange(1, 1+k)))
+
+    ## When __call__ calls super, super calls recursion- but with q.__call__,
+    # this ensures it uses Q.__call__.
+    def _recursion(self, k):
+        return super(q, self)._recursion(k)
+
+    ## Generate Partitions of length k
+    # \param k
+    # \yields tuple of k-length partitions of n (without replacement).
+    def partition(self, k):
+        """partition(k) generates k-length partitions."""
+        return itertools.chain(*itertools.imap(
+            super(q, self).partition, xrange(1, 1+k)))
