@@ -1388,7 +1388,9 @@ Some people like rotation matrices. I don't. Not just because Euler
       the quaternion group from the old days, aka the hyper-complex numbers,
       will do just as well:
 
-$ 1, i, j ,k  $  (called "w", "x", "y", "z" axis)
+$$ 1, i, j ,k  $$
+
+(called "w", "x", "y", "z" axis)
       with: $i^2 = j^2 = k^2 = ijk = -1 $ 
       
 As a group, they're a simply connected representation of rotations, are
@@ -1406,230 +1408,200 @@ Hold-up. We only care about unit quaternions, that is, quaternions with
       that is isomorphic to the hyper-sphere __S4__ and closed
       under the Grassmann product.
 
-S
-      Alias or Alibi?
-      ===============
-      Another point of confusion is "what is a transformation?". Well, alias
+
+###### Alias or Alibi?
+      
+Another point of confusion is "what is a transformation?". Well, alias
       transformations leave the vector unchanged and give its representation in
       a different coordinate system. (Think ALIAS: same animal, different name).
-      \n
-      Meanwhile the Alibi transformation leaves the coordinates fixed and
+      
+Meanwhile the Alibi transformation leaves the coordinates fixed and
       transforms the vector. (Think ALIBI: I wasn't there, because I was here)
-      \n
-      What about pre or post multiplication? That is:
-      \n\n
-      \f$ v'_i = M_{ij}v_j \f$ or \f$ v'_j = v_i M_{ij} \f$?
-      \n\n
-      I have chosen the former for alibi (active) transformations. There
+      
+What about pre or post multiplication? That is:
+
+      
+$$ v'_i = M_{ij}v_j \f$ or \f$ v'_j = v_i M_{ij} $$?
+      
+I have chosen the former for alibi (active) transformations. There
       are 2 reasons for this choice:
-      \n\n
-      1) Euler-angle and Tait-Bryan representations of rotations are
+
+1) Euler-angle and Tait-Bryan representations of rotations are
       traditionally active; moreover, the more familiar pre-multiplication
       leads to break down of Tait-Bryan aircraft coordinates: Yaw, Pitch,
       and Roll to be:
-      \n\n
-      \f$ {\bf M}_{ypr} = {\bf M}_{\rm yaw}{\bf M}_{\rm pitch}{\bf M}_{\rm roll} \f$.
-      \n\n
-      That leads to a great deal of simplification when converting between
+      
+$$ {\bf M}_{ypr} = {\bf M}_{\rm yaw}{\bf M}_{\rm pitch}{\bf M}_{\rm roll} $$
+      
+That leads to a great deal of simplification when converting between
       representations.
-      \n\n
-      2) When dealing with quantum operators, state-changing
+     
+2) When dealing with quantum operators, state-changing
       pre-multiplication is the most common.
-      \n\n
-      3) For non-unitary / non-orthogonal transforms, it makes sense.
-      \n\n
-      4) When transforming objects of equivalent rank (Rotation matrices
+
+3) For non-unitary / non-orthogonal transforms, it makes sense.
+     
+4) When transforming objects of equivalent rank (Rotation matrices
       operating on rank-2 tensors, or quaternions transforming vectors),
       one recovers the standard conjugate (or sandwich) product:
-      \n\n
-      \f$ a' = {\bf \hat O} a {\bf \hat O}^T \f$.
-      \n\n
-      For tensors, this is a direct result of tensors being composed
+     
+ $$ a' = {\bf \hat O} a {\bf \hat O}^T $$.
+      
+For tensors, this is a direct result of tensors being composed
       of the outer products of pairs of vectors. Likewise for spinors
       composing vectors (and scalars, for that matter).
 
-      (That is, a quaternion transforms a vector via:
-      \n\n
-      \f$ (0, \vec v') = {\bf q} (0, \vec v) {\bf \bar q} \f$.
-      \n\n
-      and likewise for scalars
-      \n\n
-      \f$ (s', \vec 0) = {\bf q} (s, \vec 0) {\bf \bar q} \f$.
-      \n\n
-      Thus, the transformation of vectors and scalars is unified via the
+(That is, a quaternion transforms a vector via:
+     
+$$ (0, \vec v') = {\bf q} (0, \vec v) {\bf \bar q} $$.
+  
+and likewise for scalars
+      
+$$ (s', \vec 0) = {\bf q} (s, \vec 0) {\bf \bar q} $$.
+     
+Thus, the transformation of vectors and scalars is unified via the
       quaternion. This is because quaternions act fundamentally on spinors:
-      \n\n
-      \f$ \xi'={\bf q}\xi \f$
-      \n\n
-      and both vector and scalar can be written as the outer product of
-      2 spinors:
-      \n\n
-      \f$ v = \xi\xi \f$
-      \n\n.
-      In terms of representation theory, this can be expressed as the
-      tensor product of the 2 state spinor space with itself:
-      \n\n
-      \f$ {\bf 2} \otimes {\bf 2} = {\bf 3} \oplus {\bf 1}\f$
-      \n\n
-      being the tensor sum of a vector-space and a scalar space.
+      
+$$ \xi'={\bf q}\xi $$
 
-      But: this is a bit much for the dear user to worry about, hence,
+and both vector and scalar can be written as the outer product of
+ 2 spinors:
+      
+$$ v = \xi\xi $$
+   
+In terms of representation theory, this can be expressed as the
+      tensor product of the 2 state spinor space with itself:
+    
+$$ {\bf 2} \otimes {\bf 2} = {\bf 3} \oplus {\bf 1} $$
+     
+being the tensor sum of a vector-space and a scalar space.
+
+But: this is a bit much for the dear user to worry about, hence,
       ALL operations are overloaded via function emulation ("__call__");
       thus, all transformation representations act like functions that
       can transform whatever kind of object you give them.
-      \n
-      For example, for quaternions, one might code"
+      
+For example, for quaternions, one might code"
 
-\verbatim
-v' = M * v
-v' = (q * v * (~q)).vector  # quat. mul does v --> (0, v).
-\endverbatim
-      and get the right answer, but would you rather use the same form
-      for each transformation:
-\verbatim
-v' = M(v)
-v' = q(v)
-\endverbatim
-      Likewise for vectors and tensors (and anything else). You transform
+
+	v' = M * v
+	v' = (q * v * (~q)).vector  # quat. mul does v --> (0, v).
+
+and get the right answer, but would you rather use the same form
+for each transformation:
+
+	v' = M(v)
+	v' = q(v)
+
+Likewise for vectors and tensors (and anything else). You transform
       your angular momentum vector, l, and your inertia tensor, I,  via:
-\verbatim
-l' = M * l
-I' = M * I * M.T
-I' = M * I * ~M
-\endverbatim
-      but isn't it sweeter to just use:
-\verbatim
-l' = M(l)
-I' = M(I)
-\endverbatim
-       \n
-       and let the object figure out the right answer?
-       \n
-      Euler Angle Classes
-      ==================
-      There is a base class, EulerAngleBase, for transformations represented as
+
+	l' = M * l
+	I' = M * I * M.T
+	I' = M * I * ~M
+
+but isn't it sweeter to just use:
+
+	l' = M(l)
+	I' = M(I)
+
+      
+and let the object figure out the right answer?
+      
+#### Euler Angle Classes
+     
+There is a base class, EulerAngleBase, for transformations represented as
       Euler angles. Like matrices and versors, you can compose and call them.
       Nevertheless, there are 2 points of confusion:
-      \n\n
-      (1) What are the axes
-      \n
-      (2) What are the units.
-      \n\n
-      The answer:
-      \n\n
-      I don't know. No, really, the EulerAngle class doesn't know. It uses its
-      <a href="https://en.wikipedia.org/wiki/Class_variable">
-      static class attributes</a>
-      (<a href="https://en.wikipedia.org/wiki/Method_(computer_programming)#Abstract_methods">
-      abstract</a> in the base class):
-      \n\n
-      geo.metric.euler.charts._ElementalRotationTriplet.AXES
-      ( a length 3 tuple of vectors representing ordered intrinsic
-      	      rotations), and
-\n	      
-      Circumference    ( a float that should be 2*pi or 360)
-      \n
-      to figure it out. So, to support common radar problems like platform
+      
+(1) What are the axes
+      
+(2) What are the units.
+      
+The answer:
+
+I don't know. No, really, the EulerAngle class doesn't know. It uses its
+[static class attributes](https://en.wikipedia.org/wiki/Class_variable),
+[in the abstract base class](https://en.wikipedia.org/wiki/Method_(computer_programming)#Abstract_methods"):
+geo.metric.euler.charts._ElementalRotationTriplet.AXES
+( a length 3 tuple of vectors representing ordered intrinsic
+      	      rotations), to figure it out. So, to support common radar problems like platform
       motion, there is a subclass:
-      \n\n
-      geo.metric.euler.charts.YPR
-      \n\n
-      which has AXES set to (z, y, x)-- so that you get a yaw rotation followed
+      
+
+		geo.metric.euler.charts.YPR
+      
+which has AXES set to (z, y, x)-- so that you get a yaw rotation followed
       by a pitch rotation followed by a roll rotation; Circumference=360, so
       that if you have an ASCII motion file from a gyroscope (in degrees),
       for instance, you can do:
-      \verbatim
+      
       >>>attitude = YPR(*numpy.loadtxt("gyro.txt")
-      \endverbatim
-      Yeah-- it's like that. Plus, there's a RPY class, because some
-      people do the rotations backwards. (Imagine the FORTRAN code to do this:
-      \n(1) get a logical unit
-      \n(2) open the file
-      \n(3) compute a mess of a 3 x 3 matrix to do the rotation
-      \n(4) create an empty array in which to put the result
-      \n(4) loop over the file
-      \n(5) read a line of the file
-      \n(6) do the matrix multiplication (in a 2-deep do loop)
-      \n(7) assign the results correct elements of the output array
-         \n(7.1) --(7.3) for x, for y, and the for z
-      \n(8) end do
-      \n(9) close the file
-      \n(10) free the logical unit
-      \n(11) compile it
-      \n(12) fix the bugs \n(goto 11, unit it compiles)
-      \n(13) run it
-      \n(14) read stack trace, \n(goto 1 unit it runs)
-      \n(15) write code to put the results into a file
-      \n(16) write code to read the file.
-      \n(17) goto 1 until there are no bugs
-      \n(18) hope you didn't miss anything
-      \n(19) Take a lunch break-- no, call it a day.
-      )
-      \n\n
-      Rotation Summary:
-      ================
-      In the spirit of OO: you do need to know which object you have when
+  
+
+#### Rotation Summary:
+      
+In the spirit of OO: you do need to know which object you have when
       performing transformation. If you have "T", then:
 
-\verbatim      		 T(v)
-\endverbatim
-     Transforms v
-\verbatim		  ~T
-\endverbatim
-     Inverts the transformation
-\verbatim     	     T*T'
-\endverbatim
- composes 2 transformations, so that
+     		 T(v)
 
-\verbatim     	      T*(~T)
-\endverbatim
+Transforms v
+		  ~T
+
+Inverts the transformation
+     	     T*T'
+
+composes 2 transformations, so that
+
+    	      T*(~T)
+
 is the identity transformation (for any rotation object). Specific forms
 of the rotation are as follows:
 
-\verbatim     	  	T.dcm()
-\endverbatim    
-     returns the equivalent direction cosine matrix (as a Tensor)
+ 	  	T.dcm()
 
-\verbatim		 T.versor()
-\endverbatim
-     returns the equivalent versor
+returns the equivalent direction cosine matrix (as a Tensor)
 
-\verbatim		 T.ypr()
-\endverbatim
-     returns the equivalent YPR triplet 
-	
-\verbatim			T.rpy()
-\endverbatim
-     returns the equivalent RPY triplet .
-     \n\n
-     T can be a Matrix Versor YPR or RYP instance. And that is POLYMORPHISM in
-     a nutshell.
+		 T.versor()
 
-      @subsection Q Quaternions
-      The full quaternion algebra, __H__, is represented in desic/hamilton.py.
+returns the equivalent versor
+
+		 T.ypr()
+
+returns the equivalent YPR triplet 
+
+	T.rpy()
+
+returns the equivalent RPY triplet .
+
+### Quaternions
+The full quaternion algebra, __H__, is represented in desic/hamilton.py.
       While it has no use for transformations in __E3__, it is included
       for completeness. While versors only support the Grassmann product,
       quaternions allow for addition, subtraction, and dilation operations
       as well as inner, outer, odd, and even products.
 
-      @section Affine
-      The Affine transformation is the most general linear function of
+### Affine
+The Affine transformation is the most general linear function of
       a vector:
-      \n\n
-      \f$ A(\vec x) = {\bf M}\vec x + \vec b\f$.
-      \n\n
-      For proper euclidean transformation (det(M) = 1), than any rotating
+    
+$$ A(\vec x) = {\bf M}\vec x + \vec b$$.
+      
+For proper euclidean transformation (det(M) = 1), than any rotating
       object will do. Dilations, skews, reflections, etc.. will require a
       fully general matrix (rep'd as a rank-2 tensor).
-      \n
-      The magic methods support:
+    
+    
+The magic methods support:
 
-\verbatim
-A(v)                    # function emulation
-(A * A')(v) = A(A'(v))  # composition
-~A(A(v)) = v            # inversion
-A ** (m/n)              # interpolation
-\endverbatim
+
+	A(v)                    # function emulation
+	(A * A')(v) = A(A'(v))  # composition
+	~A(A(v)) = v            # inversion
+	A ** (m/n)              # interpolation
+	
+	
       MODULE FUNCTIONS 
       =================
       First of, I believe all functions should be PURE functions: that is,
