@@ -1,5 +1,5 @@
-/**
-     @mainpage THE Package for Geometry on Earth.
+
+     # THE Package for Geometry on Earth.
      
      @section Intro Introduction
      The point of this package is to allow you to do manifestly covariant
