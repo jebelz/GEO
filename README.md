@@ -97,8 +97,9 @@ it doesn't matter if _v_ is represented in Cartesian, polar, or
      and the results are the same:
 
      >>>jpl + v == jpl.ecef() + v.polar() 
-     	True \endverbatim
-
+     	True 
+	
+	
 (It is the duty of the OO-programmer to implement these choices
      without _if_ - _then_ clauses: unlike functions acting on arrays,
      objects know themselves and thus [dispatch](https://en.wikipedia.org/wiki/Dynamic_dispatch)
@@ -240,7 +241,8 @@ The SpaceCurve now has veclocity, acceleration (linear and angular),
 where the result has been rounded for clarity.
      
 #### Complexification
-     The bulk of geo is all about real vectors spaces: while vectors
+
+The bulk of geo is all about real vectors spaces: while vectors
      can have complex components, they still live in \f$\mathbb R^3\f$,
      and as such,
      their bilinear inner product is not positive definite:
@@ -271,7 +273,8 @@ In gibbs.py, the
  
 
 #### Higher Rank Tensors
-     3rd and 4th rank tensors, and a class-factory capable of making
+     
+3rd and 4th rank tensors, and a class-factory capable of making
      any order tensor are available in euclid/three.py and
      euclid/four.py, respectively.
      Inner, outer, and wedge products
@@ -296,7 +299,8 @@ In practice, rank 2 and rank 4 tensors usually have some degree of
    
    
 ###   Einstein Summation Notation
-     Through the wonders of python and [complete class customization](https://docs.python.org/2/reference/datamodel.html#customizing-attribute-access)
+     
+Through the wonders of python and [complete class customization](https://docs.python.org/2/reference/datamodel.html#customizing-attribute-access)
      [Einstein summation notation]
      (https://en.wikipedia.org/wiki/Einstein_notation) is _fully_ supported (einstein/albert.py).
      For example,
@@ -387,7 +391,8 @@ Note that the code matches math equations _exactly_. The latter
 
 
 ### Irreducible Representations and Subspaces
-     Here we delve into a rather involved topic: the irreducible
+     
+Here we delve into a rather involved topic: the irreducible
      representations and subspaces of the general Cartesian tensor.
      An irreducible subspace of a tensor is some linear combination of
      a tensor and its transposes that is closed under rotations. For example,
@@ -482,7 +487,8 @@ Additional tools for the alternating tensor, aka Levi-Civita (pseudo)-
      
 
 ## Schur-Weyl Duality
-     Rank-2 tensors have two subspaces closed under rotations which
+     
+Rank-2 tensors have two subspaces closed under rotations which
      are defined by their symmetric and antisymmetric parts. These
      are constructed by symmetric and antisymmetric permutations of their
      two indices--which is rather simple-as there are only 2 permutations.
@@ -526,7 +532,8 @@ This subpackage also supports some results from the representation
 ## Geo-Detic:
 
 #### Coordinates and Ellipsoids
-     The geo.detic package implements geo.metric objects on the Earth
+ 
+The geo.detic package implements geo.metric objects on the Earth
      via the introduction of coordinates (coordinates.py), which can
      be represented in Earth Centered Earth Fixed
      (geo.detic.coordinates.ECEF), geodetic
@@ -573,7 +580,7 @@ Support for interpolation
 
 
 ### Universal Transverse Mercator
-     UTM (utm.py, kruger.py) support is under development. A class for seamless
+UTM (utm.py, kruger.py) support is under development. A class for seamless
      use of DD MM SS.ssss format is provided (preliminarily) in dms.py
 
      
@@ -697,98 +704,99 @@ This is the point of OO, and it is strongly supported. The point is, you
 
      >>>platform.llh()
      
-     It does not matter if "platform" is in LLH already, or in ECEF, or in SCH,
+It does not matter if "platform" is in LLH already, or in ECEF, or in SCH,
      or in a tangent plane coordinate system. Moreover, if you have another
      point, "target"
 
      \verbatim	    >>>platform - target
      \endverbatim
 
-     is the vector joining them: REGARDLESS OF THEIR COORDINATE SYSTEM-- you
+is the vector joining them: REGARDLESS OF THEIR COORDINATE SYSTEM-- you
      do not need to specify it-- the vector will be computed in the Cartesian
      coordinate system at platform's origin (even if the coordinate system is
      not Cartesian). This because coordinates are treated elements of
      an affine space--
      vector spaces without an origin.
 
-     All coordinates are defined on an ellipsoid-- and they carry that
+All coordinates are defined on an ellipsoid-- and they carry that
      information with them. You can translate to another ellipsoid, e.g.,
      AIR1830, via:
 
      \verbatim	    >>>platform | almanac.AIR1830
      \endverbatim
 
-     Again-- you don't need to specify if "platform" is LLH, SCH, or the local
+Again-- you don't need to specify if "platform" is LLH, SCH, or the local
      tangent plane (LTP)-- "platform" knows that already and converts itself
      to the same sub-class of coordinates. That's the point of polymorphism.
 
-     First Class Transformation:
-     ---------------------------
-     _Question_:
+#### First Class Transformation:
+     
+_Question_:
 
-     Why are their so few functions for coordinate transformations? Why are
+Why are their so few functions for coordinate transformations? Why are
      there no 3x3 matrices filled with (bug prone) long combinations of trig
      operations?
 
-     _Answer_:
+_Answer_:
 
-     Transformation are 1st class object that permit arithmetic operations.
+Transformation are 1st class object that permit arithmetic operations.
      Hence, you build a a full 3-DoF rotation as a product of 3 simple 1-DoF
      rotations. With the affine transformation, you can build any 6-DoF
      coordinate transformation out of its building blocks-- and compose
      them as they are needed.
 
-     With that, most coordinate transformations are 1 to 3 lines of code,
+With that, most coordinate transformations are 1 to 3 lines of code,
      and can be easily understood. This avoids an important antipattern:
      "long-method" -- which claims any method over 7 lines is too long--
      it becomes hard to understand, hard to maintain, and hard to extend.
      
-     Furthermore, the composition and inversion of transformations is
-     handled with
-     <a href="https://docs.python.org/2/reference/datamodel.html#emulating-numeric-types">operator overloading</a>
-     of "*" ("__mul__")and "~"
+Furthermore, the composition and inversion of transformations is
+     handled with [operator overloading]
+     (https://docs.python.org/2/reference/datamodel.html#emulating-numeric-types)
+     of "\*" ("__mul__")and "~"
      ("__invert__"),
      respectively, with some support for interpolating between transformations
-     via overloading "**" ("__pow__") with non-integer exponents. (Python's
-     built-in <a href="https://docs.python.org/2/library/functions.html#pow">
-     pow</a> function has a 3 argument option, which implements
-     <a href="http://en.wikipedia.org/wiki/Slerp">spherical linear
-     interpolation</a>.)
+     via overloading "\*\*" ("__pow__") with non-integer exponents. (Python's
+     built-in [pow](https://docs.python.org/2/library/functions.html#pow)
+     function has a 3 argument option, which implements [spherical linear]
+     (http://en.wikipedia.org/wiki/Slerp)
+     interpolation.
      
-     Array or Singleton:
-     ====================
-     In the above example, "platform" or "target" could be singletons or arrays
+### Array or Singleton:
+     
+In the above example, "platform" or "target" could be singletons or arrays
      --it doesn't matter. The resultant vector will match the inputs-- without
      you having to tell it. If the objects are made out of numpy-arrays, then
      the result will be too-- numpy does all the work-- neither the user nor
      the developer has to worry about loop indices when using
      _or_ writing code.
     
-     With that in mind, here are the details:
+With that in mind, here are the details:
 
-     @section Introduction
-     Vector exists so that coordinates can exist. The ellipsoid exists so that
+## Introduction
+     
+Vector exists so that coordinates can exist. The ellipsoid exists so that
      the coordinates make sense. The goal of this sub-package is to make ALL
      vector and coordinate operations simple overloaded math operations or
      method calls.
 
-     Moreover, the objects are completely divorced from computer "arrays", and
+Moreover, the objects are completely divorced from computer "arrays", and
      hence, you can use a single instance to represent a bunch of vectors, or
      points on a map, or orientations, etc., and ALL the broadcasting is done
      by numpy. This is a very important point to digest, for a vector, v, or
      tensor T:
 
-\verbatim     	    >>> v[2], T[0, 1]
-\endverbatim
-       have NO MEANING with respect to vectors and tensors. They are not:
+	>>> v[2], T[0, 1]
 
-\verbatim     	    >>> v.z, T.xy
-\endverbatim
-     V[2] only has meaning if v.x[2], v.y[2], and v.z[2] have meaning, and then
+have NO MEANING with respect to vectors and tensors. They are not:
+
+ 	    >>> v.z, T.xy
+
+V[2] only has meaning if v.x[2], v.y[2], and v.z[2] have meaning, and then
      it should be obvious what it means. Same for T.xy[0,1] and the other 8
      rank-2 tensor attributes.
 
-     What this means is that you are free to make Vector, Tensor,
+What this means is that you are free to make Vector, Tensor,
      quaternion, Euler-angle triplets, and coordinate objects out of
      arbitrarily large numpy arrays of any dimension. That they are captured
      in a single Tensor or Coordinate object should not make you think you have
@@ -796,37 +804,46 @@ This is the point of OO, and it is strongly supported. The point is, you
      history of a platform, while a single Vector can represent the look
      vector to every post in an 2-D Digital Elevation Model.
 
-     This is an important consideration. Tensors are not defined by their
+This is an important consideration. Tensors are not defined by their
      number of elements-- they are defined by their transformation properties.
      That is, a Vector object can be one vector, or N vectors arranged in
      some one-or-more numpy.ndarray shape, or it can be a generator or
      iterator that produces vectors-- they ALL have the same transformation
      properties, and hence are all Vector objects with the same interface.
      
-     (Note that a vector can be a single vector, and still have non-singleton
+(Note that a vector can be a single vector, and still have non-singleton
      elements. Take for example, geo.metric.wigner.eckart.J(), which is
      indeed a single vector, yet it's components are Tensors, such that
-     \f$ e^{i{\bf\vec J\cdot{\hat n}}\phi} \f$ generates rotations
-     about a unit vector \f$ {\bf \hat n} \f$. Even worse is
+     $ e^{i{\bf\vec J\cdot{\hat n}}\phi} $ generates rotations
+     about a unit vector $ {\bf \hat n} $. Even worse is
      geo.detic.pauli.J(). Here the vector's components are numpy matrices
-     of dimension \f$2j+1\f$, represented internal-degrees of freedom.
+     of dimension $2j+1$, represented internal-degrees of freedom.
      This is all implemented polymorphically without any conditionals
      (_if_ _then_); you simply cannot do this with your procedural Matlab
      arrays and matrices.)
 
-     DO NOT CONFUSE TENSOR PROPERTIES WITH ARRAY PROPERTIES:
+DO NOT CONFUSE TENSOR PROPERTIES WITH ARRAY PROPERTIES:
 
-     "__getattr__"  gets tensor properties, e.g:
-     \verbatim m.xy  \endverbatim\n
-     "__getitem__"  gets array properties,  e.g:
-     \verbatim v[10:1000:3, -30:]
-     \endverbatim \n\n
-     The payoff:
+ 	"__getattr__"  gets
+	
+tensor properties, e.g:
      
-     The user/developer should NEVER have to do a loop to transform ENTIRE
+     m.xy  
+     
+While:
+     
+     "__getitem__"
+     
+gets array properties,  e.g:
+   
+   v[10:1000:3, -30:]
+   
+The payoff:
+     
+The user/developer should NEVER have to do a loop to transform ENTIRE
      motion histories or 2-d images.
      
-     Of course you may want a loop, even an implied loop. For those who like
+Of course you may want a loop, even an implied loop. For those who like
      python's iterator-pattern and support for functional programming style,
      all vector/ tensor/coordinate objects can be created with lazy-evaluation
      attributes. That is, you can make them out of iterators, generators,
@@ -837,105 +854,110 @@ This is the point of OO, and it is strongly supported. The point is, you
      computer-science-like interfaces to its components.
      
 
-     @section euclid Euclid
-     Vectors (and other Tensors) in 3-Dimensional Euclidean Space (__E3__)
+## euclid Euclid
+Vectors (and other Tensors) in 3-Dimensional Euclidean Space (__E3__)
 
-     Vectors are important objects. We're talking about a physicist's vectors.
+Vectors are important objects. We're talking about a physicist's vectors.
      That's a geometric object that lives in Euclidean 3-space (for us) and does
      NOT depend on the reference frame. That "vectorized" and "vector" have
      meaning in computer science is entirely unrelated and is just a point of
      confusion. Try to FORGET IT.
 
-     There are several ways to consider vectors. One way is as a rank-1
+There are several ways to consider vectors. One way is as a rank-1
      tensor, that is, as a linear function from
-     \f$ {\mathbb R}^3 \rightarrow {\mathbb R}\f$--this is a very powerful view
+     $ {\mathbb R}^3 \rightarrow {\mathbb R}$--this is a very powerful view
      point for characterizing physical laws--and is supported in geo:
-     \n\n
-     \f$ {\bf \vec a(\vec b} \equiv {\bf \vec a\cdot \vec b} \f$\\n\n.
+     
+$$ {\bf \vec a(\vec b} \equiv {\bf \vec a\cdot \vec b} $$.
 
-     Nevertheless, we'll define them by how they transform.
+Nevertheless, we'll define them by how they transform.
      Vectors are defined by their transformation properties: you have to rotate
      them by 360 degrees to remain unchanged. Well, that is entirely useless
      for computer programming. What is useful is that:
 
-     (1) They transform as:\n\n
-			\f$	v'_i = T_{ij}  v_j  \f$
-			\n\n
-     (2) In a given reference frame, they can be represented by 3 components:
-                      \f$v_i\f$ for \f$i = 1, 2, 3.\f$
-     So there you go. Vectors have 3 things, and that defines their 
+(1) They transform as:
+			$$	v'_i = T_{ij}  v_j  $$
+		
+(2) In a given reference frame, they can be represented by 3 components:
+                      
+	v_i  for i = 1, 2, 3 
+	
+	
+So there you go. Vectors have 3 things, and that defines their 
      representation in a frame. That leads to an important pythonic note:
 
-     Vector (Tensor, Coordinate, etc..) objects are entirely defined by their
+Vector (Tensor, Coordinate, etc..) objects are entirely defined by their
      "__init__" arguments. To that end, a vector is given
      by its x, y, and z attributes:
 
-\verbatim     	       	  >>>v = Vector(x, y, z)
-\endverbatim
-     There shall be no nullary instantiation followed by setter calls:
+	       	  >>>v = Vector(x, y, z)
 
-\verbatim
+There shall be no nullary instantiation followed by setter calls:
+
+
 	>>>v = Vector()  # NO
 	>>>v.setX(x)     # NO
 	>>>v.setY(y)     # NO
 	>>>v.setZ(z)     # NO NO NO
-\endverbatim
-     Fair enough, now we have a vector. What do you do with that? Well, you
+
+Fair enough, now we have a vector. What do you do with that? Well, you
      don't call a function. The vector should have everything you want to do
      with it defined by methods and operators (magic methods):
      
-     Magic Methods:
-     =============
-     The following invoke magic methods:
+## Magic Methods:
      
-\verbatim  +v = v.__pos__()
-\endverbatim
-     Doesn't do anything.It returns "v", though it could return a copy of v.
+The following invoke magic methods:
+     
+   +v = v.__pos__()
 
-\verbatim     	     -v = v.__neg__()
-\endverbatim
-     Negation, implemented as negation of each component
+Doesn't do anything.It returns "v", though it could return a copy of v.
 
-\verbatim     	    v + v' = v.__add__(v')
-\endverbatim
-     vector addition [Note: no constants allowed]:
-\verbatim     	    v + 7 = v.__add__(7)
-\endverbatim
-raises an
+     -v = v.__neg__()
+
+
+Negation, implemented as negation of each component
+
+   	    v + v' = v.__add__(v')
+
+vector addition [Note: no constants allowed]:
+
+     v + 7 = v.__add__(7)
+
+#raises a
      geo.utils.exceptions.NonCovariantOperation error (exceptions.py)]
 
-\verbatim           v - v' = v.__sub__(v')
-\endverbatim
-     vector subtraction 
+    v - v' = v.__sub__(v')
 
-\verbatim
-v/4	  =  v.__div__(4)
-v*0.25	  =  v.__mul__(0.25)    
-0.25*v    =  v.__rmul__(0.25)
-\endverbatim
+vector subtraction 
+
+
+	v/4	  =  v.__div__(4)
+	v*0.25	  =  v.__mul__(0.25)    
+	0.25*v    =  v.__rmul__(0.25)
+
 are all dilations. Reflected multiplication is the simplest, as it can
 _only_ be a dilations
 
-\verbatim	     v * v' = v.__mul__(v')
-\endverbatim
-     Scalar product
+     v * v' = v.__mul__(v')
 
-\verbatim     	    v**2 = v.__pow__(2)
-\endverbatim
-    "__pow__" takes any positive integer, though "2" is the only defensible
-    argument
+Scalar product
 
-\verbatim abs(v) = v.__abs__() -> ||v**2|| ->  v.L2norm() = v.norm(l=2)
-\endverbatim
-     all need to be defined, and some don't, like:
+  v**2 = v.__pow__(2)
 
-\verbatim     	 v ^ v' = v.__xor__(v')
-\endverbatim
-    cross (wedge) product
+spherical linear Interpolation:c"__pow__" takes any positive integer, though "2" is the only defensible
+argument
 
-\verbatim     	  v & v' = v.__and__(v')
-\endverbatim
-    outer (dyad) product
+	abs(v) = v.__abs__() -> ||v**2|| ->  v.L2norm() = v.norm(l=2)
+
+all need to be defined, and some don't, like:
+
+        v ^ v' = v.__xor__(v')
+
+cross (wedge) product
+
+ 	  v & v' = v.__and__(v')
+
+outer (dyad) product
 
 \verbatim     	  ~v   =  v.__invert__() = v / v*v
 \endverbatim
