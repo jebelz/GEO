@@ -66,23 +66,41 @@
      and minutes) and a float (seconds) and so on, along with which 
      ellipsoid we're using, the OO user just says:
      
-     \verbatim jpl = WGS84.LLH(DMS(34, 12, 6.1), DMS(-118, 10, 18), 210)\endverbatim
+     \verbatim 
+     
+     jpl = WGS84.LLH(DMS(34, 12, 6.1), DMS(-118, 10, 18), 210)
+     
+     \endverbatim
+     
      and the object knows, and remembers, exactly what that all means-- and
      is much more than just records in a structure, because when you write 
 
-     \verbatim  d = jpl - gsfc \endverbatim
+     \verbatim  
+     
+     d = jpl - gsfc
+     
+     \endverbatim
+     
      it knows that the difference between 2 points in an affine space is
      a vector, and it knows how to compute it, regardless of how the
      coordinates of NASA Goddard were specified. That is, it might be that:
+
 \verbatim
+
 gsfc = almanac.ALMANAC["AIRY 1830"].LLH(38.9915337403, -76.85, 548)
+
 \endverbatim
-     which is a different coordinate system with respect to a different
-     ellipsoid -- but the meaning of the point does not depend on its
+
+which is a different coordinate system with respect to a different
+      ellipsoid -- but the meaning of the point does not depend on its
      representation. Hence:
+
 \verbatim
+
 >>>print repr(jpl - gsfc)
 geo.metric.euclid.vector.Vector(-3622444.0, 177651.0, -426628.0)
+
+
 \endverbatim
      is the ECEF vector connecting them.
      Furthermore, if you add a vector to a point:
