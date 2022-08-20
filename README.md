@@ -165,7 +165,8 @@ and are supported in affine.py. While __M__ can be any object that
      together form the so-called generators of rigid Euclidean space.
 
 ### Non-Cartesian Coordinates.
-     Support for non-Cartesian vector representations
+     
+Support for non-Cartesian vector representations
      is provided. Spherical (aka polar)
      (geo.metric.euclid.kant.spherical.Polar), cylindrical
      (geo.metric.euclid.kant.cylindrical.Cylinder), and parabolic
