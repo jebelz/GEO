@@ -1,8 +1,7 @@
+THE Package for Geometry on Earth.
 
-     THE Package for Geometry on Earth.
-     
-     Intro Introduction
-     The point of this package is to allow you to do manifestly covariant
+Intro Introduction
+The point of this package is to allow you to do manifestly covariant
      vector operations (and transformations), both abstractly and with
      respect to geodesy via affine spaces on Earth. Manipulation of
      Earth-bound coordinates and abstract vectors can be done without
