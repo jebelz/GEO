@@ -1012,6 +1012,7 @@ This is not just good, but great. Moreover, it is true for all tensors and
 Thus, if you iterate over a multidimensional (in the computer array sense)
      vector, your iterator will return vectors one by one (or arrays of vectors-
      it's all passed to numpy or whatever controls the attributes' iterators).
+     
 ### At A Deeper Level
      
 That Vectors can be more than singletons is not just a computer science
@@ -1133,9 +1134,6 @@ Furthermore, you can project that correlation tensor into it's
       irreducible spherical components at will-- it's just a method call that
       executes 1 or 2 lines of code.
 
-     ------------
-     |Non-Vectors|
-     -------------
 
 #### Scalar:
    
@@ -1156,7 +1154,7 @@ While this is trivial, it is formally a trivial
 	representation of SO(3), it is
 by no means "just a number". Consider the would-be scalar:
 
-     $$ s = \bf{ \vec A\cdot}(\bf{\vec B \times \vec C}) $$,
+$$ s = \bf{ \vec A\cdot}(\bf{\vec B \times \vec C}) $$,
     
 which is really a pseudo-scalar. In the full Clifford algebra off
      Euclidean 3-space, it's a trivector, or 3-blade, and that cannot
@@ -1195,9 +1193,8 @@ Many a python vector module has failed w.r.t. to numpy broadcasting
 
 There are (at least) 3 ways to look at rank-2 tensors:
 
-
-Component-wise
-(1) A Component-wise view, which can be either:\n
+##### Component-wise
+	(1) A Component-wise view, which can be either:\n
           A triplet of irreducible spherical parts:\n
      	   	   1 scalar component (proportion to the identity)\n
      		   3 rank 1 components (The antisymmetric part-- which
@@ -1207,11 +1204,13 @@ Component-wise
 	-------------------------------------------------------------------\n
 	or	   9 Cartesian components: xx, xy, .., yz, zz (We'll use this\n
 		     	       		      	      	     for attributes)\n
-     @subsection ten2 As Transforming Objects
+##### As Transforming Objects
+
      (2) Geometric animals, U,  that transform as\n\n
 
      	 	   	    \f$U'_{ij} = T_{ik}  T_{jl}  U_{kl} \f$\n
-     @subsection ten3 (Bi)Linear Maps
+
+##### (Bi)Linear Maps
      Tensors can be defined as bilinear maps from:\n
      	 (3A) \f$ {\mathbb R}^3 \times {\mathbb R}^3 \rightarrow {\mathbb R} \f$ \n
 	 (3B)  \f$ {\mathbb R}^3  \rightarrow {\mathbb R}^3 \f$, \n
@@ -1224,266 +1223,163 @@ Component-wise
      is respected--the user should look upon their rotation matrices as just
      that, eventhough they live in a tensor class.
 
-      Rows and Columns:
-      -----------------
-      Rows and Columns have no physical meaning and are hence, meaningless.
+
+###### Rows and Columns:
+
+Rows and Columns have no physical meaning and are hence, meaningless.
       They are at best a linear algebra concept: matrices have rows and
       columns, but tensors are not matrices. With respect to tensors,
       they are a typographical construct-- a relic of writing frame dependent
       representation of geometric objects on paper. I do not support them, and
       frankly, I don't know what "row major" or "column major" means. My tensors
       have indices, and each one is as "major" as the other.
-      
-      Nevertheless, there are methods:
 
-\verbatim
-tensor.cols() -->  T.ix, T.iy, T.iz
-tensor.rows() -->  T.xi, T.yi, T.zi
-\endverbatim
- iterate over 1st and 2nd tensor indices -- and
+Nevertheless, there are methods:
+
+
+	tensor.cols() -->  T.ix, T.iy, T.iz
+	tensor.rows() -->  T.xi, T.yi, T.zi
+
+iterate over 1st and 2nd tensor indices -- and
       indices (slots, really) have meaning.
       I just happen to call it rows (cols)--but they're NOT rows (cols).
       It's handy though, if
       you want to know one of the important tensor invariants:
-      \n\n
-      \f$ m_{1i}  m_{2j}  m_{3k}  \epsilon_{ijk} \f$
-      \n\n
-      which is the determinant, you can compute it by unpacking the rows in the
+  
+$$ m_{1i}  m_{2j}  m_{3k}  \epsilon_{ijk} $$
+      
+which is the determinant, you can compute it by unpacking the rows in the
       geo.metric.euclid.vector.scalar_triple_product function:
       
-\verbatim >>>scalar_triple_product(*tensor.rows())
-\endverbatim
-      and that does make a (pseudo) scalar our of it. The other scalars are the
+	 >>>scalar_triple_product(*tensor.rows())
+
+and that does make a (pseudo) scalar our of it. The other scalars are the
       trace and the L2-Norm, and there are methods for those too. To summarize,
       for a matrix/tensor T (with functions from the tensor.py modules):
-      \n\n      
-      Rank-2 Tensor Invariants:
-      ----------------------
-      Some invariants:
-\verbatim  abs(T) = T.L2norm() = T.norm([l=2])
-\endverbatim
-      \f$ \sqrt{\sum_{ij}T_{ij}^2}\f$
-\verbatim Tr(T) = T.trace() = T.contract(0, 1) = T.ii
-\endverbatim
-      \f$ \sum_{ij}T_{ij}\delta_{ij}\equiv T_{ii}\f$.
-\verbatim det(T) = T.det()
-\endverbatim
-      \n\n
-      \f$ m_{1i}  m_{2j}  m_{3k}  \epsilon_{ijk} \f$
-      \n\n
-      The 3 invariants can also be expressed as coefficients of
-      the charactertics polynomial:
-      \verbatim
-T.poly1d()              # a numpy.poly1d object
-T.characteristics()     # a tuple of Scalars.
-T.J(n); n = (1, 2, 3)   # The traditional n-th order invariants.
-\endverbatim
-\n\n
-      Rank-2 Tensor's Vectors:
-      ---------------------- 
-      Vectors from Tensors:
+       
+## Rank-2 Tensor Invariants:
+      
+Some invariants:
 
-\verbatim      	      T.dual()
-\endverbatim
-      \f$ \frac{1}{2}\epsilon_{ijk}T_{jk} \f$
+	abs(T) = T.L2norm() = T.norm([l=2])
+
+ $ \sqrt{\sum_{ij}T_{ij}^2}$
  
-\verbatim	      T.vector()
-\endverbatim
-      \f$ \epsilon_{ijk}T_{jk} \f$ 
-\n\n
-      Rank-2 Tensor's Rank-2 Tensor 
-      ----------------------------
-      Tensors from Tensors:
+	Tr(T) = T.trace() = T.contract(0, 1) = T.ii
 
-\verbatim
-T.C                                    # Complex Conjugate
-T.T = T.transpose() = T.ji             # Transpose
-T.H = T.T.C                            # Hermitian conjugate
-~T    --> T.__invert__() = T.I = T**-1 # Inverse
-adj(T) = T.adj() = ~T/det(T)           # Adjugate tensor
-cof(T) = T.cof() = adj(T).T            # Cofactor tensor
-symm(T)= T.S()                         # Symmetric Part
-       = (T + T.T)/2                   #   via direct computation
-       = T.symmetrize([[0, 1]])        #   via Schur-Weyl Duality
-       = getattr(T, "{ij}")            #   via Einstein summation notation
-skew(T)=T.A()                          # Antisymmetric Part
-       = (T - T.T)/2                   #   cia direct computation
-       = T.symmetrize([[0], [1]])      #   via Schur-Weyl Duality       
-       = getattr(T, "[ij]")            #   via Einstein summation notation
-hyd(T) = T.hyd() = DELTA * Tr(T)       # Hydrostatic part (c.f. Stress tensor)
-dev(T) = T.dev() = T - hyd(T)          # Deviatoric part (c.f. Stress tensor)
-T.natural_form() = symm(T) - hyd(T)    # Symmetric, trace-free part (pure J=2).
-U = T.diagonalizer()                   # Unitary transform that diagonalizes T
-T.diagonalized() = U.I* T * U          # Diagonalized form.
-T.irrep(j, m)                          # Cartesian part that is pure J=j, M=m
-\endverbatim
-      \n\n
-      Other methods include:
-      \n\n
-\verbatim
-T.spherical()            # Irreducible Spherical Representation
-T.eig()                  # Eigenvalues and Eigenvectors
-T.angle_of_rotation()    # Angle of rotations (for a DCM)
-T.axis_of_rotation()     # Axis.....
-T.sqrt()                 # Square Root
-T.exp() = exp(T)         # 1 + T + T**2/2 + T**3/6 ...
-T.log() = log(T)         # Inverse of exp(T)
-T.svd()                  # Single Value Decomp into dyads.
-\endverbatim
-\n\n
-      Some other operations are:
-\verbatim
-T.commutator(M) = T*M - M*T     # [T, M]
-T.anticommutator(M) = T*M + M*T # {T, M}
-T.sandwich(M) = T * M * T.T     # aka conjugate product
-T.row(n) = T.e(n)                      # n-th "row"
-T.col(n) = T.e(Ellipsis, n)            # n-th "col"
-for p in T.polyadics()...              # Projections onto Cartesian basis
-for ee in T.basis()...                 # Cartesian Basis: (X&X&, X&Y, ... Z&Z)
-T.inner(U)                     # Inner product (any rank)
-T.outer(U)                     # Outer product (any rank)
-T.wedge(U)                     # Generalized Cross Product (any rank)
-\endverbatim
-The last 7 are accomplished for any rank via:
-\verbatim
->>list(T.iter_indices())
->>[(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2), (2, 0), (2, 1), (2, 2)]
-\endverbatim
-That allows index gymnastics without resorting to a _for_-loop.
-     @subsection tdps Tensor (dyadic) Products
-     The double/mixed dot and cross products are:\n
-     geo.metric.euclid.tensor.Tensor.dot()   \n
-     geo.metric.euclid.tensor.Tensor.double_dot()  (same as dot) \n
-     geo.metric.euclid.tensor.Tensor.dot_cross()   \n
-     geo.metric.euclid.tensor.Tensor.cross_dot()   \n
-     geo.metric.euclid.tensor.Tensor.double_cross() \n
-     \n
-     @subsection tps Tensor Projection, Rejection and Reflection
-     Dyadic projection, rejection and reflection generalize their
-     vector counterparts via the double dot product:
-\verbatim
-T" = T >> T'  # project T onto T' dyads.
-T" = T << T'  # reject T onto T' dyads.
-T" = T | T'  # reflect T onto T' dyads.     
-\endverbatim
-      Simple enough. Now if T' is replace by a vector "v", then it gets
-      tricky, because you have to choose and index on which to perform
-      the operation, and hence, the operator overloads return functions
-      that take the index as an argument:
-\verbatim
-T' = (T >> X)(0)  # project out X "row"
-T' = (T >> X)(1)  # project out X "column"
-T' = ((T >> X)(0) >> Y)(1) # only T.xy survives.
-\endverbatim
-      I have used basis vector to make the geometric concept understandable-
-      it's not a common operation-- but you can replace "X" with _any_
-      vector. (An application, for instance, would be with a stress tensor
-      and some arbitrary vector to get the momentum flux in that direction).
-      The rejections work like-wise on the perpendicular components.
-      Reflection is straight forward (here with unit vectors):
-\verbatim
-T' = (T | X)(0)  # invert sign of X "row"
-T' = (T | Y)(1)  # invert sign of Y "column"
-\endverbatim
-      These operations work on rank 3 and higher rank tensors, too. (See
-      http://en.wikipedia.org/wiki/Cauchy_stress_tensor for apps).
+$ \sum_{ij}T_{ij}\delta_{ij}\equiv T_{ii}$.
 
-The Dyadic Basis
-================
-      Finally, tensors are often represented as vectors (1-index obejcts)
-      on a 9-dimensional vector space, with bases: xx, xy, ..., zy, zz.
-      You can convert your tensors to this space (rather procedurally as
-      numpy-arrays) via:
-\verbatim
+	det(T) = T.det()
 
-v = T.nineXone()      # convert to a numpy column.
+      
+$ m_{1i}  m_{2j}  m_{3k}  \epsilon_{ijk} $
+ 
+The 3 invariants can also be expressed as coefficients of
+      the charactertics polynomial:
 
-\endverbatim
-	A rotation matrix can then be converted, via a Kronecker product:
-\verbatim
+	T.poly1d()              # a numpy.poly1d object
+	T.characteristics()     # a tuple of Scalars.
+	T.J(n); n = (1, 2, 3)   # The traditional n-th order invariants.
 
-R = M.nineXnine()      # convert to a 9 x 9 numpy matrix
+###### Rank-2 Tensor's Vectors:
+      
+Vectors from Tensors:
 
-\endverbatim
-      The tensor transformation to a different frame then becomes a
-      a linear transformation:
-\verbatim      
-v' = R * v.
-\endverbatim
+   	      T.dual()
 
-Note: R can be block diagonalized in to 5, 3, and 1 sized blocks. These blocks
-represent the rank 2, 1, and 0 parts of a general rank-2 tensor.
+$ \frac{1}{2}\epsilon_{ijk}T_{jk} $
+ 
+     T.vector()
 
-      @subsection rank34 Higher Rank Tensors
-      Cartesian rank-3 and rank-4 tensors are fully supported. Higher rank
-      tensors are created on-the-fly when requested (e.g. by the outer
-      products of existing tensors).
+$ \epsilon_{ijk}T_{jk} $ 
 
-      The Levi-Civita (Pseudo)Tensor is a package constant:
-\verbatim
+#### Rank-2 Tensor 
+      
+Tensors from Tensors:
 
->>>print geo.EPSILON
-    [0, 0, 0] [0, 0, -1] [0, 1, 0]
-    [0, 0, 1] [0, 0, 0] [-1, 0, 0]
-    [0, -1, 0] [1, 0, 0] [0, 0, 0]
 
-\endverbatim
-     A expected, the attributes are triplets fromed from 'x', 'y', and 'z'.
-\verbatim
+	T.C                                    # Complex Conjugate
+	T.T = T.transpose() = T.ji             # Transpose
+	T.H = T.T.C                            # Hermitian conjugate
+	~T    --> T.__invert__() = T.I = T**-1 # Inverse
+	adj(T) = T.adj() = ~T/det(T)           # Adjugate tensor
+	cof(T) = T.cof() = adj(T).T            # Cofactor tensor
+	symm(T)= T.S()                         # Symmetric Part
+	       = (T + T.T)/2                   #   via direct computation
+	       = T.symmetrize([[0, 1]])        #   via Schur-Weyl Duality
+	       = getattr(T, "{ij}")            #   via Einstein summation notation
+	skew(T)=T.A()                          # Antisymmetric Part
+	       = (T - T.T)/2                   #   cia direct computation
+	       = T.symmetrize([[0], [1]])      #   via Schur-Weyl Duality       
+	       = getattr(T, "[ij]")            #   via Einstein summation notation
+	hyd(T) = T.hyd() = DELTA * Tr(T)       # Hydrostatic part (c.f. Stress tensor)
+	dev(T) = T.dev() = T - hyd(T)          # Deviatoric part (c.f. Stress tensor)
+	T.natural_form() = symm(T) - hyd(T)    # Symmetric, trace-free part (pure J=2).
+	U = T.diagonalizer()                   # Unitary transform that diagonalizes T
+	T.diagonalized() = U.I* T * U          # Diagonalized form.
+	T.irrep(j, m)                          # Cartesian part that is pure J=j, M=m
 
->>>print geo.EPSILON.xyz
-1
 
-\endverbatim
-      Alegbraic operations "+", "-", "*", "&" are supported. Inner products
-      and contractions can be done with the inner() and contract() methods,
-      though for clarity, Einstein summation is preffered. For example:
-      \n\n \f$ \epsilon_{ijk}\epsilon_{ijl} = 2 \delta_{kl} \f$ \n\n
-      can be verfied via:
-\verbatim      
+Other methods include:
+     
+	T.spherical()            # Irreducible Spherical Representation
+	T.eig()                  # Eigenvalues and Eigenvectors
+	T.angle_of_rotation()    # Angle of rotations (for a DCM)
+	T.axis_of_rotation()     # Axis.....
+	T.sqrt()                 # Square Root
+	T.exp() = exp(T)         # 1 + T + T**2/2 + T**3/6 ...
+	T.log() = log(T)         # Inverse of exp(T)
+	T.svd()                  # Single Value Decomp into dyads.
+	
+Some other operations are:
 
->>>print (EPSILON & EPSILON).ijkijl
-[2.0, 0.0, 0.0]
-[0.0, 2.0, 0.0]
-[0.0, 0.0, 2.0]
+	T.commutator(M) = T*M - M*T     # [T, M]
+	T.anticommutator(M) = T*M + M*T # {T, M}
+	T.sandwich(M) = T * M * T.T     # aka conjugate product
+	T.row(n) = T.e(n)                      # n-th "row"
+	T.col(n) = T.e(Ellipsis, n)            # n-th "col"
+	for p in T.polyadics()...              # Projections onto Cartesian basis
+	for ee in T.basis()...                 # Cartesian Basis: (X&X&, X&Y, ... Z&Z)
+	T.inner(U)                     # Inner product (any rank)
+	T.outer(U)                     # Outer product (any rank)
+	T.wedge(U)                     # Generalized Cross Product (any rank)
 
-\endverbatim
-      Higher rank tensors are displayed to the screen recursively, for
-      example:
-\verbatim
+### Higher Rank Tensors:
 
->>>print Four(*range(3**4))
-======================================
-[0, 1, 2] [9, 10, 11] [18, 19, 20]
-[3, 4, 5] [12, 13, 14] [21, 22, 23]
-[6, 7, 8] [15, 16, 17] [24, 25, 26]
---------------------------------------
-[27, 28, 29] [36, 37, 38] [45, 46, 47]
-[30, 31, 32] [39, 40, 41] [48, 49, 50]
-[33, 34, 35] [42, 43, 44] [51, 52, 53]
---------------------------------------
-[54, 55, 56] [63, 64, 65] [72, 73, 74]
-[57, 58, 59] [66, 67, 68] [75, 76, 77]
-[60, 61, 62] [69, 70, 71] [78, 79, 80]
-======================================
-\endverbatim
-	Einstein summation notation is supported up to rank-15 (which requires
+For example, a rank-4 tesnor is diplayed as follow:
+
+	>>>print Four(*range(3**4))
+	======================================
+	[0, 1, 2] [9, 10, 11] [18, 19, 20]	
+	[3, 4, 5] [12, 13, 14] [21, 22, 23]
+	[6, 7, 8] [15, 16, 17] [24, 25, 26]
+	--------------------------------------
+	[27, 28, 29] [36, 37, 38] [45, 46, 47]
+	[30, 31, 32] [39, 40, 41] [48, 49, 50]
+	[33, 34, 35] [42, 43, 44] [51, 52, 53]
+	--------------------------------------
+	[54, 55, 56] [63, 64, 65] [72, 73, 74]
+	[57, 58, 59] [66, 67, 68] [75, 76, 77]
+	[60, 61, 62] [69, 70, 71] [78, 79, 80]
+	======================================
+
+Einstein summation notation is supported up to rank-15 (which requires
 	over 16,000,000 lines to print). Let's hope your tensor problems aren't
 	that deep.
 
-      @section charts Charts on SO(3)
-      The euclid.py module is all about Tensors-- and how you add, subtract,
+### Charts on SO(3)
+The euclid.py module is all about Tensors-- and how you add, subtract,
       and multiply them. The rank-2 tensor also transforms vectors--but it is
       not alone. There are many ways to represent rotations in
-      \f$\mathbb R^3\f$, and
+      $\mathbb R^3$, and
       collectively, they are known as charts on __SO(3)__-- the rotation group.
       They live in charts.py. A nice introduction is provided here:
 
       http://en.wikipedia.org/wiki/Charts_on_SO(3)
 
-      Versors
-      =======
-      Some people like rotation matrices. I don't. Not just because Euler
+#### Versors
+     
+Some people like rotation matrices. I don't. Not just because Euler
       angles always seem ambiguous-- it's because __SO(3)__ -- the group of
       rotation
       matrices--is not simply connected and you get problems interpolating
@@ -1503,9 +1399,10 @@ represent the rank 2, 1, and 0 parts of a general rank-2 tensor.
       the quaternion group from the old days, aka the hyper-complex numbers,
       will do just as well:
 
-      \f$ 1, i, j ,k  \f$  (called "w", "x", "y", "z" axis) \n\n
-      with: \f$i^2 = j^2 = k^2 = ijk = -1 \f$ \n\n
-      As a group, they're a simply connected representation of rotations, are
+$ 1, i, j ,k  $  (called "w", "x", "y", "z" axis)
+      with: $i^2 = j^2 = k^2 = ijk = -1 $ 
+      
+As a group, they're a simply connected representation of rotations, are
       numerically stable, can be spherical-linearly interpolated (slerp), are
       easy to represent on a computer, and in my opinion, easier to use than
       matrices. (They are also the standard for on-board real-time spacecraft
@@ -1514,71 +1411,13 @@ represent the rank 2, 1, and 0 parts of a general rank-2 tensor.
       tell you vectors are not fundamental--that they're made out of
       "something"....but I digress...).
 
-      Hold-up. We only care about unit quaternions, that is, quaternions with
+Hold-up. We only care about unit quaternions, that is, quaternions with
       norm == 1. They are a subset of the quaternions call versors
       (euler/hamilton.py)
       that is isomorphic to the hyper-sphere __S4__ and closed
       under the Grassmann product.
-      
-      Still, there is always an choice in how to represent them. If you're doing
-      math, and don't care about rotations, the Cayley-Dickson extension of the
-      complex numbers is best, two complex numbers and another imaginary unit
-      "j":\n
-      \f$ z + jz' \f$\n
-      Hence, with:\n
-      \f$ q  \equiv  z + z'i \f$\n
-      \f$  q = (a + ib) +  (a' + ib')j  \f$\n
-      \f$  q = (a + ib +  ja' +  kb') \f$\n\n
-      you get a quartet of reals:\n
-\verbatim      	  q = (a, ib, ja', kb').
-\endverbatim
-      You would think that would end it, but it isn't.
 
-      There is always a question, if you have a primitive obsession and are
-      using arrays to represent quaternions, no one is certain--in spite of the
-      unambiguous Cayley-Dickson construction--if you are doing:
-
-\verbatim      		  	(w, x, y, z)
-\endverbatim
-      or
-\verbatim      		  	(x, y, z, w)
-\endverbatim
-      Really. No, REALLY. People put "w" last, even though it destroys the
-      alphabet, because it preserves the indexing
-      into the vector, while adding on a scalar--Well, I DON'T INDEX VECTORS--
-      they don't have items (unless they do-- A Vector of ducks quacks like 3
-      ducks).
-      
-      I break them down into a scalar part and a vector part. The order doesn't
-      really matter. Hence a Versor, q,  is:
-
-      a Scalar (w)
-      a Vector (x,y,z).
-
-      q.w is q.scalar.w
-      q.x is q.vector.x and so on for y and z, and THERE IS NO q[i]. 
-
-      Hence:\n
-\verbatim			>>>q = Versor(scalar, vector)
-\endverbatim
-      Your quaternions can be singletons or numpy arrays, just like Scalar and
-      Vectors.
-
-      They transform with their "__call__" method (NOTE:
-      __everything__ transforms
-      with its "__call__" method), which overloads the function syntax:
-
-\verbatim      	       >>>q(v)
-\endverbatim
-      and you compose rotations with multiplication:
-
-\verbatim      	      q(q'(v)) = (q*q')(v) or (q'*q)(v)
-\endverbatim
-      Which is it, do you left or right multiply? It depends. The Versor
-      rotations can be converted into Matrix objects via:
-\verbatim      q.AliasMatrix()    --> Alias transformation matrix\endverbatim
-\verbatim      q.AlibiMatrix()    --> Alibi transformation matrix
-\endverbatim
+S
       Alias or Alibi?
       ===============
       Another point of confusion is "what is a transformation?". Well, alias
