@@ -11,19 +11,18 @@ The point of this package is to allow you to do manifestly covariant
      dimensional arrays of coordinates: _The_ _code_ _you_
      _write_ _is_ _the_ _same_ _for_ _either_ _case_ .
 
-     Furthermore, all transforming objects are (polymorphic)
+Furthermore, all transforming objects are (polymorphic)
      
-     [function emulators](https://docs.python.org/2/reference/datamodel.html#emulating-callable-objects), so that
+[function emulators](https://docs.python.org/2/reference/datamodel.html#emulating-callable-objects), so that
      the code you write depends neither on the type of the object doing
      the transformation (rotation matrix, quaternion, Euler angles, etc.)
      nor on the object being transformed (Vector, Quaternion, Tensor, Scalar,
      etc.):
 
-     \verbatim
->>>x2 = T(x1)
+   
+  		>>>x2 = T(x1)
 
-     \endverbatim
-     
+ 
      will rotate _x1_ to _x2_, regardless of how __T__ represents
      the rotation for  _x1_ a tensor of any rank, or quaternion. Both
      __T__ and _x1_ can be singleton or array-like, and _x2_ will have the
