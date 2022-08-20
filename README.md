@@ -118,7 +118,7 @@ Cartesian Vectors in R3.
 The geo.metric package (euclid.py) defines the basics for rank 0
      (scalar.py), 1 (vector.py),
      2 (tensor.py), and higher objects in real Euclidean
-     \f$\mathbb E^3\f$ space, aka \f$\mathbb R^3\f$.
+     $\mathbb E^3 $space, aka $\mathbb R^3$.
 
 Transformations in SO(3)
 Matrix __SO(3)__  (via tensor.py), quaternion __SU(2)__  (euler/hamilton.py),
