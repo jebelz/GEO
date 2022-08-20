@@ -118,9 +118,13 @@ Cartesian Vectors in R3.
 The geo.metric package (euclid.py) defines the basics for rank 0
      (scalar.py), 1 (vector.py),
      2 (tensor.py), and higher objects in real Euclidean
-     $\mathbb E^3 $space, aka $\mathbb R^3$.
+     $\mathbb E^3 $
+     space,
+     aka
+     $\mathbb R^3$.
 
 Transformations in SO(3)
+
 Matrix __SO(3)__  (via tensor.py), quaternion __SU(2)__  (euler/hamilton.py),
      transformations are implemented.
      Furthermore, various
@@ -160,110 +164,98 @@ and are supported in affine.py. While __M__ can be any object that
      infitesimal translations and their duals (3 infitesimal rotations)
      together form the so-called generators of rigid Euclidean space.
 
-     @subsubsection ncc Non-Cartesian Coordinates.
+Non-Cartesian Coordinates.
      Support for non-Cartesian vector representations
      is provided. Spherical (aka polar)
      (geo.metric.euclid.kant.spherical.Polar), cylindrical
      (geo.metric.euclid.kant.cylindrical.Cylinder), and parabolic
      (geo.metric.euclid.kant.parabolic.Parabola) coordinates
      are implemented. Through the wonders or __OOP__ and
-     <a href="https://en.wikipedia.org/wiki/First-class_function">1st-class
-     functions</a>
+     [1st-class functions](https://en.wikipedia.org/wiki/First-class_function)
      you can dynamically create fully operational non-Cartesian 
      coordinate representations via the metaclass
      geo.metric.euclid.kant.CoordinateFactory. All you need to do
      is provide a function and its inverse (that is, to and from
      Cartesian coordinates).
 
-     So the Cartessian basis vector can be expressed in other coordinate
+So the Cartessian basis vector can be expressed in other coordinate
      systems:
-     \verbatim
->>>print X.polar()	
-radius=1.0, theta=1.57079632679, phi=0.0
 
->>>print Y.cylinder()
-rho=1.0, theta=1.57079632679, z=0.0
+	>>>print X.polar()	
+	radius=1.0, theta=1.57079632679, phi=0.0
 
->>>print Z.parabola()
-u=1.41421356237, v=0.0, theta=0.0
-     \endverbatim
+	>>>print Y.cylinder()
+	rho=1.0, theta=1.57079632679, z=0.0
 
-     These vector classes are
-     <a href="https://en.wikipedia.org/wiki/Adapter_pattern">
-     adapter pattern</a>
-     interfaces to the Cartesian Vector: that is, when used in operations,
+	>>>print Z.parabola()
+	u=1.41421356237, v=0.0, theta=0.0
+
+These vector classes are [adapter pattern](https://en.wikipedia.org/wiki/Adapter_pattern)
+interfaces to the Cartesian Vector: that is, when used in operations,
      they convert themselves to Cartesian, do the operation, and then
      convert back to their original coordinate system. That allows
      you to mix coordinates systems seemlessly, because a vector is a
      vector, regardless of the coordinate system in which it is expressed.
      Hence \f$ \hat x \times \hat y = \hat z \f$ in any coordainte system:
-     \verbatim
->>>print X.polar() ^ Y.cylinder()
-radius=1.0, theta=0.0, phi=3.14159265359
+     
+     
+	>>>print X.polar() ^ Y.cylinder()
+	radius=1.0, theta=0.0, phi=3.14159265359
 
->>>print (X.polar() ^ Y.cylinder()) * Z
-w=1.0
-     \endverbatim
+	>>>print (X.polar() ^ Y.cylinder()) * Z
+	w=1.0
 
-     @subsubsection reiman Non-Euclidean Geometry
-     While it is tempting to go fully Non-euclidean, the
-     computational and architectural hit is too high for every day purposes.
-     (That is: every dot product becomes a double contraction with the
-     metric tensor; architecurally, every vector needs it's own set of
-     metric co/contra/mixed metric tensors.)
-     Nevertheless,
-     their is an experimental implementation (riemann.py), where Vectors
-     are attached to a metric space.
 
-     @subsubsection ssc Space Curves
-     Space curves and the Frenet-Serret formalism is available in
+Space Curves
+     
+Space curves and the Frenet-Serret formalism is available in
      (motion.py). The space curve comprises an (array_like) Vector and a
      one dimensional time array, which serves as a parameter in the
      parameterization of the 3D curve.
 
-     Take an array like Vector representing a helical path:
-     \verbatim
+Take an array like Vector representing a helical path:
+   
      >>>t = linspace(0, 2*pi, 100000)  # parameter
      >>>v = X*sin(3*t) + Y*cos(3*t) + Z*t/1000
      >>>print type(v)
      <class 'geo.metric.euclid.vector.Vector'>
-     \endverbatim
-     That array-like Vector can be made into a spacecurve by formalizing
+     
+That array-like Vector can be made into a spacecurve by formalizing
      the parameter $t$:
-     \verbatim
+     
      >>>v = v.spacecurve(t)
      >>>print type(v)
      <class 'geo.metric.frenet_serret.motion.SpaceCurve'>
-     \endverbatim
-     The SpaceCurve now has veclocity, acceleration (linear and angular),
+     
+The SpaceCurve now has veclocity, acceleration (linear and angular),
      torsion and curvature (and radii thereof), along with the Tangent,
      Normal, and Binormal coordinate system at every point, e.g.:
-     \verbatim
+  
      >>>print v.TNB()[100000//6].broadcast(round)
-[-1.0, -0.0, 0.0]
-[-0.0, 1.0, 0.0]
-[-0.0, -0.0, -1.0]
-     \endverbatim     			
-     where the result has been rounded for clarity.
+	[-1.0, -0.0, 0.0]
+	[-0.0, 1.0, 0.0]
+	[-0.0, -0.0, -1.0]
+       			
+where the result has been rounded for clarity.
      
-     @subsubsection complex Complexification
+Complexification
      The bulk of geo is all about real vectors spaces: while vectors
      can have complex components, they still live in \f$\mathbb R^3\f$,
      and as such,
      their bilinear inner product is not positive definite:
-     \verbatim
+
      >>>v = X + 1j*Y
      >>>print v*v
      w=0j
-     \endverbatim
-     In gibbs.py, the
+     
+In gibbs.py, the
      real vector.Vector objects are placed into
-     \f$\mathbb C^3\f$: they are the
+     $\mathbb C^3$: they are the
      same vectors, but their sesqui-linear inner product is positive
      definite. The outer product is also complexified, making them
      the ideal tool for representing polarization density matrices
      (faraday.py).
-     \verbatim
+     
      >>>v = v.gibbs()  # same vector, now lives in a new space
      >>>print type(v)
      <class 'geo.metric.euclid.gibbs.Gibbs'>
@@ -275,9 +267,9 @@ w=1.0
      [(1+0j), -1j, 0j]
      [1j, (1+0j), 0j]
      [0j, 0j, 0j]
-     \endverbatim
+ 
 
-     @subsubsection ho Higher Rank Tensors
+Higher Rank Tensors
      3rd and 4th rank tensors, and a class-factory capable of making
      any order tensor are available in euclid/three.py and
      euclid/four.py, respectively.
@@ -285,110 +277,106 @@ w=1.0
      are supported, along with index contraction and other forms of
      index gymnastics.
 
-     In practice, rank 2 and rank 4 tensors usually have some degree of
+In practice, rank 2 and rank 4 tensors usually have some degree of
      symmetry;
      voigt.py implements a traditional method for dealing with
      major and or minor symmetric fourth rank tensors such as electric
      susceptibility and elasticity, .e.g:
+     
+     
      >>>print voigt.voigt(((X&X&X&X) +2*(Y&Y&Y&Y) + 3*(Z&Z&Z&Z) - 4*(X&X&Y&Y))
      ...: )
-[[ 1. -4.  0.  0.  0.  0.]
- [ 0.  2.  0.  0.  0.  0.]
- [ 0.  0.  3.  0.  0.  0.]
- [ 0.  0.  0.  0.  0.  0.]
- [ 0.  0.  0.  0.  0.  0.]
- [ 0.  0.  0.  0.  0.  0.]]
-     \endverbatim()
-
-     @subsubsection albert Einstein Summation Notation
-     Through the wonders of python and
-     <a href="https://docs.python.org/2/reference/datamodel.html#customizing-attribute-access">
-     complete class customization</a>,
-     <a href="https://en.wikipedia.org/wiki/Einstein_notation">Einstein
-     summation notation</a> is _fully_ supported (einstein/albert.py).
+	[[ 1. -4.  0.  0.  0.  0.]
+ 	[ 0.  2.  0.  0.  0.  0.]
+ 	[ 0.  0.  3.  0.  0.  0.]
+ 	[ 0.  0.  0.  0.  0.  0.]
+ 	[ 0.  0.  0.  0.  0.  0.]
+ 	[ 0.  0.  0.  0.  0.  0.]]
+   
+   
+   Einstein Summation Notation
+     Through the wonders of python and [complete class customization](https://docs.python.org/2/reference/datamodel.html#customizing-attribute-access)
+     [Einstein summation notation]
+     (https://en.wikipedia.org/wiki/Einstein_notation) is _fully_ supported (einstein/albert.py).
      For example,
      a second rank Tensor only has 9 attributes: 'xx', 'xy', 'xz',
      'yx', 'yy', 'yz', 'zx', 'zy', and 'zz', and it has a trace
      method:
 
-     \verbatim
+
      s = T.trace()
-     \endverbatim
 
-     which explicitly computes:
+
+which explicitly computes:
      
-     \verbatim
+    
      s = T.xx + T.yy + T.zz
-     \endverbatim
+    
 
-     which is indeed the trace of the tensor. One may also code:
+which is indeed the trace of the tensor. One may also code:
      
-     \verbatim
-     s = T.ii
-     \endverbatim
-
-     Of course, their is no 'ii' attribute (or property). Nevertheless,
+    
+s = T.ii
+   
+Of course, their is no 'ii' attribute (or property). Nevertheless,
      geo regonizes this as Einstein summation and goes ahead and computes
      the trace. Likewise for the transpose:
 
-     \verbatim
+     
      t_ji = T.ji  # same as T.T, or T.transpose(1,0)
-     \endverbatim
-
-     (The reversed alphabetical order indicates transposition). Rows and columns
+     
+(The reversed alphabetical order indicates transposition). Rows and columns
      can also be extracted (as Vectors):
 
-     \verbatim
+     
      row0 = T.xi
      col2 = T.ix
-     \endverbatim
+    
 
-     This is the preferred method of extracting "rows" and "columns" because
+This is the preferred method of extracting "rows" and "columns" because
      Tensor don't have rows and columns, and the names are antithetical to
      geo's ethos.
 
-     Of course, this seems rather cute for rank-2 Tensors (and down right
+Of course, this seems rather cute for rank-2 Tensors (and down right
      silly for Vectors), it is quite powerful when dealing with high
      rank tensors: You really can write code that looks _exactly_ _like_
      the equations in your text book. For example:
-     \n
-     The explicit cross product (as the partial trace of a rank-5
+ 
+ 
+The explicit cross product (as the partial trace of a rank-5
      tensor):
-     \n\n
-     \f$ ({\bf{\vec a  \times \vec b}})_i \equiv \epsilon_{ijk}a_jb_k =
-     ({\bf{\epsilon \vec a\vec b}})_{ijkjk} \f$
-     \n\n
-     can be coded as:
+     $ ({\bf{\vec a  \times \vec b}})_i \equiv \epsilon_{ijk}a_jb_k =
+     ({\bf{\epsilon \vec a\vec b}})_{ijkjk} $
+can be coded as:
 
-     \verbatim
+     
      a_cross_b = (EPSILON & a & b).ijkjk
-     \endverbatim
+     
 
-     Similarly, the determinant
-     \n
-     \f$ \det{\bf T} = \left| \begin{array}{ccc}
+Similarly, the determinant
+    $$ \det{\bf T} = \left| \begin{array}{ccc}
      T_{xx} & T_{xy} & T_{xz} \\
      T_{yx} & T_{yy} & T_{yz} \\
      T_{zx} & T_{zy} & T_{zz}
      \end{array} \right| =
-     \epsilon_{ijk}T_{xi}T_{yj}T_{zk} \f$
-     \n\n     
-     can be computed via triple contraction of a rank-6
+     \epsilon_{ijk}T_{xi}T_{yj}T_{zk} $$
+   
+   
+can be computed via triple contraction of a rank-6
      tensor (with explicit labeling of the fixed indices):
-     \verbatim
+     
      det_t = (EPISLON & T.xi & T.yi & T.zi).ijkijk
-     \endverbatim
-     Another formulation as 
+    
+Another formulation as 
      the  6-fold contraction of a rank-12 tensor;
-     \n\n
-     \f$\det(T)=\frac{1}{6}\epsilon_{ijk}\epsilon_{lmn}T_{il}T_{jm}T_{kn}\f$
-     \n\n
-     is coded as:
-     \verbatim
+     $$\det(T)=\frac{1}{6}\epsilon_{ijk}\epsilon_{lmn}T_{il}T_{jm}T_{kn}$$
+     
+is coded as:
+    
      det_t = (EPSILON & EPSILON & T & T & T).ijklmniljmkn / 6
-     \endverbatim
+    
 
-     Note that the code matches math equations _exactly_. The latter
+Note that the code matches math equations _exactly_. The latter
      implicitly runs a 12-deep loop to build and then contract the
      531,441 components of a rank-12 tensor--while it is not the most
      computationaly efficient algorithm, it does demonstrate the
@@ -397,7 +385,7 @@ w=1.0
      when considering the rotational symmetries  of rank-3+ tensors...
 
 
-     @subsection irreps Irreducible Representations and Subspaces
+Irreducible Representations and Subspaces
      Here we delve into a rather involved topic: the irreducible
      representations and subspaces of the general Cartesian tensor.
      An irreducible subspace of a tensor is some linear combination of
