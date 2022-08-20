@@ -347,10 +347,8 @@ Of course, this seems rather cute for rank-2 Tensors (and down right
      the equations in your text book. For example:
  
  
-The explicit cross product (as the partial trace of a rank-5
-     tensor):
-     $ ({\bf{\vec a  \times \vec b}})_i \equiv \epsilon_{ijk}a_jb_k =
-     ({\bf{\epsilon \vec a\vec b}})_{ijkjk} $
+The explicit cross product (as the partial trace of a rank-5 tensor):
+$ ({\bf{\vec a  \times \vec b}})_i \equiv \epsilon_{ijk}a_jb_k = ({\bf{\epsilon \vec a\vec b}})_{ijkjk} $
 can be coded as:
 
      
@@ -358,14 +356,6 @@ can be coded as:
      
 
 Similarly, the determinant
-$$ \det{\bf T} = \left| \begin{array}{ccc}
-     T_{xx} & T_{xy} & T_{xz} \\
-     T_{yx} & T_{yy} & T_{yz} \\
-     T_{zx} & T_{zy} & T_{zz}
-     \end{array} \right| =
-     \epsilon_{ijk}T_{xi}T_{yj}T_{zk} $$
-   
-   
 can be computed via triple contraction of a rank-6
      tensor (with explicit labeling of the fixed indices):
      
