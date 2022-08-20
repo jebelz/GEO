@@ -358,7 +358,7 @@ can be coded as:
      
 
 Similarly, the determinant
-    $$ \det{\bf T} = \left| \begin{array}{ccc}
+$$ \det{\bf T} = \left| \begin{array}{ccc}
      T_{xx} & T_{xy} & T_{xz} \\
      T_{yx} & T_{yy} & T_{yz} \\
      T_{zx} & T_{zy} & T_{zz}
