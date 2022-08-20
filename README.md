@@ -1,6 +1,6 @@
-THE Package for Geometry on Earth.
+# THE Package for Geometry on Earth.
 
-Intro Introduction
+## Intro Introduction
 
 The point of this package is to allow you to do manifestly covariant
      vector operations (and transformations), both abstractly and with
@@ -29,7 +29,7 @@ Furthermore, all transforming objects are (polymorphic)
      approriate array structure (or not) according to numpy's broadcasting
      rules.
 
-Manifest Covariance
+### Manifest Covariance
 
 [Manifest Covariance](https://en.wikipedia.org/wiki/Manifest_covariance),
 [coordinate free](https://en.wikipedia.org/wiki/Coordinate-free")
@@ -109,12 +109,12 @@ Operations are independent of representations. (NB: that's, little _r_
      Representations, and those you should not mix--but who would do that
      anyway?).
 
-Geo-Metric:
+## Geo-Metric:
 There are 2 main and 2 (or more) ancillary sub-packages:
 
-Euclid and Euler
+### Euclid and Euler
 
-Cartesian Vectors in R3.
+#### Cartesian Vectors in R3.
 The geo.metric package (euclid.py) defines the basics for rank 0
      (scalar.py), 1 (vector.py),
      2 (tensor.py), and higher objects in real Euclidean
@@ -123,7 +123,7 @@ The geo.metric package (euclid.py) defines the basics for rank 0
      aka
      $\mathbb R^3$.
 
-Transformations in SO(3)
+#### Transformations in SO(3)
 
 Matrix __SO(3)__  (via tensor.py), quaternion __SU(2)__  (euler/hamilton.py),
      transformations are implemented.
@@ -144,7 +144,7 @@ for all classes of _T_. That is, T could be a "tensor", euler angle,
 It is an object's job, as a polymorphic function emulator, to use the
 correct method to transform its argument.
 
-Transformations GL(3, R) (aka Aff(3))
+##### Transformations GL(3, R) (aka Aff(3))
 In the context of geo, an
      [affine transformation](https://en.wikipedia.org/wiki/Affine_transformation)is a general linear transformations from
      R3 -> R3
@@ -164,7 +164,7 @@ and are supported in affine.py. While __M__ can be any object that
      infitesimal translations and their duals (3 infitesimal rotations)
      together form the so-called generators of rigid Euclidean space.
 
-Non-Cartesian Coordinates.
+### Non-Cartesian Coordinates.
      Support for non-Cartesian vector representations
      is provided. Spherical (aka polar)
      (geo.metric.euclid.kant.spherical.Polar), cylindrical
@@ -206,7 +206,7 @@ interfaces to the Cartesian Vector: that is, when used in operations,
 	w=1.0
 
 
-Space Curves
+### Space Curves
      
 Space curves and the Frenet-Serret formalism is available in
      (motion.py). The space curve comprises an (array_like) Vector and a
@@ -238,7 +238,7 @@ The SpaceCurve now has veclocity, acceleration (linear and angular),
        			
 where the result has been rounded for clarity.
      
-Complexification
+#### Complexification
      The bulk of geo is all about real vectors spaces: while vectors
      can have complex components, they still live in \f$\mathbb R^3\f$,
      and as such,
@@ -269,7 +269,7 @@ In gibbs.py, the
      [0j, 0j, 0j]
  
 
-Higher Rank Tensors
+#### Higher Rank Tensors
      3rd and 4th rank tensors, and a class-factory capable of making
      any order tensor are available in euclid/three.py and
      euclid/four.py, respectively.
@@ -294,7 +294,7 @@ In practice, rank 2 and rank 4 tensors usually have some degree of
  	[ 0.  0.  0.  0.  0.  0.]]
    
    
-   Einstein Summation Notation
+###   Einstein Summation Notation
      Through the wonders of python and [complete class customization](https://docs.python.org/2/reference/datamodel.html#customizing-attribute-access)
      [Einstein summation notation]
      (https://en.wikipedia.org/wiki/Einstein_notation) is _fully_ supported (einstein/albert.py).
@@ -385,7 +385,7 @@ Note that the code matches math equations _exactly_. The latter
      when considering the rotational symmetries  of rank-3+ tensors...
 
 
-Irreducible Representations and Subspaces
+### Irreducible Representations and Subspaces
      Here we delve into a rather involved topic: the irreducible
      representations and subspaces of the general Cartesian tensor.
      An irreducible subspace of a tensor is some linear combination of
@@ -400,33 +400,33 @@ Irreducible Representations and Subspaces
      
 
 
-     @subsubsection we Spherical Tensors: 3 x 3 = 5 + 3 + 1
-     This does not refer to spherical coordinates, rather the decomposition
+ #### Spherical Tensors: 3 x 3 = 5 + 3 + 1
+     
+ This does not refer to spherical coordinates, rather the decomposition
      of Vectors (wigner/eckart/one.py) and
      Tensors (wigner/eckart/two.py) into irreducible representations
      of __SO(3)__.
      Thus, the _x_ or _xy_-like
      attributes are replaced by
      orbital and
-     azimuthal quantum numbers: \f$(l, m)\f$-- also knows as degree and order.
+     azimuthal quantum numbers:$(l, m)$-- also knows as degree and order.
      The signifcance of these is that they are eigentensors of rotations
      about a fixed axis.
 
-     For rank-1, the 3 spherical basis states are eigenvectors of z-rotations.
+ For rank-1, the 3 spherical basis states are eigenvectors of z-rotations.
      This is similar to Cartesian vector addition being isomorphic to
      the translation operators acting on position eigenstates (which are plain
      old position vectors). Because translation commute, the construction
      of higher rank tensors is straightforward. A rank-N basis state is just
      the polyadic product of N basis vectors (e.g.
-     \f$ {\bf \hat{x}\hat{x}\hat{y}}\f$). Rotations do not commute,
+     $ {\bf \hat{x}\hat{x}\hat{y}}$). Rotations do not commute,
      so polyadic products of spherical basis vectors are not necessarily
      eigentensors of rotations. This is entirely analgous to the construction
-     of
-     <a href="https://en.wikipedia.org/wiki/Spherical_harmonics#Spherical_harmonics_in_Cartesian_form">spherical harmonics in Cartesian coordinates</a>,
+     of [spherical harmonics in Cartesian coordinates](https://en.wikipedia.org/wiki/Spherical_harmonics#Spherical_harmonics_in_Cartesian_form"),
      and it gets complicated, fast. Nevertheless, geo goes there--though
      it requires and entirely complex subpackage (geo.metric.wigner).
 
-     In geo's implementation, the elements of spherical tensors are not
+In geo's implementation, the elements of spherical tensors are not
      accessed by
      attributes, rather, the instances are containers
      of irreducible
@@ -434,7 +434,7 @@ Irreducible Representations and Subspaces
      Methods allow conversions between
      the 2 representations (ec.py, ka.py, and rt.py).
      So for instance:
-     \verbatim
+     
      
      >>>M = Tensor(xx, xy, xz, ..., zz)
      >>>print M.xx, M.xy, M.xz, ..., M.zz
@@ -442,14 +442,14 @@ Irreducible Representations and Subspaces
      >>>T = M.spherical()
      >>>print T[0, 0], T[1, -1], T[2, -2], ..., T[2, 2]
 
-     \endverbatim
-     are represenations of the same geometric object, as very different
+     
+are represenations of the same geometric object, as very different
      python objects.
 
-     Applications to polarization observables are
+Applications to polarization observables are
      demonstrated in faraday.py .
 
-     The full transformation matrices associated with
+The full transformation matrices associated with
      spherical representations of any dimensions 2j+1 for integer and
      1/2-integer representations (j)  are in wigner.py, which also
      implements the decomposition of tensor-product spaces into
@@ -460,11 +460,11 @@ Irreducible Representations and Subspaces
      over different kets (eigenstates of the total angular momentum
      and total z-projection). [This is truly dialed-in python, _Eds._]
 
-     The preliminary implementation of rank 3 (wigner/eckart/three.py) and
+The preliminary implementation of rank 3 (wigner/eckart/three.py) and
      rank 4 (wigner/eckart/four.py) is underway; however, these are difficult
      (i.e., publishable) to implement.
 
-     Spherical decomposition of complete Cartesian tensors requires and
+Spherical decomposition of complete Cartesian tensors requires and
      understanding of isotropic tensors, which are available up to 
      rank 6 in syzygy.py: these
      are tensors that are independent of coordinate system, which for
@@ -474,38 +474,33 @@ Irreducible Representations and Subspaces
      For higher ranks there are more than one isotropic tensor per rank,
      and they are not all linearaly independent.
 
-     Additional tools for the alternating tensor, aka Levi-Civita (pseudo)-
-     tensor/symbol are in levi_civita.py. The
-     <a href="https://en.wikipedia.org/wiki/Kronecker_delta#Generalizations_of_the_Kronecker_delta">
-     generalized Kronecker deltas</a>
+Additional tools for the alternating tensor, aka Levi-Civita (pseudo)-
+     tensor/symbol are in levi_civita.py. The [generalized Kronecker deltas]
+     (https://en.wikipedia.org/wiki/Kronecker_delta#Generalizations_of_the_Kronecker_delta)
      can be computed in kronecker.py.
      
 
-     @subsubsection symrep Schur-Weyl Duality
+## Schur-Weyl Duality
      Rank-2 tensors have two subspaces closed under rotations which
      are defined by their symmetric and antisymmetric parts. These
      are constructed by symmetric and antisymmetric permutations of their
      two indices--which is rather simple-as there are only 2 permutations.
      Higher rank _n_ tensors with _n_ indices have more complicated
      subspaces,and they can be computed from the various _n!_ permutations
-     of their indices. This is the domain of
-     <a href="https://en.wikipedia.org/wiki/Schur–Weyl_duality">Schur-Weyl
-     Duality</a>: 
+     of their indices. This is the domain of [Schur-Weyl Duality]
+     ("https://en.wikipedia.org/wiki/Schur–Weyl_duality")
      The symmetric group on _n_-letters,
-     \f$ Sym(n) \f$ can be decomposed into irreducible representations based
-     on the integer partitions of \f$ n \f$ (really?). So to that end,
+     $ Sym(n) $ can be decomposed into irreducible representations based
+     on the integer partitions of $ n $ (really?). So to that end,
      there is monte.py (rimshot), which provides classes for the
-     <a href="https://en.wikipedia.org/wiki/Symmetric_group">
-     symmetric group</a>,
-     <a href="https://en.wikipedia.org/wiki/Permutation">permutations</a>,
-     and
-     <a href="https://en.wikipedia.org/wiki/Cyclic_permutation">cycles</a>.
-
-     The
-     <a href="https://en.wikipedia.org/wiki/Robinson–Schensted_correspondence">
-     Robinson-Schensted Correspondence</a> then relates irreducible
-     representations of the symmetric group to
-     <a href="https://en.wikipedia.org/wiki/Young_tableau">Young Tableaux</a>
+     [symmetric group](https://en.wikipedia.org/wiki/Symmetric_group),
+     [permutations](https://en.wikipedia.org/wiki/Permutation),
+     and [cycles](https://en.wikipedia.org/wiki/Cyclic_permutation)
+     The [Robinson-Schensted Correspondence]
+     (https://en.wikipedia.org/wiki/Robinson–Schensted_correspondence)
+     then relates irreducible
+     representations of the symmetric group to [Young Tableaux]
+     (https://en.wikipedia.org/wiki/Young_tableau)
      (young.py). They provides a
      link to partitions of integers, which is taken up in pascal.py,
      which starts with Pochammer symbols and winds up with integer
@@ -515,21 +510,21 @@ Irreducible Representations and Subspaces
      polynomials, which are required for the Wigner D matrices.
      Also: since Young diagrams are like a multiset, a multiset object
      is available in de_bruijn.py, but it's really just a hashable
-     <a href="https://docs.python.org/2/library/collections.html#collections.Counter">
-     collections.Counter.</a>
-     (The theory of conjugacy classes in finite
-     groups necessitates multisets with keys that are themselves multisets).
+     [collections.Counter.](https://docs.python.org/2/library/collections.html#collections.Counter)
+     
+The theory of conjugacy classes in finite
+     groups necessitates multisets with keys that are themselves multisets.
 
-     This subpackage also supports some results from the representation
+This subpackage also supports some results from the representation
      theory of finte groups, permutations, and combinatorics. The
      Young Tableaux formalism also has applications to the representation
      of Lie groups, which are commonly used to understand the quark
      (and separately the gluon) structure of matter
      (gelfand_tsetlin/__init__.py).
 
-     @section yvec Geo-Detic:
+## Geo-Detic:
 
-     @subsection coo Coordinates and Ellipsoids
+#### Coordinates and Ellipsoids
      The geo.detic package implements geo.metric objects on the Earth
      via the introduction of coordinates (coordinates.py), which can
      be represented in Earth Centered Earth Fixed
@@ -539,37 +534,36 @@ Irreducible Representations and Subspaces
      or sphere (geo.detic.coordinates.SCH) relative to a
      geo.detic.origins.PegPoint.
 
-     The coordinates are
-     <a href="https://docs.python.org/2/library/abc.html">abstract</a>,
-     and only have
-     <a href="https://en.wikipedia.org/wiki/Class_(computer_programming)#Abstract_and_concrete">
-     concrete</a> meaning with respect
+The coordinates are[abstract] (https://docs.python.org/2/library/abc.html),
+     and only have [concrete](https://en.wikipedia.org/wiki/Class_(computer_programming)#Abstract_and_concrete)
+     meaning with respect
      to an ellipsoid (ellipsoid.py). 
      Although preference is given to WGS84 (wgs84.py), a variety of
      historic ellipsoids are available (almanac.py), as well as user-defined
      ellipsoids and others in the Solar System (copernicus.py).
      
-     Analytic computations of covariant and contravariant basis vectors
+Analytic computations of covariant and contravariant basis vectors
      linking LLH and SCH to their canonical Cartesian coordinates
      systems (ECEF and LTP, respectively) are included (christoffel.py).
      That is: you always have both the tangent basis vectors
-     (_e.g._, \f$
+     (_e.g._, $
      (\frac{\partial  \vec r}{\partial s},
      \frac{\partial  \vec r}{\partial c},
-     \frac{\partial  \vec r}{\partial h})\f$
-     which are not-necessarity
+     \frac{\partial  \vec r}{\partial h})$
+which are not-necessarity
      normailzed vectors running along the direction of change of s, c, and h,
      and the cotangent basis vectors
-     (_e.g._ \f$
+     (_e.g._ $
      {\bf\vec{\nabla}}s,
      {\bf\vec{\nabla}}c,
      {\bf\vec{\nabla}}h)
-     \f$), which are the gradients of the local coordinates (that is, they're
+     $), which are the gradients of the local coordinates (that is, they're
      normal to surfaces of constants s, c, and h--and likewise for latitude,
      longitude and height with resepct to ECEF).
      
-     @subsection The Geoids     
-     Support for interpolation
+## The Geoids     
+     
+Support for interpolation
      on geoids is provided (egm08.py, egm96.py). While the former
      requires the
      <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008/">
@@ -577,15 +571,16 @@ Irreducible Representations and Subspaces
      __EGM96__ is contained within this package.
 
 
-     @subsection utm Universal Transverse Mercator
+### Universal Transverse Mercator
      UTM (utm.py, kruger.py) support is under development. A class for seamless
      use of DD MM SS.ssss format is provided (preliminarily) in dms.py
 
      
-     @section four Geo-Desic
-     Because it's there.
+## Geo-Desic
      
-     The geo.desic sub-package goes beyond 6-DoF vector transformations in
+Because it's there.
+     
+The geo.desic sub-package goes beyond 6-DoF vector transformations in
      __E3__ with a fully developed Clifford algebra (clifford.py), the complete
      quaternion group __H__ (geo/desic/hamilton.py), and dynamic creation of
      Cayley-Dickson extension algebras (cayley_dickson.py).
@@ -598,7 +593,7 @@ Irreducible Representations and Subspaces
      Needless-to-say, a spinor representation is given
      in cartan.py.
   
-     You'll also note SO3.py: it only has 2 lines of computation (2!),
+You'll also note SO3.py: it only has 2 lines of computation (2!),
      but what it does is amazing. You assign a vector to each of
      the generators of rotations in the fundamental rep (the complex
      2x2 matrices that rotate 2 component spinors), and then you write
@@ -612,7 +607,7 @@ Irreducible Representations and Subspaces
      of the algebra.. it's the proliferation of "3"s that have
      totally different meanings that causes confusion (at least for me).
 
-     Preliminary implementation of Lie algebras (lie.py), and SU(3)
+Preliminary implementation of Lie algebras (lie.py), and SU(3)
      (gell_mann.py) are dubious, at best-- but you can convert the
      3-component fundamental representation (per the prior paragraph)
      into the \f$3^2-1=8\f$ adjoint representation
@@ -623,48 +618,49 @@ Irreducible Representations and Subspaces
      between fundamental and adjoint representations, which is a bit
      obtuse in the rotation group).
 
-     @section comp Computational Implementation
-     The point of this package is to provide support for using manifestly
+
+# Computational Implementation
+The point of this package is to provide support for using manifestly
      covariant formulations in __E3__ as applied to geodesy.
 
-     The idea of manifest covariance is important: scalars and not numbers,
+The idea of manifest covariance is important: scalars and not numbers,
      vectors are not arrays, and tensors and not matrices. Each is a geometric
      object who's essence does not depend on any particular representation
      in a coordinate system; moreover, they have well defined transformational
      properties based on their rank.
 
-     Similarly, when applied to geodesy: points on the Earth and their,
+Similarly, when applied to geodesy: points on the Earth and their,
      relation to each other do not depend any particular coordinate system
      choosen to represent them.
 
-     Thus: relations and equation should be expressible in term that do
+Thus: relations and equation should be expressible in term that do
      not depend on coordinates (manifest covariance); nevertheless, when
      implementing the equations, a representation must be chosen: the computer
      needs numbers.
 
-     This package is the tool to do just that: one can create geometric
+This package is the tool to do just that: one can create geometric
      objects in suitable coordinates, do covariant operations on them,
      and then express the results in a suitable coordinate system.
      
-     ARRAYS vs. VECTORS:
-     -------------------
-     This package is a fully polymorphic object oriented vector and coordinate
+## ARRAYS vs. VECTORS:
+   
+This package is a fully polymorphic object oriented vector and coordinate
      package, focused on geo-location on an arbitrary oblate ellipsoid of
      revolution.
 
-     It is for use with large data sets represented by
-     <a href="http://www.numpy.org">numpy.ndarrays</a>-
+It is for use with large data sets represented by [numpy.ndarrays]
+     (http://www.numpy.org)-
      or not- numpy is only required if you use it. (The numpy-interface
      is factored out into mix-in classes (arraylike.py), and functions
      chosen at import time (trig.py). (You do not need numpy installed
      to use the core package).)
 
-     It is for use with manifestly covariant vector transformations: that is:
+It is for use with manifestly covariant vector transformations: that is:
      the user does operations with vectors and tensors-- not their
      components. Yes, you start off with components, and you finish with
      components, but in between-- they don't really matter.
      
-     RESULT: vectors have attributes (_x_, _y_, ...) as do
+RESULT: vectors have attributes (_x_, _y_, ...) as do
      coordinates (_lat_, _lon_, ...)- these are NOT, and NEVER WILL BE,
      represented as sequences
      ([0], [1], ...). That you would do it in lesser languages such as Fortran,
@@ -672,11 +668,11 @@ Irreducible Representations and Subspaces
      natural urge, which evolved over years of primitive obsession, is to do
      so. Fight it.
 
-     Array, sequence, container, and iterator properties are ALWAYS separated
+Array, sequence, container, and iterator properties are ALWAYS separated
      from vector, tensor, coordinate, Euler angle, quaternion properties: THEY
      NEVER MIX. EVER. EVER. EVER. EVER.
 
-     __EVER__.
+__EVER__.
 
 		 ....XXXXXXXX XX     XX XXXXXXXX XXXXXXXX  
      		 XX       XX     XX XX       XX     XX 
@@ -687,20 +683,19 @@ Irreducible Representations and Subspaces
      		 XXXXXXXX    XXX    XXXXXXXX XX     XX 
 
    
-     Needless-to-say, there is a caveat for spherical tensors--which have
+ Needless-to-say, there is a caveat for spherical tensors--which have
      NO attributes, as they _are_ containers of eigenstates.
 		 
-     POLYMORPHISM:
-     ------------
-     This is the point of OO, and it is strongly supported. The point is, you
+## POLYMORPHISM:
+    
+This is the point of OO, and it is strongly supported. The point is, you
      DO NOT need to know which kind of coordinate you have when using it. For
      example if you have data, "platform" referenced to a coordinate system,
      and you NEED that data in geodetic coordinates (LLH), you just call the
      method:
 
-     \verbatim	    >>>platform.llh()
-     \endverbatim
-
+     >>>platform.llh()
+     
      It does not matter if "platform" is in LLH already, or in ECEF, or in SCH,
      or in a tangent plane coordinate system. Moreover, if you have another
      point, "target"
