@@ -85,23 +85,25 @@
      a vector, and it knows how to compute it, regardless of how the
      coordinates of NASA Goddard were specified. That is, it might be that:
 
-\verbatim
+	\verbatim
 
-gsfc = almanac.ALMANAC["AIRY 1830"].LLH(38.9915337403, -76.85, 548)
+	gsfc = almanac.ALMANAC["AIRY 1830"].LLH(38.9915337403, -76.85, 548)
 
-\endverbatim
+	\endverbatim
 
 which is a different coordinate system with respect to a different
       ellipsoid -- but the meaning of the point does not depend on its
      representation. Hence:
 
-\verbatim
+	\verbatim
 
 >>>print repr(jpl - gsfc)
+
 geo.metric.euclid.vector.Vector(-3622444.0, 177651.0, -426628.0)
 
 
-\endverbatim
+	\endverbatim
+
      is the ECEF vector connecting them.
      Furthermore, if you add a vector to a point:
 
