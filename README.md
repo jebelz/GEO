@@ -347,9 +347,8 @@ Of course, this seems rather cute for rank-2 Tensors (and down right
      the equations in your text book. For example:
  
  
-The explicit cross product (as the partial trace of a rank-5 tensor):
-$ ({\bf{\vec a  \times \vec b}})_i \equiv \epsilon_{ijk}a_jb_k = ({\bf{\epsilon \vec a\vec b}})_{ijkjk} $
-can be coded as:
+The explicit cross product (as the partial trace of a rank-5 tensor) is coded as:
+
 
      
      a_cross_b = (EPSILON & a & b).ijkjk
@@ -1253,16 +1252,16 @@ Some invariants:
 
 	abs(T) = T.L2norm() = T.norm([l=2])
 
- $ \sqrt{\sum_{ij}T_{ij}^2}$
+ $$ \sqrt{\sum_{ij}T_{ij}^2} $$
  
 	Tr(T) = T.trace() = T.contract(0, 1) = T.ii
 
-$ \sum_{ij}T_{ij}\delta_{ij}\equiv T_{ii}$.
+$$ \sum_{ij}T_{ij}\delta_{ij}\equiv T_{ii} $$
 
 	det(T) = T.det()
 
       
-$ m_{1i}  m_{2j}  m_{3k}  \epsilon_{ijk} $
+$$ m_{1i}  m_{2j}  m_{3k}  \epsilon_{ijk} $$
  
 The 3 invariants can also be expressed as coefficients of
       the charactertics polynomial:
@@ -1277,11 +1276,11 @@ Vectors from Tensors:
 
    	      T.dual()
 
-$ \frac{1}{2}\epsilon_{ijk}T_{jk} $
+$$ \frac{1}{2}\epsilon_{ijk}T_{jk} $$
  
      T.vector()
 
-$ \epsilon_{ijk}T_{jk} $ 
+$$ \epsilon_{ijk}T_{jk} $$ 
 
 #### Rank-2 Tensor 
       
