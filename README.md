@@ -1586,7 +1586,7 @@ The full quaternion algebra, __H__, is represented in desic/hamilton.py.
 The Affine transformation is the most general linear function of
       a vector:
     
-$$ A(\vec x) = {\bf M}\vec x + \vec b$$.
+$$ A(\vec x) = {\bf M}\vec x + \vec b $$
       
 For proper euclidean transformation (det(M) = 1), than any rotating
       object will do. Dilations, skews, reflections, etc.. will require a
