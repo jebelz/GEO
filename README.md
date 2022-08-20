@@ -22,6 +22,7 @@
 
      \verbatim
 >>>x2 = T(x1)
+
      \endverbatim
      
      will rotate _x1_ to _x2_, regardless of how __T__ represents
