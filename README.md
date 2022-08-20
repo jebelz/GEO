@@ -1195,17 +1195,18 @@ There are (at least) 3 ways to look at rank-2 tensors:
 		     	       		      	      	     for attributes)\n
 ##### As Transforming Objects
 
-     (2) Geometric animals, U,  that transform as\n\n
+(2) Geometric animals, U,  that transform as
 
-     	 	   	    \f$U'_{ij} = T_{ik}  T_{jl}  U_{kl} \f$\n
+$$ U'_{ij} = T_{ik}  T_{jl}  U_{kl} $$
 
 ##### (Bi)Linear Maps
-     Tensors can be defined as bilinear maps from:\n
-     	 (3A) \f$ {\mathbb R}^3 \times {\mathbb R}^3 \rightarrow {\mathbb R} \f$ \n
-	 (3B)  \f$ {\mathbb R}^3  \rightarrow {\mathbb R}^3 \f$, \n
+ Tensors can be defined as bilinear maps from:
+ 
+$$ {\mathbb R}^3 \times {\mathbb R}^3 \rightarrow {\mathbb R} $$
+	 
 
-      geo chooses to represent tensors 9-components, representing the
-      weights of 9 Cartesian dyads--this is standard. Moreover, they
+geo chooses to represent tensors 9-components, representing the
+weights of 9 Cartesian dyads--this is standard. Moreover, they
       are used to represent the so-called
      direction-cosine-matrix (DCM), even though a DCM is technically not
      a tensor-- the python Zen (import this) "practicality beats purity"
@@ -1252,7 +1253,7 @@ Some invariants:
 
 	abs(T) = T.L2norm() = T.norm([l=2])
 
- $$ \sqrt{\sum_{ij}T_{ij}^2} $$
+$$ \sqrt{\sum_{ij}T_{ij}^2} $$
  
 	Tr(T) = T.trace() = T.contract(0, 1) = T.ii
 
