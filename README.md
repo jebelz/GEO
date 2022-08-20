@@ -13,7 +13,6 @@ The point of this package is to allow you to do manifestly covariant
      _write_ _is_ _the_ _same_ _for_ _either_ _case_ .
 
 Furthermore, all transforming objects are (polymorphic)
-     
 [function emulators](https://docs.python.org/2/reference/datamodel.html#emulating-callable-objects), so that
      the code you write depends neither on the type of the object doing
      the transformation (rotation matrix, quaternion, Euler angles, etc.)
@@ -24,7 +23,7 @@ Furthermore, all transforming objects are (polymorphic)
   		>>>x2 = T(x1)
 
  
-     will rotate _x1_ to _x2_, regardless of how __T__ represents
+ will rotate _x1_ to _x2_, regardless of how __T__ represents
      the rotation for  _x1_ a tensor of any rank, or quaternion. Both
      __T__ and _x1_ can be singleton or array-like, and _x2_ will have the
      approriate array structure (or not) according to numpy's broadcasting
