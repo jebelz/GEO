@@ -29,118 +29,99 @@ Furthermore, all transforming objects are (polymorphic)
      approriate array structure (or not) according to numpy's broadcasting
      rules.
 
-     @subsection mc Manifest Covariance
-     <a href="https://en.wikipedia.org/wiki/Manifest_covariance">
-     Manifest Covariance</a> (aka
-     <a href="https://en.wikipedia.org/wiki/Coordinate-free">
-     "coordinate free"</a>) vector operations means you
+Manifest Covariance
+
+[Manifest Covariance](https://en.wikipedia.org/wiki/Manifest_covariance),
+[coordinate free](https://en.wikipedia.org/wiki/Coordinate-free")
+vector operations means you
      can write equations and manipulate vectors without regards to their
      coordinate representation. This package is all about that. Scalars,
      Vectors, and Tensors must be created with a specific coordinate system
      in mind, but they need not be manipulated with regards to their
      components: operations are coordinate free.
 
-     When applied to Geodesy, the idea of a coordinate independent coordinate
+When applied to Geodesy, the idea of a coordinate independent coordinate
      system may seem nonsensical, but it is not. Instances of geodesy
      classes represent a point, or an array of points on Earth, and while
      they must be created in a coordinate system (say, ECEF, geodetic, or
      some local tangent system), transformation to other coordinate systems
      do not require explicit reference to their internal representation.
 
-     Needless-to-say, the concept of coordinate-independent objects conforms
-     well with
-     <a href="https://en.wikipedia.org/wiki/Object-oriented_programming">
-     object-oriented programming</a>. While the
-     <a href="https://en.wikipedia.org/wiki/Procedural_programming">
-     procedural</a> and/or
-     <a href="https://en.wikipedia.org/wiki/Imperative_programming">
-     imperative</a> programmer may
-     represent
-     <a href="https://en.wikipedia.org/wiki/Jet_Propulsion_Laboratory">
-     JPL's</a> coordinates as:
+Needless-to-say, the concept of coordinate-independent objects conforms
+     well with [object-oriented programming](https://en.wikipedia.org/wiki/Object-oriented_programming)
+     While the [procedural](https://en.wikipedia.org/wiki/Procedural_programming)
+     [imperative](https://en.wikipedia.org/wiki/Imperative_programming)
+     and/or programmer may [JPL's] (https://en.wikipedia.org/wiki/Jet_Propulsion_Laboratory)
+     represent 
+     coordinates as:
 
-     \verbatim jpl = [[34, 12, 6.1], [-118, 10, 18], 250] \endverbatim
-     he has to remember that address 0 contains 2 integers (latitude degrees
+     jpl = [[34, 12, 6.1], [-118, 10, 18], 250]
+     
+     
+he/she has to remember that address 0 contains 2 integers (latitude degrees
      and minutes) and a float (seconds) and so on, along with which 
      ellipsoid we're using, the OO user just says:
      
-     \verbatim 
      
      jpl = WGS84.LLH(DMS(34, 12, 6.1), DMS(-118, 10, 18), 210)
      
-     \endverbatim
-     
-     and the object knows, and remembers, exactly what that all means-- and
-     is much more than just records in a structure, because when you write 
 
-     \verbatim  
+     
+and the object knows, and remembers, exactly what that all means-- and
+     is much more than just records in a structure, because when you write 
      
      d = jpl - gsfc
      
-     \endverbatim
-     
-     it knows that the difference between 2 points in an affine space is
+it knows that the difference between 2 points in an affine space is
      a vector, and it knows how to compute it, regardless of how the
      coordinates of NASA Goddard were specified. That is, it might be that:
 
-	\verbatim
-
 	gsfc = almanac.ALMANAC["AIRY 1830"].LLH(38.9915337403, -76.85, 548)
-
-	\endverbatim
 
 which is a different coordinate system with respect to a different
       ellipsoid -- but the meaning of the point does not depend on its
      representation. Hence:
 
-	\verbatim
 
->>>print repr(jpl - gsfc)
+	>>>print repr(jpl - gsfc)
+	geo.metric.euclid.vector.Vector(-3622444.0, 177651.0, -426628.0)
 
-geo.metric.euclid.vector.Vector(-3622444.0, 177651.0, -426628.0)
-
-
-	\endverbatim
-
-     is the ECEF vector connecting them.
+is the ECEF vector connecting them.
      Furthermore, if you add a vector to a point:
 
-     \verbatim p = jpl + v
-     \endverbatim
-     it doesn't matter if _v_ is represented in Cartesian, polar, or
+     p = jpl + v
+     
+it doesn't matter if _v_ is represented in Cartesian, polar, or
      cylindrical coordinates- because that doesn't change the meaning of _v_,
      just the representation. Likewise, the affine point could be in ECEF,
      and the results are the same:
 
-     \verbatim  >>>jpl + v == jpl.ecef() + v.polar() 
+     >>>jpl + v == jpl.ecef() + v.polar() 
      	True \endverbatim
 
-     (It is the duty of the OO-programmer to implement these choices
+(It is the duty of the OO-programmer to implement these choices
      without _if_ - _then_ clauses: unlike functions acting on arrays,
-     objects know themselves and thus
-     <a href="https://en.wikipedia.org/wiki/Dynamic_dispatch">
-     dispatch</a> the right code
-     <a href="https://en.wikipedia.org/wiki/Late_binding">when
-     called upon</a> to do so.)
+     objects know themselves and thus [dispatch](https://en.wikipedia.org/wiki/Dynamic_dispatch)
+     the right code [when called upon](https://en.wikipedia.org/wiki/Late_binding)
      
-     Operations are independent of representations. (NB: that's, little _r_
+Operations are independent of representations. (NB: that's, little _r_
      representations. geo/ allows various group-theoretic big _R_
      Representations, and those you should not mix--but who would do that
      anyway?).
 
-     @section xvec Geo-Metric:
-     There are 2 main and 2 (or more) ancillary sub-packages:
+Geo-Metric:
+There are 2 main and 2 (or more) ancillary sub-packages:
 
-     @subsection euclid Euclid and Euler
+Euclid and Euler
 
-     @subsubsection svt Cartesian Vectors in R3.
-     The geo.metric package (euclid.py) defines the basics for rank 0
+Cartesian Vectors in R3.
+The geo.metric package (euclid.py) defines the basics for rank 0
      (scalar.py), 1 (vector.py),
      2 (tensor.py), and higher objects in real Euclidean
      \f$\mathbb E^3\f$ space, aka \f$\mathbb R^3\f$.
 
-     @subsubsection svt2 Transformations in SO(3)
-     Matrix __SO(3)__  (via tensor.py), quaternion __SU(2)__  (euler/hamilton.py),
+Transformations in SO(3)
+Matrix __SO(3)__  (via tensor.py), quaternion __SU(2)__  (euler/hamilton.py),
      transformations are implemented.
      Furthermore, various
      representation of the charts on __SO(3)__ (charts.py) allow Euler-angle
@@ -148,36 +129,30 @@ geo.metric.euclid.vector.Vector(-3622444.0, 177651.0, -426628.0)
      transformation of vectors is independent of the representation
      of the transform, _T_:
 
-     \verbatim v' = T(v)
-     \endverbatim
-
-     for all classes of _T_. That is, T could be a "tensor", euler angle,
+     v' = T(v)
+     
+for all classes of _T_. That is, T could be a "tensor", euler angle,
      versor, etc. Moreover, their argument doesn't need to be a vector:
 
-     \verbatim
-s' = T(v*v)  # == T(v) * T(v) == v*v          Rotates a scalar
-t' = T(v&v)  # == T(V) & T(v) == T*(v&v)*T.T  Rotates a rank-2 tensor.
-     \endverbatim
+	s' = T(v*v)  # == T(v) * T(v) == v*v          Rotates a scalar
+	t' = T(v&v)  # == T(V) & T(v) == T*(v&v)*T.T  Rotates a rank-2 tensor.
 
-     It is an object's job, as a polymorphic function emulator, to use the
-     correct method to transform its argument.
+It is an object's job, as a polymorphic function emulator, to use the
+correct method to transform its argument.
 
-     @subsubsection svt3 Transformations GL(3, R) (aka Aff(3))
-     In the context of geo, an
-     <a href="https://en.wikipedia.org/wiki/Affine_transformation">affine
-     transformation</a> is a general linear transformations from
-     \f$\mathbb R^3\f$ to \f$\mathbb R^3\f$:
-     \n\n
-     \f$ A(\vec x) = {\bf M}\vec x + \vec b \f$
-     \n\n
-     and are supported in affine.py. While __M__ can be any object that
+Transformations GL(3, R) (aka Aff(3))
+In the context of geo, an
+     [affine transformation](https://en.wikipedia.org/wiki/Affine_transformation)is a general linear transformations from
+     R3 -> R3
+and are supported in affine.py. While __M__ can be any object that
      transforms vectors linearly, we are primarily concerned with rotations.
      The translation __b__ is always from the target space (which is trivial
      in geo's implementation). With general forms of __M__, one can
      implement
-     <a href="https://en.wikipedia.org/wiki/Scaling_(geometry)">scalings</a>,
-     <a href="https://en.wikipedia.org/wiki/Similarity_(geometry)">similiarity
-     transformations</a>, reflections,
+     [scalings](https://en.wikipedia.org/wiki/Scaling_(geometry)">)
+     [similiarity](https://en.wikipedia.org/wiki/Similarity_(geometry))
+     transformations
+     [reflections]
      <a href="https://en.wikipedia.org/wiki/Shear_mapping">shear
      mappings</a>, pure translations,
      <a href="https://en.wikipedia.org/wiki/Homothetic_transformation">
