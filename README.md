@@ -480,8 +480,8 @@ Spherical decomposition of complete Cartesian tensors requires and
      and they are not all linearaly independent.
 
 Additional tools for the alternating tensor, aka Levi-Civita (pseudo)-
-     tensor/symbol are in levi_civita.py. The [generalized Kronecker deltas]
-     (https://en.wikipedia.org/wiki/Kronecker_delta#Generalizations_of_the_Kronecker_delta)
+     tensor/symbol are in levi_civita.py. The
+     [generalized Kronecker deltas](https://en.wikipedia.org/wiki/Kronecker_delta#Generalizations_of_the_Kronecker_delta)
      can be computed in kronecker.py.
      
 
@@ -493,8 +493,8 @@ Rank-2 tensors have two subspaces closed under rotations which
      two indices--which is rather simple-as there are only 2 permutations.
      Higher rank _n_ tensors with _n_ indices have more complicated
      subspaces,and they can be computed from the various _n!_ permutations
-     of their indices. This is the domain of [Schur-Weyl Duality]
-     ("https://en.wikipedia.org/wiki/Schur–Weyl_duality")
+     of their indices. This is the domain of
+     [Schur-Weyl Duality]("https://en.wikipedia.org/wiki/Schur–Weyl_duality")
      The symmetric group on _n_-letters,
      $ Sym(n) $ can be decomposed into irreducible representations based
      on the integer partitions of $ n $ (really?). So to that end,
@@ -505,8 +505,8 @@ Rank-2 tensors have two subspaces closed under rotations which
      The [Robinson-Schensted Correspondence]
      (https://en.wikipedia.org/wiki/Robinson–Schensted_correspondence)
      then relates irreducible
-     representations of the symmetric group to [Young Tableaux]
-     (https://en.wikipedia.org/wiki/Young_tableau)
+     representations of the symmetric group to
+     [Young Tableaux](https://en.wikipedia.org/wiki/Young_tableau)
      (young.py). They provides a
      link to partitions of integers, which is taken up in pascal.py,
      which starts with Pochammer symbols and winds up with integer
@@ -541,7 +541,7 @@ The geo.detic package implements geo.metric objects on the Earth
      or sphere (geo.detic.coordinates.SCH) relative to a
      geo.detic.origins.PegPoint.
 
-The coordinates are[abstract] (https://docs.python.org/2/library/abc.html),
+The coordinates are[abstract](https://docs.python.org/2/library/abc.html),
      and only have [concrete](https://en.wikipedia.org/wiki/Class_(computer_programming)#Abstract_and_concrete)
      meaning with respect
      to an ellipsoid (ellipsoid.py). 
@@ -958,43 +958,47 @@ cross (wedge) product
 
 outer (dyad) product
 
-\verbatim     	  ~v   =  v.__invert__() = v / v*v
-\endverbatim
-    is a special case for converting covariant and contravariant vectors
+			~v   =  v.__invert__() = v / v*v
+
+is a special case for converting covariant and contravariant vectors
     in local orthonormal bases and their conjugate global basses.
-    \n
-    Projection, Rejections, Reflection:
-\verbatim
-a >> b = a.__rshift__(b) = a.projection(b) = Proj(b)(a)
-a << b = a.__lshift__(b) = a.rejection(b) = Rej(b)(a)
-a | b  = a.__or__(b)     = a.reflection(b) = Ref(b)(a)
-\endverbatim
-	Respectively. (Projection, rejection, and reflection operations
+    
+### Projection, Rejections, Reflection:
+
+	a >> b = a.__rshift__(b) = a.projection(b) = Proj(b)(a)
+	a << b = a.__lshift__(b) = a.rejection(b) = Rej(b)(a)
+	a | b  = a.__or__(b)     = a.reflection(b) = Ref(b)(a)
+
+
+Respectively. (Projection, rejection, and reflection operations
 	for vectors, tensors, and quaternions are unified in cauchy.py.)
 	The right column are tensor operators:\n
 	geo.metric.euclid.vector.Proj'\n
         geo.metric.euclid.vector.Rej'\n
 	geo.metric.euclid.vector.Ref.\n
-\n
-        Moreover, what about "__getitem__":
 
-\verbatim
-v[3]                = v.__getitem__(3)
-v[-1]               = v.__getitem__(3)
-v[start:stop:step]  = v.__getitem__(slice(start, stop, step))
-\endverbatim
-     Do those have meaning? Yes they do, but they HAVE NOTHING TO DO WITH
+Moreover, what about "__getitem__":
+
+
+	v[3]                = v.__getitem__(3)
+	v[-1]               = v.__getitem__(3)
+	v[start:stop:step]  = v.__getitem__(slice(start, stop, step))
+
+Do those have meaning? Yes they do, but they HAVE NOTHING TO DO WITH
      VECTORS. That is:
 
-\verbatim	v.x is not v[0]\endverbatim
-\verbatim       v.y is not v[1]\endverbatim
-\verbatim       v.z is not v[2]\endverbatim
-     No.
-\verbatim
+	v.x is not v[0]
+    	v.y is not v[1]
+	v.z is not v[2]
+     
+No.
+     
+
      v[start:stop:step] is
      Vector(v.x[start:stop:step], v.y[start:stop:step], v.z[start:stop:step])
-\endverbatim
-     This is not just good, but great. Moreover, it is true for all tensors and
+
+
+This is not just good, but great. Moreover, it is true for all tensors and
      all coordinate classes. It is the key for making all objects work with or
      without numpy in a manner that allows the user or developer to never have
      to consider it. You can make objects out of singletons or multi-
@@ -1005,16 +1009,15 @@ v[start:stop:step]  = v.__getitem__(slice(start, stop, step))
      expressions-- again it's all about Tensors controlling their own destiny
      while leaving unto numpy what is numpy's.
 
-     Thus, if you iterate over a multidimensional (in the computer array sense)
+Thus, if you iterate over a multidimensional (in the computer array sense)
      vector, your iterator will return vectors one by one (or arrays of vectors-
      it's all passed to numpy or whatever controls the attributes' iterators).
-
-     At A Deeper Level
-     =================
-     That Vectors can be more than singletons is not just a computer science
+### At A Deeper Level
+     
+That Vectors can be more than singletons is not just a computer science
      convenience-- it's a fact of life. Consider the Pauli matrices (pauli.py).
-     They can be combined into a single \f$\mathbb R^3\f$ vector,
-     \f$ {\bf \vec{\sigma} } \f$-- there is but one vector, but its components
+     They can be combined into a single $\mathbb R^3$ vector,
+     $ {\bf \vec{\sigma} } $-- there is but one vector, but its components
      are 2 x 2 matrices, representing internal degrees of freedom-- the
      fundamental representation of SU(2). They could be spin up and the
      orthogonal
@@ -1024,93 +1027,93 @@ v[start:stop:step]  = v.__getitem__(slice(start, stop, step))
      The point is to convince the dear reader beyond all objections that
      vectors are not 3 numbers in an array.
 
-     Regular Methods:
-     ===============
-	
-     The 1st regular method is:
+#### Regular Methods:
+     
+The 1st regular method is:
 
-\verbatim      	     v.iter()
-\endverbatim
-      it returns "x", "y" and "z" in order via an iterator.
+	 v.iter()
+
+it returns "x", "y" and "z" in order via an iterator.
       
-\verbatim		v.tolist() --> [v.x, v.y, v.z] = list(v.iter())
-\endverbatim
-      does it all at once.
+	v.tolist() --> [v.x, v.y, v.z] = list(v.iter())
 
-      Other methods, some called by magic methods, are straightforward:
+does it all at once.
 
-\verbatim      	    v.dual()
-\endverbatim
-      contract with Levi-Civita symbol and make a Tensor (which
+Other methods, some called by magic methods, are straightforward:
+
+   	    v.dual()
+
+contract with Levi-Civita symbol and make a Tensor (which
       will do the cross product via posterior multiplication)
 
-\verbatim      	   v.dot(u)
-\endverbatim
-      Dot Product: contract with another Vector and make a Scalar
+      	   v.dot(u)
 
-\verbatim      	  v.cross(u)
-\endverbatim
-      Cross Product: contract the dual with another Vector and make
+ Dot Product: contract with another Vector and make a Scalar
+
+     	  v.cross(u)
+
+Cross Product: contract the dual with another Vector and make
       a Vector (There is no distinction between vectors and axial
       vectors)
 
-\verbatim			v.outer(u)
-\endverbatim
+			v.outer(u)
+
        Outer Product: with another Vector, make a dyad, that is a Matrix
 
-\verbatim       	     v.dilation(alpha)
-\endverbatim
-       change length with multiplication or division by a Scalar or number.
+    	     v.dilation(alpha)
+
+change length with multiplication or division by a Scalar or number.
        There are also right_dilation and left_dilation method, if your
        vector's components don't commute with the scalar (which is only
-       a scalar in \f$\mathbb R^3\f$, and not in the 'other' space.)
+       a scalar in $\mathbb R^3$, and not in the 'other' space.)
 
-\verbatim      	     v.dyad(u)
-\endverbatim
-      Is outer
+   v.dyad(u)
 
-\verbatim      	     v.hat()
-\endverbatim
-      Is dilation by 1/abs(v) --> returns a Vector's unit Vector.
+Is the outer product.
 
-\verbatim      	   v.L2norm()
-\endverbatim
-      L2-norm is just the norm.
+     	     v.hat()
+
+Is dilation by 1/abs(v) --> returns a Vector's unit Vector.
+
+      	   v.L2norm()
+
+L2-norm is just the norm.
       
-      There are also bonus functions for not only computing projections,
+There are also bonus functions for not only computing projections,
       rejections, and reflections, but also functions for creating
       like-wise operators:
-      \verbatim
-v.projection(u)   v >> u    u.projector()(v)    Proj(u)(v)	
-v.rejection(u)    v << u    u.rejector()(v)     Rej(u)(v)	
-v.reflection(u)   v | u     u.reflector()(v)    Ref(u)(v)	
-\endverbatim	
+    
+	v.projection(u)   v >> u    u.projector()(v)    Proj(u)(v)	
+	v.rejection(u)    v << u    u.rejector()(v)     Rej(u)(v)	
+	v.reflection(u)   v | u     u.reflector()(v)    Ref(u)(v)	
+	
 Rotations about arbitrary vectors:
-\verbatim      	      v.versor(angle)
-\endverbatim	
-      are given by the resulting unit quaternion.
 
-      Special Numpy Methods:
-      ======================
-      You can call numpy array methods like "mean", "sum", "cumsum" on tensors
+	v.versor(angle)
+
+are given by the resulting unit quaternion.
+
+#### Special Numpy Methods:
+      
+You can call numpy array methods like "mean", "sum", "cumsum" on tensors
       and get a tensor result--or on a coordinate to get a coordinate result.
       That is:
 
-\verbatim      	   >>>platform.mean()
-\endverbatim
-      will be the average position of a platform in LLH, ECEF, SCH, LTP, etc--
+	>>>platform.mean()
+
+will be the average position of a platform in LLH, ECEF, SCH, LTP, etc--
       whatever it is in. While for a 2-d array like SCH coordinate, "dem ",
       representing a digital elevation model (DEM) (with geo-located pixels):
 
-\verbatim      		   >>>dem.mean(axis=0).h
-\endverbatim
- be an array of heights that represent the height averaged over cross-
+	   >>>dem.mean(axis=0).h
+
+be an array of heights that represent the height averaged over cross-
       track, at fixed along track coordinate.
       
-      There is also an append method, that allows you to stack vectors onto
+There is also an append method, that allows you to stack vectors onto
       your object by applying numpy.append to each component.
       
-      It's really quite slick. It's all done via the
+It's really quite slick. It's all done via the
       geo.utils.arraylike.ABCNumpy.broadcast
       method, which allows you to apply functions to elements and
       reconstruct tensors/coordinates from the results (and you can use
@@ -1118,15 +1121,15 @@ Rotations about arbitrary vectors:
       derivatives and what-not if you're dealing with a motion track, for
       instance.
 
-      More sophisticated operations are quite simple, for instance, if "v" is a
+More sophisticated operations are quite simple, for instance, if "v" is a
       Vector made up of numpy arrays:
 
-\verbatim      	     sigma = ((v-v.mean())&(v-v.mean())).mean()
-\endverbatim
-      is their correlation tensor. (Do you know how much code that would be with
+    	     sigma = ((v-v.mean())&(v-v.mean())).mean()
+
+is their correlation tensor. (Do you know how much code that would be with
       Fortran arrays?).
 
-      Furthermore, you can project that correlation tensor into it's
+Furthermore, you can project that correlation tensor into it's
       irreducible spherical components at will-- it's just a method call that
       executes 1 or 2 lines of code.
 
@@ -1134,62 +1137,67 @@ Rotations about arbitrary vectors:
      |Non-Vectors|
      -------------
 
-     Scalar:
-     ======
-     Scalars are NOT PRIMITIVES! A single scalar can be represented (poorly)
+#### Scalar:
+   
+Scalars are NOT PRIMITIVES! A single scalar can be represented (poorly)
      by a single floating point number-- but that is no reason to do it that
      way. 
 
-     When you square a vector, you are going to get a scalar. Why is this not
+When you square a vector, you are going to get a scalar. Why is this not
      just a number? There are several reasons:
 
-     (1) Scalars are rank-0 tensors, and hence, have tensor properties that need
+(1) Scalars are rank-0 tensors, and hence, have tensor properties that need
      to be captured in a class. For example: they are invariant under rotations
      and transform according to:
 
-\verbatim                                 s' = s
-\endverbatim
-	While this is trivial, it is formally a trivial
+                               s' = s
+
+While this is trivial, it is formally a trivial
 	representation of SO(3), it is
-     by no means "just a number". Consider the would-be scalar:
-     \n\n
-     \f$ s = \bf{ \vec A\cdot}(\bf{\vec B \times \vec C}) \f$,
-     \n\n
-     which is really a pseudo-scalar. In the full Clifford algebra off
+by no means "just a number". Consider the would-be scalar:
+
+     $$ s = \bf{ \vec A\cdot}(\bf{\vec B \times \vec C}) $$,
+    
+which is really a pseudo-scalar. In the full Clifford algebra off
      Euclidean 3-space, it's a trivector, or 3-blade, and that cannot
      be confused with "a number".
 
-     (2) On a more practical front: If you are dealing with numpy arrays and 
+(2) On a more practical front: If you are dealing with numpy arrays and 
      don't have scalars, you will 
      get burned when doing reflected multiplication. Let's say you want to scale
      a 100,000 point motion history, v, with:
 
-\verbatim 	    	     (1/(v**2))*v
-\endverbatim
-     Here v.x, v.y, v.z are 100,000 element numpy arrays. If v**2 is just a
+  	     (1/(v**2))*v
+
+Here v.x, v.y, v.z are 100,000 element numpy arrays. If v\*\*2 is just a
      number (a 100,000 element array), the operator will use numpy's overloaded
      "*" are try to make a:
 
-     100,000 x 100,1000 =10,000,000,000 element array.
+100,000 x 100,1000 =10,000,000,000 element array.
 
-     Try it-- you will not like it. 
-     
-     To that end, I have a geo.metric.euclid.scalar.Scalar() class, and it has
+Try it-- you will not like it. 
+
+
+To that end, I have a geo.metric.euclid.scalar.Scalar() class, and it has
      one attribute "w", so said
      operation will be executed by geo.metric.euclid.scalar.Scalar.__mul__
      which yields a single
      geo.metric.euclid.vector.Vector who's attributes are 100,000 element
      numpy arrays.
 
-     Many a python vector module has failed w.r.t. to numpy broadcasting
+Many a python vector module has failed w.r.t. to numpy broadcasting
      because the author(s) failed to give the rank-0 tensor its full due.
 
-     Rank 2 Tensor:
-     ==============     
 
-     There are (at least) 3 ways to look at rank-2 tensors:
-     @subsection ten1 Component-wise
-     (1) A Component-wise view, which can be either:\n
+##### Rank 2 Tensor:
+    
+
+
+There are (at least) 3 ways to look at rank-2 tensors:
+
+
+Component-wise
+(1) A Component-wise view, which can be either:\n
           A triplet of irreducible spherical parts:\n
      	   	   1 scalar component (proportion to the identity)\n
      		   3 rank 1 components (The antisymmetric part-- which
