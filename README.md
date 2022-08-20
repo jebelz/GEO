@@ -13,8 +13,8 @@
      _write_ _is_ _the_ _same_ _for_ _either_ _case_ .
 
      Furthermore, all transforming objects are (polymorphic)
-     <a href="https://docs.python.org/2/reference/datamodel.html#emulating-callable-objects">
-     function emulators</a>, so that
+     
+     [function emulators] (https://docs.python.org/2/reference/datamodel.html#emulating-callable-objects), so that
      the code you write depends neither on the type of the object doing
      the transformation (rotation matrix, quaternion, Euler angles, etc.)
      nor on the object being transformed (Vector, Quaternion, Tensor, Scalar,
