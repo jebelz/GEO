@@ -51,7 +51,7 @@ Needless-to-say, the concept of coordinate-independent objects conforms
      well with [object-oriented programming](https://en.wikipedia.org/wiki/Object-oriented_programming)
      While the [procedural](https://en.wikipedia.org/wiki/Procedural_programming)
      [imperative](https://en.wikipedia.org/wiki/Imperative_programming)
-     and/or programmer may [JPL's] (https://en.wikipedia.org/wiki/Jet_Propulsion_Laboratory)
+     and/or programmer may [JPL's](https://en.wikipedia.org/wiki/Jet_Propulsion_Laboratory)
      represent 
      coordinates as:
 
@@ -301,8 +301,7 @@ In practice, rank 2 and rank 4 tensors usually have some degree of
 ###   Einstein Summation Notation
      
 Through the wonders of python and [complete class customization](https://docs.python.org/2/reference/datamodel.html#customizing-attribute-access)
-     [Einstein summation notation]
-     (https://en.wikipedia.org/wiki/Einstein_notation) is _fully_ supported (einstein/albert.py).
+     [Einstein summation notation](https://en.wikipedia.org/wiki/Einstein_notation) is _fully_ supported (einstein/albert.py).
      For example,
      a second rank Tensor only has 9 attributes: 'xx', 'xy', 'xz',
      'yx', 'yy', 'yz', 'zx', 'zy', and 'zz', and it has a trace
@@ -321,7 +320,7 @@ which explicitly computes:
 which is indeed the trace of the tensor. One may also code:
      
     
-s = T.ii
+	s = T.ii
    
 Of course, their is no 'ii' attribute (or property). Nevertheless,
      geo regonizes this as Einstein summation and goes ahead and computes
@@ -708,8 +707,8 @@ It does not matter if "platform" is in LLH already, or in ECEF, or in SCH,
      or in a tangent plane coordinate system. Moreover, if you have another
      point, "target"
 
-     \verbatim	    >>>platform - target
-     \endverbatim
+     >>>platform - target
+     
 
 is the vector joining them: REGARDLESS OF THEIR COORDINATE SYSTEM-- you
      do not need to specify it-- the vector will be computed in the Cartesian
@@ -722,8 +721,8 @@ All coordinates are defined on an ellipsoid-- and they carry that
      information with them. You can translate to another ellipsoid, e.g.,
      AIR1830, via:
 
-     \verbatim	    >>>platform | almanac.AIR1830
-     \endverbatim
+     >>>platform | almanac.AIR1830
+     
 
 Again-- you don't need to specify if "platform" is LLH, SCH, or the local
      tangent plane (LTP)-- "platform" knows that already and converts itself
@@ -751,15 +750,15 @@ With that, most coordinate transformations are 1 to 3 lines of code,
      it becomes hard to understand, hard to maintain, and hard to extend.
      
 Furthermore, the composition and inversion of transformations is
-     handled with [operator overloading]
-     (https://docs.python.org/2/reference/datamodel.html#emulating-numeric-types)
+     handled with
+     [operator overloading](https://docs.python.org/2/reference/datamodel.html#emulating-numeric-types)
      of "\*" ("__mul__")and "~"
      ("__invert__"),
      respectively, with some support for interpolating between transformations
      via overloading "\*\*" ("__pow__") with non-integer exponents. (Python's
      built-in [pow](https://docs.python.org/2/library/functions.html#pow)
-     function has a 3 argument option, which implements [spherical linear]
-     (http://en.wikipedia.org/wiki/Slerp)
+     function has a 3 argument option, which implements
+     [spherical linear](http://en.wikipedia.org/wiki/Slerp)
      interpolation.
      
 ### Array or Singleton:
@@ -824,9 +823,9 @@ This is an important consideration. Tensors are not defined by their
 
 DO NOT CONFUSE TENSOR PROPERTIES WITH ARRAY PROPERTIES:
 
- 	"__getattr__"  gets
+ 	"__getattr__" 
 	
-tensor properties, e.g:
+gets tensor properties, e.g:
      
      m.xy  
      
@@ -836,7 +835,7 @@ While:
      
 gets array properties,  e.g:
    
-   v[10:1000:3, -30:]
+   	v[10:1000:3, -30:]
    
 The payoff:
      
@@ -854,7 +853,7 @@ Of course you may want a loop, even an implied loop. For those who like
      computer-science-like interfaces to its components.
      
 
-## euclid Euclid
+## Euclid
 Vectors (and other Tensors) in 3-Dimensional Euclidean Space (__E3__)
 
 Vectors are important objects. We're talking about a physicist's vectors.
