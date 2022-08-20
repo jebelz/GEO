@@ -1,4 +1,4 @@
-
+[function emulators](https://docs.python.org/2/reference/datamodel.html#emulating-callable-objects)
      # THE Package for Geometry on Earth.
      
      @section Intro Introduction
@@ -14,7 +14,7 @@
 
      Furthermore, all transforming objects are (polymorphic)
      
-     [function emulators] (https://docs.python.org/2/reference/datamodel.html#emulating-callable-objects), so that
+     [function emulators](https://docs.python.org/2/reference/datamodel.html#emulating-callable-objects), so that
      the code you write depends neither on the type of the object doing
      the transformation (rotation matrix, quaternion, Euler angles, etc.)
      nor on the object being transformed (Vector, Quaternion, Tensor, Scalar,
