@@ -896,7 +896,7 @@ Fair enough, now we have a vector. What do you do with that? Well, you
      
 The following invoke magic methods:
      
-   +v = v.__pos__()
+   +v = v.\_\_pos\_\_()
 
 Doesn't do anything.It returns "v", though it could return a copy of v.
 
