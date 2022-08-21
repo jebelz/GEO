@@ -31,7 +31,7 @@ Furthermore, all transforming objects are (polymorphic)
 
 ### Manifest Covariance
 
-[Manifest Covariance](https://en.wikipedia.org/wiki/Manifest_covariance),
+[Manifest Covariance](https://en.wikipedia.org/wiki/Manifest_covariance),bb
 [coordinate free](https://en.wikipedia.org/wiki/Coordinate-free")
 vector operations means you
      can write equations and manipulate vectors without regards to their
@@ -256,9 +256,9 @@ The bulk of geo is all about real vectors spaces: while vectors
      >>>print v*v
      w=0j
      
-In gibbs.py, the
-     real vector.Vector objects are placed into
-     $\mathbb C^3$: they are the
+In [gibbs.py](https://github.com/jebelz/GEO/blob/main/metric/euclid/gibbs.py), the
+real vector.Vector objects are placed into
+$\mathbb C^3$ : they are the
      same vectors, but their sesqui-linear inner product is positive
      definite. The outer product is also complexified, making them
      the ideal tool for representing polarization density matrices
