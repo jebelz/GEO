@@ -405,7 +405,7 @@ Here we delve into a rather involved topic: the irreducible
      
  This does not refer to spherical coordinates, rather the decomposition
      of Vectors ([wigner/eckart/one.py](https://github.com/jebelz/GEO/blob/main/metric/wigner/eckart/one.py)) and
-     Tensors (wigner/eckart/two.py) into irreducible representations
+     Tensors ([wigner/eckart/two.py](https://github.com/jebelz/GEO/blob/main/metric/wigner/eckart/two.py)) into irreducible representations
      of __SO(3)__.
      Thus, the _x_ or _xy_-like
      attributes are replaced by
@@ -420,13 +420,13 @@ Here we delve into a rather involved topic: the irreducible
      old position vectors). Because translation commute, the construction
      of higher rank tensors is straightforward. A rank-N basis state is just
      the polyadic product of N basis vectors (e.g.
-     $ {\bf \hat{x}\hat{x}\hat{y}}$). Rotations do not commute,
+     $ {\bf \hat{x}\hat{x}\hat{y}}$ ). Rotations do not commute,
      so polyadic products of spherical basis vectors are not necessarily
      eigentensors of rotations. This is entirely analgous to the construction
-     of [spherical harmonics in Cartesian coordinates](https://en.wikipedia.org/wiki/Spherical_harmonics#Spherical_harmonics_in_Cartesian_form"),
+     of [spherical harmonics in Cartesian coordinates](https://en.wikipedia.org/wiki/Spherical_harmonics#Spherical_harmonics_in_Cartesian_form),
      and it gets complicated, fast. Nevertheless, geo goes there--though
      it requires and entirely complex subpackage
-     ([geo.metric.wigner]https://github.com/jebelz/GEO/blob/main/metric/wigner/).
+     ([geo.metric.wigner](https://github.com/jebelz/GEO/blob/main/metric/wigner/).
 
 In geo's implementation, the elements of spherical tensors are not
      accessed by
