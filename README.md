@@ -248,7 +248,7 @@ where the result has been rounded for clarity.
 #### Complexification
 
 The bulk of geo is all about real vectors spaces: while vectors
-     can have complex components, they still live in \f$\mathbb R^3\f$,
+     can have complex components, they still live in $\mathbb R^3$ ,
      and as such,
      their bilinear inner product is not positive definite:
 
