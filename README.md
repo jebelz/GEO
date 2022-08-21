@@ -1143,7 +1143,7 @@ While this is trivial, it is formally a trivial
 	representation of SO(3), it is
 by no means "just a number". Consider the would-be scalar:
 
-$$ s = \bf{ \vec A\cdot}(\bf{\vec B \times \vec C}) $$,
+$$ s = \bf{ \vec A\cdot}(\bf{\vec B \times \vec C}) $$
     
 which is really a pseudo-scalar. In the full Clifford algebra off
      Euclidean 3-space, it's a trivector, or 3-blade, and that cannot
@@ -2295,7 +2295,7 @@ can be show lexigraphically as follows:
 This represents a mixed symmetry iredducible subspace.
 
 There are several way to apply that symetrizer to a tensor. We can use
-the tableua's "syymetriz" method as follows:
+the tableuax's "symmetrize" method as follows:
 
 Start with a rank three tensor:
 
@@ -2328,15 +2328,15 @@ the user do not have be concerned with all the index gymnastics.
 	[0.0, 70.665, -516.829] [-70.665, -0.0, 182.12] [516.829, -182.12, -0.0]
 
 So I guess that's closed? The zeros are in the same spot, and, e.g.
-$ q'_{yzx} = -q'_{xzy} $, but I am not convinced. Let's take the tensor
-$ q' $ and ask it to show us its non-zero modules:
+$q'_{yzx} = -q'_{xzy}$, but I am not convinced. Let's take the tensor
+$q'$ and ask it to show us its non-zero modules:
 
 	>>>qprime.show_modules()
 	[i][j]
 	[k] 
 	w=1641.91108164 
 
-which matches the orginal$:
+which matches the orginal:
 
 	>>>q.show_modules()
 	[i][j]
@@ -2352,7 +2352,7 @@ there
 is simply no index to permute. Meanwhile, vectors have one index, and
 the permutation group on 1 element is trivial.
 
-$N=2$ has two paritiotns ($2=2$ and $2=1+1$),
+$N=2$ has two paritiotns ( $2=2$ and $2=1+1$),
 corresponding to the following diagrams:
 
 	>>>p = pascal.P(2)
@@ -2373,9 +2373,9 @@ But wait, there is more. The Young diagrams have a remarkable formula,
 called the "Hook Length Formula". The hook length is computed from
 the arm and leg lengths. See:
 
-	geo.metric.schur_weyl.young.Diagram.arm()\n
-	geo.metric.schur_weyl.young.Diagram.leg()\n
-	geo.metric.schur_weyl.young.Diagram.hook()\n
+	geo.metric.schur_weyl.young.Diagram.arm()
+	geo.metric.schur_weyl.young.Diagram.leg()
+	geo.metric.schur_weyl.young.Diagram.hook()
 
 for more. These formula can calculate the dimensions of the closed
 subspaces, for any rank of tensor, over _any_ field.
@@ -2402,135 +2402,127 @@ dimensions of the irreducible subspaces:
 ...:     print "{}\t{}\t{}".format(*map(item.dimW, [2, 3, 4]))
 ...:     print
 
-☐☐
-3	6	10
+	☐☐
+	3	6	10
 
-☐
-☐
-1	3	6
-\endverbatim
-So for combinig 2 quantum spinors (\f$D=2\f$), we get a symmetric triplet and
+	☐
+	☐
+	1	3	6
+
+So for combinig 2 quantum spinors ( $D=2$ ), we get a symmetric triplet and
 an antisymmetric singlet, ala:
-\n\n
-\f$ |1, 1\rangle = \uparrow\uparrow \f$
-\n\n
-Meanwhile, \f$D=3\f$ tells us:
-\n\n
-\f$ {\bf 3} \otimes {\bf 3} = {\bf 6}_S \oplus {\bf 3}_A \f$
-\n\n
+
+$$ |1, 1\rangle = \uparrow\uparrow $$
+
+Meanwhile $D=3$ tells us:
+
+$$ {\bf 3} \otimes {\bf 3} = {\bf 6}_S \oplus {\bf 3}_A $$
+
 which says that (anti)symmetric rank 2 tensors have 6 (3) components in three
 dimensions. In special relativity:
-\n\n
-\f$ {\bf 4} \otimes {\bf 4} = {\bf 10}_S \oplus {\bf 6}_A \f$
-\n\n
+
+$$ {\bf 4} \otimes {\bf 4} = {\bf 10}_S \oplus {\bf 6}_A $$
+
 so that the antisymmetric electromagnetic field strength tensor,
-\f$ F_{\mu\nu} = \partial_{\mu}A_{\nu} - \partial_{nu}A_{\mu} \f$
+$ F_{\mu\nu} = \partial_{\mu}A_{\nu} - \partial_{nu}A_{\mu} $
 has six componets (3 for the Electric field, and 3 for the magnetic field).
 The symmetric stress-energy tensor has 10 components (1 for mass/energy
 density, 3 for energy flux or momentum time derivative, and 6 for
 spatial stress).
 
 Now we can take it to 3rd rank:
-\verbatim
-In [378]: for item in d ^ d ^ d:
-     ...:     print unicode(item)
-     ...:     print "{}\t{}\t{}".format(*map(item.dimW, [2, 3]))
-     ...:     print
 
-☐☐☐
-4	10
+	In [378]: for item in d ^ d ^ d:
+	     ...:     print unicode(item)
+	     ...:     print "{}\t{}\t{}".format(*map(item.dimW, [2, 3]))
+	     ...:     print
 
-☐☐
-☐
-2	8
+	☐☐☐
+	4	10
 
-☐☐
-☐
-2	8
+	☐☐
+	☐
+	2	8
 
-☐
-☐
-☐
-0	1
-\endverbatim
-From the \f$D=2\f$ columns we learn: there is no antisymmetric combination
+	☐☐
+	☐
+	2	8
+
+	☐
+	☐
+	☐
+	0	1
+
+From the $D=2$ columns we learn: there is no antisymmetric combination
 of 3 electrons. There is one symmetric combination of 4 dimensions
-(\f$J = 3/2 \f$), and 2 mixed symmetry \f$J=1/2\f$ combinations.
+$J = 3/2 $ ), and 2 mixed symmetry $J=1/2$ combinations.
 
-For \f$D=3\f$, there is one antisymmetric tensor, the Levi-Civita tensor.
-While in the quark model, this irrep is the \f$ \Omega^-\f$n baryon,
+For $D=3$ , there is one antisymmetric tensor, the Levi-Civita tensor.
+While in the quark model, this irrep is the $\Omega^-$ baryon,
 famoulsy predicted by Gell-Mann.
 
 The application of Young tableau and symmetry spans a phenomenal amount
 of physics.
 
-Quantum Spins
-=============
-Spin 1/2:
----------
+### Quantum Spins
+
+#S pin 1/2:
+
 The addition of quantum spins is a special case of __SU__(2) irreducible
 representations. For instance, a spin 1/2 particle has 2 eigenstates of
 "alignment": the spin along and arbitary axis (taken to $J_z$)
 has 2 eigenvalues:
-$m = \pm frac 1 2$. When the spins of 2 indentical particales are combined,
+$m = \pm frac 1 2$ . When the spins of 2 indentical particales are combined,
 the eigenstates of total $J_z$ are not eigenstates the individual particles'
-$J_z$.
-\verbatim
->>>u = racah.Ket(0.5, 0.5)
->>>print unicode(u)
-|½, ½⟩
+$J_z$ .
+
+	>>>u = racah.Ket(0.5, 0.5)
+	>>>print unicode(u)
+	|½, ½⟩
  
->>>print unicode(d)
-|½, -½⟩
+	>>>print unicode(d)
+	|½, -½⟩
 
->>>d = racah.Ket(0.5, -0.5)
+	>>>d = racah.Ket(0.5, -0.5)
 
->>>print unicode(u*u)
-[ |1, 1⟩]
+	>>>print unicode(u*u)
+	[ |1, 1⟩]
 
->>>print unicode(u*d)
-[√（½) |0, 0⟩ +
-√（½) |1, 0⟩]
+	>>>print unicode(u*d)
+	[√（½) |0, 0⟩ + √（½) |1, 0⟩]
 
->>>print unicode(d*u)
-[-√（½) |0, 0⟩ +
-√（½) |1, 0⟩]
+	>>>print unicode(d*u)
+	[-√（½) |0, 0⟩ + √（½) |1, 0⟩]
 
->>>print unicode(d*d)
-[ |1, -1⟩]
-\endverbatim
+	>>>print unicode(d*d)
+	[ |1, -1⟩]
+
 So that now, by inspection, we can construct linear combinations that a
-(normalized) eigenstates of $J^2$ and $J_z=0$:
-\verbatim
->>>print (u*d + d*u)/sqrt(2)
-[ |1, 0>]
+(normalized) eigenstates of $J^2$ and $J_z=0$ :
 
->>>print (u*d - d*u)/sqrt(2)
-[ |0, 0>]
-\endverbatim
+	>>>print (u*d + d*u)/sqrt(2)
+	[ |1, 0>]
 
-Spin 1
-------
+	>>>print (u*d - d*u)/sqrt(2)
+	[ |0, 0>]
+
+
+### Spin 1
+
 The racah.py has the basis kets for spin 1:
-\verbatim
->>>Z, P, M = [Ket(1, m) for m in (0, 1, -1)]
-\endverbatim
+
+	>>>Z, P, M = [Ket(1, m) for m in (0, 1, -1)]
+
 so that:
-\verbatim
->>>print racah.Z, racah.P, racah.M
- |1, 0>  |1, 1>  |1, -1>
-\endverbatim
+
+	>>>print racah.Z, racah.P, racah.M
+	 |1, 0>  |1, 1>  |1, -1>
+
 Then we can take linear combination:
 
-Spherical Vectors:
-==================
+### Spherical Vectors:
+
 With the above tools we can now delve in to spherical vectors.
-Mathematically, the basis vectors transform as the fundemental represent
-
-
-
-
-\copyright
-JEB WORLD LTD.
-*/
+Mathematically, the basis vectors transform as the fundemental representation.
+[To be written]
 
