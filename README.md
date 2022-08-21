@@ -106,7 +106,8 @@ it doesn't matter if _v_ is represented in Cartesian, polar, or
      the right code [when called upon](https://en.wikipedia.org/wiki/Late_binding)
      
 Operations are independent of representations. (NB: that's, little _r_
-     representations. geo/ allows various group-theoretic big _R_
+     representations. [geo/](https://github.com/jebelz/GEO/)
+     allows various group-theoretic big _R_
      Representations, and those you should not mix--but who would do that
      anyway?).
 
