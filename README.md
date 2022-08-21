@@ -1421,8 +1421,11 @@ Meanwhile the Alibi transformation leaves the coordinates fixed and
       
 What about pre or post multiplication? That is:
 
-      
-$$ v'_i = M_{ij}v_j \f$ or \f$ v'_j = v_i M_{ij} $$?
+$$ v'_i = M_{ij}v_j $$
+
+or
+
+$$ v'_j = v_i M_{ij} $$
       
 I have chosen the former for alibi (active) transformations. There
       are 2 reasons for this choice:
@@ -1446,7 +1449,7 @@ That leads to a great deal of simplification when converting between
       operating on rank-2 tensors, or quaternions transforming vectors),
       one recovers the standard conjugate (or sandwich) product:
      
- $$ a' = {\bf \hat O} a {\bf \hat O}^T $$.
+$$ a' = {\bf \hat O} a {\bf \hat O}^T $$
       
 For tensors, this is a direct result of tensors being composed
       of the outer products of pairs of vectors. Likewise for spinors
@@ -1454,11 +1457,11 @@ For tensors, this is a direct result of tensors being composed
 
 (That is, a quaternion transforms a vector via:
      
-$$ (0, \vec v') = {\bf q} (0, \vec v) {\bf \bar q} $$.
+$$ (0, \vec v') = {\bf q} (0, \vec v) {\bf \bar q} $$
   
 and likewise for scalars
       
-$$ (s', \vec 0) = {\bf q} (s, \vec 0) {\bf \bar q} $$.
+$$ (s', \vec 0) = {\bf q} (s, \vec 0) {\bf \bar q} $$
      
 Thus, the transformation of vectors and scalars is unified via the
       quaternion. This is because quaternions act fundamentally on spinors:
@@ -1548,14 +1551,17 @@ In the spirit of OO: you do need to know which object you have when
      		 T(v)
 
 Transforms v
+
 		  ~T
 
 Inverts the transformation
-     	     T*T'
+
+
+     	        T*T'
 
 composes 2 transformations, so that
 
-    	      T*(~T)
+    	       T*(~T)
 
 is the identity transformation (for any rotation object). Specific forms
 of the rotation are as follows:
@@ -1564,15 +1570,15 @@ of the rotation are as follows:
 
 returns the equivalent direction cosine matrix (as a Tensor)
 
-		 T.versor()
+		T.versor()
 
 returns the equivalent versor
 
-		 T.ypr()
+		T.ypr()
 
 returns the equivalent YPR triplet 
 
-	T.rpy()
+		T.rpy()
 
 returns the equivalent RPY triplet .
 
@@ -1603,14 +1609,14 @@ The magic methods support:
 	A ** (m/n)              # interpolation
 	
 	
-      MODULE FUNCTIONS 
-      =================
-      First of, I believe all functions should be PURE functions: that is,
+### MODULE FUNCTIONS 
+      
+First of, I believe all functions should be PURE functions: that is,
       they do not change state. Methods can change the state of an objects,
       but functions should not. This is an important practice for proper OO
       design.
-      \n\n
-      You will notice that the euclid module is full of functions for doing the
+      
+You will notice that the euclid module is full of functions for doing the
       vector operations. They are there so that methods can call them (i.e.,
       private, but that's not enforced). You can use them if you want.
       (An example
@@ -1618,94 +1624,49 @@ The magic methods support:
       summation
       over the Levi-Civita tensor, and that is not acceptable for real
       computations.
-      \n\n
-      Hence, it is overridden to call vector._cross_product(X, Y)-- which does
+      
+Hence, it is overridden to call vector._cross_product(X, Y)-- which does
       the usual antisymmetric combination over the non-zero elements of the
       generalized sum).
-      \n\n
-      Some
-      functions are there for public use:
-      \n\n
-      geo.metric.euler.charts.roll  (aliased to geo.roll)\n
-      geo.metric.euler.charts.pitch (aliased to geo.pitch)\n
-      geo.metric.euler.charts.yaw   (aliased to geo.yaw)\n 
-      \n\n
-      These function are constructor-helpers for defining rotation
+   
+Some functions are there for public use:
+      
+      geo.metric.euler.charts.roll  (aliased to geo.roll)
+      geo.metric.euler.charts.pitch (aliased to geo.pitch)
+      geo.metric.euler.charts.yaw   (aliased to geo.yaw)
+      
+These function are constructor-helpers for defining rotation
       objects.
       They are bumped up to the top namespace, which is supposed to
       just contain things you need access too- but that may need a
       little code review. The return Versors (unit Quaternions).
       
-      (Note: the geo.metric.euclid.euclid.LinearMap.aschart() method allows
+(Note: the geo.metric.euclid.euclid.LinearMap.aschart() method allows
       the user to convert any SO(3) to any form via an name, instance, or
       Type).
-      \n\n
-      MODULE CONSTANTS
-      =================
-      The module constant "BASIS" is a collections.namedtuple with  "x", "y",
-      and "z" elements that provide basis vectors. A similar namedtuple
-      "DYADS" has the 9 tensor basis dyads ("xx", "xy", .., "zz").
-      \n\n
-      geo.metric.euclid.vector.X = \f$ \bf \hat x \f$ \n
-      geo.metric.euclid.vector.Y = \f$ \bf \hat y \f$ \n
-      geo.metric.euclid.vector.Z = \f$ \bf \hat z \f$ \n
-      geo.metric.euclid.vector.BASIS = \f$ ({\bf \hat x,\hat y,\hat z})\f$\n
-      geo.metric.euclid.vector.NULL \f$ \bf \vec 0\f$ \n \n
-      geo.metric.euclid.scalar.ZERO = 0 \n
-      geo.metric.euclid.scalar.ONE = 1 \n
-      are basic Scalars. \n\n
-      geo.metric.euclid.tensor.DELTA = \f$ \delta_{ij} =
-      {\bf \hat x\hat x + \hat y\hat y + \hat z\hat z}\f$ \n is the 
-      Idempotent Tensor (Kronecker delta).\n
-      geo.metric.euclid.tensor.PARITY = \f${\bf P} =  -\delta_{ij}\f$ \n
-      is the coordinate inversion operator.\n
-      geo.metric.euclid.tensor.BASIS = \f$ ({\bf \hat{x}\hat{x},\hat{x}\hat{y},\ldots, \hat{z}\hat{z} })\f$ \n\n
-      geo.metric.euclid.three.LEVI_CIVITA = \f$ \epsilon_{ijk} \f$ \n is the
-      fully antisymmetric rank-3 tensor. \n\n
-      The Versors are:\n
-      geo.metric.euler.hamilton.W \f$ {\bf w} \f$ \n
-      geo.metric.euler.hamilton.I \f$ {\bf i} \f$ \n
-      geo.metric.euler.hamilton.J \f$ {\bf j} \f$ \n
-      geo.metric.euler.hamilton.K \f$ {\bf k} \f$ \n
-      geo.metric.euler.hamilton.BASIS \f$ ({\bf w, i, j, k}) \f$\n
-      and they are trapped on the unit hyper-sphere and only
-      support multiplication and slerp, while:\n\n
-      the Quaternions are:\n
-      geo.desic.hamilton.W \f$ {\bf w} \f$ \n
-      geo.desic.hamilton.I \f$ {\bf i} \f$ \n
-      geo.desic.hamilton.J \f$ {\bf j} \f$ \n
-      geo.desic.hamilton.K \f$ {\bf k} \f$ \n
-      geo.desic.hamilton.BASIS \f$ ({\bf w, i, j, k}) \f$\n
-      are free to roam __H__ (actually __H__ x __C__), as they are
-      complexified (Biquaternions).\n\n
-      Ellipsoids:\n
-      geo.detic.newton.wgs84.wgs84.WGS84 is __The__ ellipsoid.\n
-      geo.detic.newton.almanac.ALMANAC are __all__ the ellipsoids.\n\n	
+      
+### Ellipsoids
+THE WGS84 elipsoid, and an almanac of other ellipsoids are available:
 
-      @section Coordinates
-      Coordinates are a lot like vectors, since they can be represented by 3
+      geo.detic.newton.wgs84.wgs84.WGS84 
+      geo.detic.newton.almanac.ALMANAC are 
+
+## Coordinates
+Coordinates are a lot like vectors, since they can be represented by 3
       frame-dependent components. Both Vector and the coordinate base classes
       inherit from the ABCNumpy interface. Hence, all coordinate
       instances can be singletons or numpy arrays, and they all have
       broadcasting, mean, "__getitem__", "__getslice__",
       "__iter__", tolist(), and
       iter() and next() behavior at hand.
-      \n\n
-      Moreover, they're all instantiated with 3 arguments and a possible peg
+      
+Moreover, they're all instantiated with 3 arguments and a possible peg
       point keyword or positional argument, but I'm getting ahead of myself.
-      \n
-      At this time, there are 4 (four) coordinate systems:
-      \n\n
-         2 have origins at the center    \
-	\n\n   
-      	 2 are tangent to the ellipsoid   \   and the inheritance diagram
-	 \n\n
-	 2 are Cartesian                 /   reflects these facts
-	 \n\n
-	 2 are not                       / 
-	 \n\n
-      They are:
-      \verbatim
+     
+At this time, there are 4 (four) coordinate systems:
+     
+
+
       ECEF             Earth Centered Earth Fixed Cartesian (x, y, z)
 
       LLH              Geodetic   (lat, lon, hgt)
@@ -1713,123 +1674,126 @@ The magic methods support:
       LTP              Tangent Plane Cartesian (x, y, z, peg_point=peg_point)
       
       SCH              offset Tangent Sphere   (s, c, h, peg_point=peg_point)
-      \endverbatim
-      A PegPoint is just a namedtuple consisting of (lat, lon, hdg). Of course,
+      
+      
+A PegPoint is just a namedtuple consisting of (lat, lon, hdg). Of course,
       all arguments are in degrees-- radians are simply not for geolocation.
       Presumably, there are a bunch of ships off the coast of west Africa, full
       of people using radians for navigation.
-      \n\n
-      Transformations:
-      ----------------
-      The idea here is to be as polymorphic as possible, so for instance, if
+      
+#### Transformations:
+     
+The idea here is to be as polymorphic as possible, so for instance, if
       you have a coordinate instance, "r":
-\verbatim
-r.ecef()	
-r.llh()	
-r.ltp()  or  r.ltp(peg)
-r.sch()  or  r.sch(peg)
-\endverbatim
-      will convert r to ECEF, LLH, LTP, SCH (or LTP, SCH with a different peg).
+
+	r.ecef()	
+	r.llh()	
+	r.ltp()  or  r.ltp(peg)
+	r.sch()  or  r.sch(peg)
+
+will convert r to ECEF, LLH, LTP, SCH (or LTP, SCH with a different peg).
       Moreover, non-Cartesian coordinates can be readily converted to Cartesian
       coordinates, via their "cartesian_counter_part" method, so that:
-\verbatim
-llh.cartesian_counter_part() --> llh.ecef()
-sch.cartesian_counter_part() --> llh.ltp()
-\endverbatim
-      Moreover, all classes have a "vector()" method that converts the points
+
+	llh.cartesian_counter_part() --> llh.ecef()
+	sch.cartesian_counter_part() --> llh.ltp()
+
+Moreover, all classes have a "vector()" method that converts the points
       into a euclid.Vector instance relative to the origin of the coordinate
       system. Thus:
-\verbatim      	      r.vector()
-\endverbatim
-      always works, yielding a Vector relative to the center of a coordinate
-      system or relative to a peg point.
-      \n\n   
-      The point is that all instances have the same methods, so you don't need
+      
+      	      r.vector()
+
+always works, yielding a Vector relative to the center of a coordinate
+system or relative to a peg point.
+     
+The point is that all instances have the same methods, so you don't need
       to know what you're dealing with to get the result you want. If I have a
       motion history, r,  in LTP coordinates and a target point on the ground,
       p, I get the vector in the peg pointing from the platform to the target
       via:
 
-\verbatim		>>>d = p.vector() - r.vector()
-\endverbatim
-      Now if the whole thing is in SCH coordinates, the computation is:
-\verbatim      	        >>>d = p.vector() - r.vector()
-\endverbatim
-      (because non-Cartesian coordinates call their Cartesian_counter_part()
+		>>>d = p.vector() - r.vector()
+
+Now if the whole thing is in SCH coordinates, the computation is:
+
+		>>>d = p.vector() - r.vector()
+
+(because non-Cartesian coordinates call their Cartesian_counter_part()
       transformation via vector()).
-      \n\n
-      Now if you have the motion in SCH and the target in LTP, you DO NOT have
+
+Now if you have the motion in SCH and the target in LTP, you DO NOT have
       to type-check, then the formula is 
       
-\verbatim	        >>>d = p.vector() - r.vector()
-\endverbatim
-      Clearly, a pattern is forming-- but all good thing must come to an end.
+	        >>>d = p.vector() - r.vector()
+
+Clearly, a pattern is forming-- but all good thing must come to an end.
       What if you motion is in LLH (or ECEF, or a different SCH or LTP system)?
       Then:
       
-\verbatim	       >>>d = p.vector() - r.ltp(p.peg_point).vector()
-\endverbatim
-      The strategy to overload the "__sub__" operator as follows:
+	       >>>d = p.vector() - r.ltp(p.peg_point).vector()
 
-\verbatim      	       >>>d = p - r
-\endverbatim
-      will make a euclid.Vector instance relative to p's origin and Cartesian
+The strategy to overload the "__sub__" operator as follows:
+
+   	       >>>d = p - r
+
+will make a euclid.Vector instance relative to p's origin and Cartesian
       orientation, even p is not Cartesian. Meanwhile, r can be in any
       coordinate system.
-      \n\n
-      Further Note: numpy will handle all the broadcasting, you can have 1
+
+Further Note: numpy will handle all the broadcasting, you can have 1
       coordinate be a bunch of arrays, and the other be a like shaped array,
       or a singleton. It's going to work.
-      \\n\n
-      Of course, "__add__", inverts the whole thing: you can add a vector to a
+
+Of course, "\_\_add\_\_", inverts the whole thing: you can add a vector to a
       point:
 
-\verbatim			>>>p' = p + v
-\endverbatim
-      and p' will be in p's coordinates, with v interpreted relative to p's
+		>>>p' = p + v
+
+and p' will be in p's coordinates, with v interpreted relative to p's
       Cartesian coordinates.
       
-      @section TEP The Ellipsoid Problem
-      The ellipsoid is defined by a semi-major axis, an inverse
+### TEP The Ellipsoid Problem
+The ellipsoid is defined by a semi-major axis, an inverse
       flattening, and and optional model name (ellipsoid.py)
-      \n\n
-      Its method/properties convert to many of the various metrics
+     
+Its method/properties convert to many of the various metrics
       associated with an ellipsoid of revolution. It also converts
       between all the various latitude definitions.
-      \b\b
-      COORDINATES: Here is the key fact: coordinates only work on ellipsoids.
+      
+COORDINATES: Here is the key fact: coordinates only work on ellipsoids.
       So, the ellipsoid has methods that construct coordinate objects.
-      \n\n
-      Suppose you have the WGS-84 ellipsoid:
-      \n\n
-\verbatim      	      >>>wgs84 = ellipsoid.Ellipsoid(6378137.0,
-		       	 		     298.25722293286969,
-	       	 			          model="WGS84")
-						  \endverbatim
-      has four methods:
-      \\n\n
-\verbatim      	  wgs84.ECEF\endverbatim
-\verbatim      	  wgs84.LLH	\endverbatim
-\verbatim      	  wgs84.LTP	\endverbatim
-\verbatim      	  wgs84.SCH	\endverbatim
-      Transformation are then done using the coordinate methods, so to get
+      
+Suppose you have the WGS-84 ellipsoid:
+  
+  	>>>wgs84 = ellipsoid.Ellipsoid(6378137.0,c298.25722293286969,cmodel="WGS84")
+						 
+has four methods:
+      
+      	  wgs84.ECEF
+      	  wgs84.LLH
+     	  wgs84.LTP
+      	  wgs84.SCH
+	  
+Transformation are then done using the coordinate methods, so to get
       JPL's coordinates in ECEF:
-\verbatim      	    jpl = wgs84.LLH(34.197, -118.175, 345.).ecef()
-\endverbatim
-      So, this makes an LLH instance and then converts it to an ECEF instance.
+     	    
+	jpl = wgs84.LLH(34.197, -118.175, 345.).ecef()
+
+So, this makes an LLH instance and then converts it to an ECEF instance.
       Moreover, the ellipsoid has functions for conversion:
 
-\verbatim      		x, y, z = wgs84.llh2ecef(34.197, -118.175, 345.)
-\endverbatim
-      That is, a triplet goes in, a triplet comes out.
-      \n\n
-      WGS84:
-      -----
-      The wgs84.py module has the classes and functions for WGS84 as module
+	x, y, z = wgs84.llh2ecef(34.197, -118.175, 345.)
+
+That is, a triplet goes in, a triplet comes out.
+      
+#### WGS84:
+      
+The wgs84.py module has the classes and functions for WGS84 as module
       constants and functions, thereby allowing an entire procedure usage.
 
-      @section pm Platform Motion 
-      After all that, you still don't have platform motion. Enter the motion.py
+## Platform Motion 
+After all that, you still don't have platform motion. Enter the motion.py
       It requires numpy, since you will have array_like attributes.
       The SpaceCurve class is basically Vector which takes that into
       consideration. 
@@ -1838,64 +1802,64 @@ sch.cartesian_counter_part() --> llh.ltp()
       curves define all that: velocity, normal, acceleration, angular velocity,
       yadda yadda. They key property is you can define a local tangent frame,
       with:
-      \verbatim
+     
       x   parallel to the curve's velocity
       y   = z ^ x
       z   is some "z" orthogonal to x. The default "z" is DOWN, but you can
       	     	      		        make it UP, or something else.
-					\endverbatim
-      Hence, given a 3-DoF motion history, you get the transformation from
+					
+Hence, given a 3-DoF motion history, you get the transformation from
       level Cartesian space to the tangent frame. Now if you throw in attitude,
       represented by any kind of rotation, boom, you have an affine
       transformation to body coordinates.
-      \n\n
-      But wait: these things all have array_like attributes, that means in
+     
+But wait: these things all have array_like attributes, that means in
       one object, you have the transformation from a local pegged coordinate
       system the body frame AT EVERY POINT IN THE MOTION HISTORY.
-      	     \n\n
-      Now stop and think about that for a minute. IF you were still suffering
+      	     
+Now stop and think about that for a minute. IF you were still suffering
       primitive obsession, using arrays for vectors, and using stand-alone
       functions for coordinate transformations--you be in a real pickle.
       All these arrays, which are JUST NUMBERS and have NO intrinsic meaning-
       no you the developer has to keep it straight. Then, you have to pass
       them to functions, and then to other functions-- how you deal with the
       fact that the functions are not constant--- I don't know- but you do.
-\n\n
-      None of that. You got a GPS history and an attitude history:
 
-      	 \verbatim  f = SpaceCurve(*gps).tld2body(imu)
-	 \endverbatim
+None of that. You got a GPS history and an attitude history:
 
-\verbatim      f(look\endverbatim), \verbatim f(target)\endverbatim,
-etc...
-      does the whole affine transformation at every point.
-      
-      @subsection Connections
-      LLH and SCH are local coordinates: their (co)tangent basis vectors depend
+	  f = SpaceCurve(*gps).tld2body(imu)
+	
+
+	 f(look)
+
+does the whole affine transformation at every point.
+     
+### Connections
+LLH and SCH are local coordinates: their (co)tangent basis vectors depend
       on position, and we may need to know them in terms of their canonical
       global bases: ECEF and LTP, respectively. Hence: christoffel.py.
       It adds mix-ins that computer the jacobians, covariant and
       	contravariant bases
-      , and connection coefficients between the cannonical frames.
+       and connection coefficients between the cannonical frames.
 
       
-      @section Utilities
+## Utilities
 
-      @subsection trig Trigonometry
-      The proliferation of "degrees" necessitates basic trig functions
+### Trigonometry
+The proliferation of "degrees" necessitates basic trig functions
       that take and return degree arguments. They are implemented in
       trig.py. Moreover, it is in this module where you try to use numpy,
       but get python's built in math library should numpy be unavailable.
 
-      @subsection Err Exceptions
-      Various errors specific to the package are defined in exceptions.py.
+### Exceptions
+Various errors specific to the package are defined in exceptions.py.
       They're basically wonky ways to catch nonsense operations.
       
 
-      @section exp Experimental Sub Packages: __Geodesic__
- 
-      @subsection cliff Clifford Algebra
-      One will note the Versor and Vector seems to be related, but their
+## Experimental Sub Packages: __Geodesic__
+
+### Clifford Algebra
+One will note the Versor and Vector seems to be related, but their
       is something missing-- they don't line up in the sense of rank,
       or which product is antisymmetric, etc.. Moreover, there is no
       distinction between the pseudo-scalar from the triple scalar product
@@ -1905,30 +1869,30 @@ etc...
       these problems are resolved in Clifford Algebras, specifically
       __Cl__(3, R),
       the Clifford algebra of
-      \f$\mathbb R^3\f$. It is implemented in blades.py
+      $\mathbb R^3$. It is implemented in blades.py
       
-      @subsection quat Quaternions
-      Versors are limited, in that they must have unit norm, thus only the
+### Quaternions
+Versors are limited, in that they must have unit norm, thus only the
       Grassmann product is allowed. The space is not closed under the inner,
       outer, odd, and even products as well as addition and subtraction.
       Hence, for fun, they are implemented in
       geo/desic/hamilton.py.
 
-      @subsection cd Cayley-Dickson Construction
-      Once you have full blown quaternions, there really is no reason to
+### Cayley-Dickson Construction
+Once you have full blown quaternions, there really is no reason to
       not have octonions and sedinions, tesserines, bi-quaternions,
       co-quaternions, and their "split" varieties (including the split
       complex numbers) They can all be implemented via the Cayley Dickson
       construction in extension.py
 
-      @subsection mink Minkowski Space
-      The minkowski.py module implements 4-vectors as a composition
+### Minkowski Space
+The minkowski.py module implements 4-vectors as a composition
       of a Scalar and a Vector- so that the metric is implicitly coded.
       Explicit coding, then Zen of python after all, would require implementing
       a metric tensor, thereby dumping a lot of multiplications by and
       additions of 0 into the package, and that is not warranted.
 
-      Additional
+Additional
       modules are lorentz.py (Lorentz transformation and general 4-tensors,
       as composed of rank 0, 1, and 2 3-tensors). de_broglie.py implements
       Lorentz transformation of wave-vector-- thus allowing simple
@@ -1937,28 +1901,26 @@ etc...
       receives null 4-vectors). The pauli.py module is TBD to implement a
       spinor representation of spacetime.
 
-      @subsection pluck Projective Geometry
-      In implementation of homogeneous coordinates is TBD
-      (geo.desic.plucker).
 
-      @subsection hot  Higher Order Tensors
-      euclid/three.py and euclid/four.py implement rank-3 and rank-4 tensors
+
+### Higher Order Tensors
+euclid/three.py and euclid/four.py implement rank-3 and rank-4 tensors
       explicitly,
       while 5th and above rank tensors are created dynamically as needed
       (inheriting their behavior from geo.metric.euclid.three.HigherOrder).
       Be advised that higher-rank objects are not fully mature.
 
-      All Cartesian tensor classes live in the
+All Cartesian tensor classes live in the
       geo.metric.euclid.euclid.Tensor_.ZOO, so that tensors of
       any-rank know about other ranks, which may be created via
       inner/outer products or index contraction.
 
-      There is a levi_civita.py to facilitate the wedge product 
+There is a levi_civita.py to facilitate the wedge product 
       in arbitrary dimensions (see
       geo.metric.euclid.three.LEVI_CIVITA).
 
-      The symmetries of high rank tensors is complicated. While the rank-2
-      tensor has only 2 obvious symmetries: \f$ {\bf T} \pm {\bf T}^T \f$,
+The symmetries of high rank tensors is complicated. While the rank-2
+      tensor has only 2 obvious symmetries: $ {\bf T} \pm {\bf T}^T $,
       which can be computed manually.
       For rank-N, the number of symmetries is equal to the number of
       integer partitions of N, and it gets completely intractable by hand.
@@ -1972,57 +1934,54 @@ etc...
       It is a complex problem.
 
 
-      Index Gymnastics
-      ================
+## Index Gymnastics
+    
+The 'e' method allows you to select or run on indices, as follows
+      for a rank 5 tensor $ T_{ijkmn} $:
 
-      The 'e' method allows you to select or run on indices, as follows
-      for a rank 5 tensor \f$ T_{ijkmn} \f$:
+      	>>>M = T.e(0, Ellipsis, 2, 1, Ellipsis)\endverbatim
 
-\verbatim      	  >>>M = T.e(0, Ellipsis, 2, 1, Ellipsis)\endverbatim
-      Or in other words:
-      \n
-      \f$ M_{jn} = T_{0j21n}\f$
-      While a contraction to a rank 3 tensor:
-      \n
-\verbatim      	      >>>A = T.contraction(0, 3)\endverbatim
-	\n    
-      represents:
-\n
-      \f$ A_{jkm} = T_{ijkim} \f$.
-\n
-      The inner and outer products, respectively are, for example:
-\n
-\verbatim      	  	>>>C = A.inner(B)\endverbatim
-\n	        
-      means:
-\n
-      \f$ C_{ijm} = A_{ijk}B_{km} \f$
-\n
-      and
-\n
+$$ M_{jn} = T_{0j21n} $$
 
-\verbatim		>>>C = A.outer(B)\endverbatim
-\n
-      \f$ C_{ijkmn} = A_{ijk}B_{mn} \f$.
-\n
-      In the later case, the rank 5 tensor is created at run-time and added
+While a contraction to a rank 3 tensor:
+     
+ 	>>>A = T.contraction(0, 3)
+   
+     
+$$ A_{jkm} = T_{ijkim} $$
+
+The inner and outer products, respectively are, for example:
+
+	>>>C = A.inner(B)
+	        
+means:
+
+$$ C_{ijm} = A_{ijk}B_{km} $$
+
+and
+
+	>>>C = A.outer(B)
+
+$$ C_{ijkmn} = A_{ijk}B_{mn} $$.
+
+In the later case, the rank 5 tensor is created at run-time and added
       to the Zoo. An antisymmetric product is also possible:
 
 
-\verbatim   	     >>>C = A ^ B\endverbatim
-		     \n
-      which becomes:
-      \n
-      \f$ C_{ijkln} = A_{ijk}\epsilon_{klm}B_{mn} \f$.
-      \n
-      (though this not a true wedge product-- use
+	>>>C = A ^ B
+
+which becomes:
+      
+$$ C_{ijkln} = A_{ijk}\epsilon_{klm}B_{mn} $$.
+      
+(though this not a true wedge product-- use
       geo.desic.clifford for that).
 
-      Of course, for computational speed, the normal Vector and rank-2
+Of course, for computational speed, the normal Vector and rank-2
       products are overridden with specific implementations. Never-the-less,
       problems arise:
 
-      While it is straightforward to implement specific formulae for
+While it is straightforward to implement specific formulae for
       "normal" rank-1,2 operations, and it is also straightforward to
       do rank-N >= 1 with slower generalized formulae  (that computer and
       expand index iterable through a generous sprinkling of itertools),
@@ -2031,83 +1990,12 @@ etc...
       perfect code. A similar problem arises with rank-0 objects-- but that
       is fairly well handled.
 
-      @section geomorphic Morphic
-      The geo.morphic sub-package is for geomorphology: the shape of terrain.
-      monge.py lets you define surfaces, as sampled by \f$z_i = f(x_i, y_i)\f$,
-      whence you can fit them with qudarics (taylor.py) and compute their
-      various forms of slope and curvatures (gauss.py). It's all in good fun.
-
-      Basically, you start with a Vector instance, v, that represents a local
-      neighborhood in a map (so v.x, v.y are from a let-lon mesh-grid, and
-      v.z is the height) and the put it into a monge patch
-
-\verbatim      	        >>>m = Monge.fromvector(v)\endverbatim
-\verbatim      		    >>>m = Monge(v.x, v.y, v.z)\endverbatim
-
-      and let geo.morphic.monge.Monge do the work:
-
-\verbatim		     		      >>>quad = m.quadric()\endverbatim
-					      \n
-      In fact, if someone gives you lat, lon and ellipsoid height in an array
-      p, you can get the geoid corrected principal curvatures at the i'th
-      point with axes defined wrt to north:
-     
-\verbatim                >>>ltp = LLH(*p).ltp(peg=(p[i, 0].lat, p[i, 1].lon, 0))\endverbatim
-\verbatim                >>>k1, k2 = Monge(ltp.x, ltp.y, ltp.z + ltp.egm96()).quadrc().kmaxkmin()\endverbatim
-			 \n
-      I mean wow. For most packages, that request is an entire module--even
-      a "task" with a stuckee; here, it's 2 lines, and on a whim at that.
-
-      @section Magnetic
-      The geo.magnetic subpackage has some modules related to
-      electro-magnetism: The aforementioned faraday.py for
-      polarization, and legendre.py--which has vector spherical
-      harmonics. (The ease with which they are computed should
-      convince you of the wonders of geo).
+ 
       
-      There is a preliminary module, voigt.py, for anisotropic materials
-      in both elasticity \f$ \tilde{\epsilon} \f$ and susceptibility
-      \f$ \chi \f$. They require rank-4 tensors; however, because of symmetry
-      they are reduced from 81 DoF to 21 and 36 DoF, respectively, and hence
-      they can be represented by a symmetric (or not) 6 by 6 matrix.
-
-      @section Centric
-      The idea here is orbits, but it will probably never happen. keppler.py
-      is empty.
-
-      @section Politics
-      Geopolitics includes various modules that involve some sort of
-      interational standards, such as: time, units, and spectrum.
-
-      @subsection LS Leap Seconds
-      leapseconds.py provides a datetime object
-      that can be substituted in-place of traditional
-      <a href="https://docs.python.org/2/library/datetime.html#datetime-objects">
-      python datetime.datetime</a> instances-- but it is leap second aware and
-      will compute correct time differences across leap-seconds. Of course,
-      this module's geo.centric.leapseconds.LEAPS cannot be predicted beyond
-      6 months.
-
-      @subsection Si System International
-      The si.py module provides objects with dimensions, both base and derived.
-
-      @subsection spectra Electromagnetic Spectrum
-      hertz.py provides a collection of dictionaries that represent the
-      various divisions of the electromagnetic spectrum, from static DC fields
-      to the
-      <a href="http://en.wikipedia.org/wiki/Planck_units">Planck Scale</a>,
-      and a function to identify where a given frequency lies.
-
-      @section tutorialu User's Tutorial
-      See tutorial.py. It does all the stuff that you want to do, and some
-      that you don't.
-      
-      @section tutoriald Developer's Tutorial
-      This is
-      <a href="http://en.wikipedia.org/wiki/SOLID_(object-oriented_design)">
-      SOLID</a> OO, pythonic code. It attempts to maximize its maintainability
-      score as determined by
-      <a href="http://www.pylint.org">pylint</a>, the current standard for
+## Developer's Tutorial
+This is [SOLID](http://en.wikipedia.org/wiki/SOLID_(object-oriented_design))
+      OO, pythonic code. It attempts to maximize its maintainability
+      score as determined by [pylint](http://www.pylint.org), the current standard for
       coding python. Exorcising anti-patterns leads to ravioli-code, which
       can be hard to read (but __"__ easy __"__ to maintain). The difficulty in reading
       arises because the implementation is hidden, while the algorithm
@@ -2116,9 +2004,9 @@ etc...
       unlearing that __now__. It is not easy, but it is well worth the
       effort.
 
-      Good Luck.
+Good Luck.
 
-      The goal is highly cohesive code, with low coupling. The mathematical
+The goal is highly cohesive code, with low coupling. The mathematical
       nature of the objects with-in, make low coupling difficult--coordinates
       will depend on vector: they will always be coupled; like-wise for
       everything else.
@@ -2141,168 +2029,78 @@ etc...
       to understand what python is doing, while you can use references
       to the _abc_ library to understand how geo does business.
 
-      @subsection poly Polymorphism
-      What is it? Well having to use "print", "printf", or "sprintf"
+### Polymorphism
+What is it? Well having to use "print", "printf", or "sprintf"
       is NOT IT.
       Polymorphism means "do the right thing without being told."
       Hence, if you code:
 
-\verbatim      		   >>>c = a * b\endverbatim
-			   \n
-      "c" better be the product of a and b. But what are a and b?
-      	  \n\n
-      \f$ c_i = ab_i \f$
-      \n\n
-      differs from
-\n\n
-      \f$ c = a_ib_i \f$
-\n\n
-      differs from
-\n\n
-      \f$ c_i = a_{ij}b_j \f$
-\n\n
-      differs from
-\n\n
-      \f$ c_{ij} = a_{ijk}b_k \f$
-\n\n
-      and so on. In these cases, internal polymoprhism--the
+	   >>>c = a * b
+			   
+"c" better be the product of a and b. But what are a and b?
+      	 
+ $$ c_i = ab_i $$
+      
+differs from
+
+$$ c = a_ib_i $$
+
+differs from
+
+$$ c_i = a_{ij}b_j $$
+
+differs from
+
+$$ c_{ij} = a_{ijk}b_k $$
+
+and so on. In these cases, internal polymoprhism--the
       highest--form works:
-      The class dispatches the correct "a.__mul__" method to
+      The class dispatches the correct "a\.\__mul\_\_" method to
       deal with the "*" operand.
-\n\n
-      What about:
-\n\n
-      \f$ c_i = a_i b \f$
-    \n\n  
-      differs from
-\n\n
-      \f$ c = a_i b_j \f$
-\n\n
-      differs from
-\n\n
-      \f$ c_i = a_i b_{ij} \f$
-\n\n
-      differs from
-\n\n
-      \f$ c_{ij} = a_i b_{ijk} \f$
-\n\n
-      Here, each case calls
+
+What about:
+
+$$c_i = a_i b $$
+
+differs from
+
+$$ c = a_i b_j $$
+
+differs from
+
+$$ c_j = a_i b_{ij} $$
+
+differs from
+
+$$ c_{ij} = a_i b_{ijk} $$
+
+Here, each case calls
+
       geo.metric.euclid.vector.Vector.__mul__, which there is none,
       it's kicked up to the super:
       geo.metric.euclid.euclid.Tensor_.__mul__. Now what?
       
-      So one solution is to use case-switch like _if_-_then_ blocks to
+So one solution is to use case-switch like _if_-_then_ blocks to
       call the right function. That's too primitive. Instead, a hash
       table bound to the left operand looks up the rank of the
       right operand to get the functions (e.g.,
-      geo.metric.euclid.vector.Vector._dispatch_mul). [Aside:
+      geo.metric.euclid.vector.Vector._dispatch_mul). (Aside:
       That shows that
       things are further complicated by the quaternion and the
-      geo.metric.frenet_serret.SpaceCurve]. That is  external
+      geo.metric.frenet_serret.SpaceCurve). That is  external
       polymorphism, where explicit code decides the function to call
       based on the argument-- this can only be solved elegantly
       with a language that supports
-      <a href="http://en.wikipedia.org/wiki/Multiple_dispatch">
-      multiple dispatch</a>, aka: multimethods.
+      [multiple dispatch](http://en.wikipedia.org/wiki/Multiple_dispatch)
+      aka: multimethods.
 
-      Well, we don't have that in python, so this is what you get.
+Well, we don't have that in python, so this is what you get.
       The solution presented is an attempt to avoid branchy
       dynamic code.
       The complexity is represented in a complex __static__ data
       structure--with one point of evaluation. It takes some
       getting used to, but it the right thing to do. If you disagree-
       read the next section. 
-
-      @subsection flat Flatness
-      The Zen of python requires flatness. The prior paragraph
-      may seem in total violation of that--but it is not. That
-      geo has deep taxonomies of subpackages and modules is a
-      result of the complexity of the problem. The code itself
-      is flat-- that is: each object does not violate the
-      Law of Demeter: access is (mostly) 1-dot-deep. Moreover,
-      deep _if_-then blocks and _for_-loops are avoided. The former,
-      for example, uses the hash table to avoid something like:
-
-      \verbatim
-def __mul__(self, other):
-    if isinstance(other, Geometric):
-        if isinstance(other, Tensor_):
-            if isinstance(other, Scalar):
-                return dilation(self, other)
-            elif isinstance(other, Vector):
-                return dot(self, other)	
-            elif isinstance(other, Tensor):
-                return anterior_product(self, other)	
-	    else:
-		return (other.transpose() * self).transpose()
-	elif isinstance(other, NonCartesian):
-	    if isinstance(other, Polar):
-	        return self * Vector(other.r * sin(other.theta) * cos(other.phi),
-		                     other.r * sin(other.theta) * sin(other.phi),
-				     other.r * cos(other.theta))
-            elif isinstance(other, Parabola):
-	         <suite>        
-        else:
-	    if isinstance(other, Quaternion):
-	         return Quaternion(ZERO, self) * other
-	      elif isinstance(other, SpaceCurve):
-	         return self * SpaceCurve.vector 
-     else:
-         return Vector(other*self.x, other*self.y, other*self.z)
-      \endverbatim
-      that's not pretty. Not only is the cyclomatic complexity too high,
-      it requires
-      Cartesian vectors know about other coordinate systems--a
-      total disaster (read: _antipattern_)--and
-      utterly NOT FLAT.
-      \n\n
-      _for_-loops are generally avoided
-      by internal iteration and the wonders of the
-      standard library's
-      <a href="https://docs.python.org/2/library/itertools.html">itertools
-      module</a> (mad props
-      to Raymond Hettinger).\n\n
-      There is also question (previously "alluded too") of singleton vs.
-      array components. That is mostly handled via internal polymorphism
-      built into numpy's array broadcasting--but there are corner
-      cases that can cause grief-- so you if get an odd result, it's
-      quite possible that the operator overload was caught by
-      numpy and not geo. (Note: this is why there is no "__array__"
-      overloading in any of geo, as numpy looks for this and considers
-      it a green-light to grab control).
-
-      @subsection wc Wildcard Imports
-      geo is full of wildcard imports:
-      \verbatim
-      	     from .module import *
-      \endverbatim
-      we all know wildcard imports are bad-- very bad. So
-      what's up?
-
-      __No__ module uses objects from a wildcard import, rather top-level
-      subpackages collect their sub-modules key objects into their
-      namespace. In support of that idea, all wildcard imports are from
-      modules using the
-      <a href="https://docs.python.org/2/tutorial/modules.html?highlight=__all__#importing-from-a-package">
-      "__all__"</a> protocol, or from a sub-package's "__init__.py" which
-      also used "__all__".
-      The point is: this brings objects up to the top namespace. Hence
-      "Vector" lives in "geo.Vector" -- and you have access to it via
-      a __flat__ look up. That it got there via:
-1 
-\verbatim geo: from .metric import *
-	  metric: from .euclid import *
-          euclid: from .vector import * \endverbatim
-
-      which got it from vector.py:
-
-\verbatim
-__all__ = ('scalar_triple_product', 'vector_triple_product',
-           'scalar_quadruple_product', 'vector_quadruple_product',
-           'Proj', 'Rej', 'Ref',
-           'Vector', 'NULL', 'BASIS', 'X', 'Y', 'Z')
-\endverbatim
-      is not required knowledge. It's flat to the user.
 
 
       @section young Tensor Symmetries Revisited
