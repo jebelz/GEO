@@ -117,17 +117,20 @@ There are 2 main and 2 (or more) ancillary sub-packages:
 ### Euclid and Euler
 
 #### Cartesian Vectors in R3.
-The geo.metric package (euclid.py) defines the basics for rank 0
-     (scalar.py), 1 (vector.py),
-     2 (tensor.py), and higher objects in real Euclidean
-     $\mathbb E^3 $
-     space,
+The geo.metric package
+[euclid.py](https://github.com/jebelz/GEO/blob/main/metric/euclid/euclid.py) defines the basics for rank 0
+[scalar.py](https://github.com/jebelz/GEO/blob/main/metric/euclid/scalar.py), 1,
+[vector.py](https://github.com/jebelz/GEO/blob/main/metric/euclid/vector.py), 2
+[tensor.py](https://github.com/jebelz/GEO/blob/main/metric/euclid/tensor.py), and higher objects in real Euclidean
+$\mathbb E^3 $
+space,
      aka
-     $\mathbb R^3$.
+$\mathbb R^3$.
 
 #### Transformations in SO(3)
 
-Matrix __SO(3)__  (via tensor.py), quaternion __SU(2)__  (euler/hamilton.py),
+Matrix __SO(3)__  (via tensor.py), quaternion __SU(2)__ 
+[hamilton.py](https://github.com/jebelz/GEO/blob/main/metric/euler/hamilton.py),
      transformations are implemented.
      Furthermore, various
      representation of the charts on __SO(3)__ (charts.py) allow Euler-angle
@@ -212,7 +215,8 @@ interfaces to the Cartesian Vector: that is, when used in operations,
 ### Space Curves
      
 Space curves and the Frenet-Serret formalism is available in
-     (motion.py). The space curve comprises an (array_like) Vector and a
+     [motion.py](https://github.com/jebelz/GEO/blob/main/metric/frenet_serret/motion.py).
+     The space curve comprises an (array_like) Vector and a
      one dimensional time array, which serves as a parameter in the
      parameterization of the 3D curve.
 
@@ -258,7 +262,7 @@ In gibbs.py, the
      same vectors, but their sesqui-linear inner product is positive
      definite. The outer product is also complexified, making them
      the ideal tool for representing polarization density matrices
-     (faraday.py).
+     [faraday.py](https://github.com/jebelz/GEO/blob/main/magnetic/faraday.py).
      
      >>>v = v.gibbs()  # same vector, now lives in a new space
      >>>print type(v)
@@ -276,8 +280,9 @@ In gibbs.py, the
 #### Higher Rank Tensors
      
 3rd and 4th rank tensors, and a class-factory capable of making
-     any order tensor are available in euclid/three.py and
-     euclid/four.py, respectively.
+     any order tensor are available in
+    [three.py](https://github.com/jebelz/GEO/blob/main/metric/euclid/three.py) and
+    [four.py](https://github.com/jebelz/GEO/blob/main/metric/euclid/four.py), respectively.
      Inner, outer, and wedge products
      are supported, along with index contraction and other forms of
      index gymnastics.
@@ -302,7 +307,8 @@ In practice, rank 2 and rank 4 tensors usually have some degree of
 ###   Einstein Summation Notation
      
 Through the wonders of python and [complete class customization](https://docs.python.org/2/reference/datamodel.html#customizing-attribute-access)
-     [Einstein summation notation](https://en.wikipedia.org/wiki/Einstein_notation) is _fully_ supported (einstein/albert.py).
+     [Einstein summation notation](https://en.wikipedia.org/wiki/Einstein_notation) is _fully_ supported
+     ([einstein/albert.py](https://github.com/jebelz/GEO/blob/main/metric/euclid/einstein/albert.py)).
      For example,
      a second rank Tensor only has 9 attributes: 'xx', 'xy', 'xz',
      'yx', 'yy', 'yz', 'zx', 'zy', and 'zz', and it has a trace
@@ -398,7 +404,7 @@ Here we delve into a rather involved topic: the irreducible
  #### Spherical Tensors: 3 x 3 = 5 + 3 + 1
      
  This does not refer to spherical coordinates, rather the decomposition
-     of Vectors (wigner/eckart/one.py) and
+     of Vectors ([wigner/eckart/one.py](https://github.com/jebelz/GEO/blob/main/metric/wigner/eckart/one.py)) and
      Tensors (wigner/eckart/two.py) into irreducible representations
      of __SO(3)__.
      Thus, the _x_ or _xy_-like
@@ -419,7 +425,8 @@ Here we delve into a rather involved topic: the irreducible
      eigentensors of rotations. This is entirely analgous to the construction
      of [spherical harmonics in Cartesian coordinates](https://en.wikipedia.org/wiki/Spherical_harmonics#Spherical_harmonics_in_Cartesian_form"),
      and it gets complicated, fast. Nevertheless, geo goes there--though
-     it requires and entirely complex subpackage (geo.metric.wigner).
+     it requires and entirely complex subpackage
+     ([geo.metric.wigner]https://github.com/jebelz/GEO/blob/main/metric/wigner/).
 
 In geo's implementation, the elements of spherical tensors are not
      accessed by
@@ -427,7 +434,10 @@ In geo's implementation, the elements of spherical tensors are not
      of irreducible
      representations and their azimuthal eigenstates.
      Methods allow conversions between
-     the 2 representations (ec.py, ka.py, and rt.py).
+     the 2 representations (
+     [ec.py](https://github.com/jebelz/GEO/blob/main/metric/wigner/eckart/ec.py),
+     [ka.py](https://github.com/jebelz/GEO/blob/main/metric/wigner/eckart/ka.py), and
+     [rt.py](https://github.com/jebelz/GEO/blob/main/metric/wigner/eckart/rt.py)).
      So for instance:
      
      
@@ -445,12 +455,15 @@ Applications to polarization observables are
      demonstrated in faraday.py .
 
 The full transformation matrices associated with
-     spherical representations of any dimensions 2j+1 for integer and
-     1/2-integer representations (j)  are in wigner.py, which also
+     spherical representation of any dimensions 2j+1 for integer and
+     1/2-integer representations (j)  are in
+     [wigner.py]https://github.com/jebelz/GEO/blob/main/metric/wigner/wigner.py), which also
      implements the decomposition of tensor-product spaces into
-     sums of irreducible spaces, with the help of clebsch_gordan.py. 
+     sums of irreducible spaces, with the help of
+     [clebsch_gordan.py](https://github.com/jebelz/GEO/blob/main/metric/wigner/clebsch_gordan.py). 
      Some assistance with decomposition of representations provided in
-     racah.py, where products of kets (eigenstates of individual
+     [racah.py](https://github.com/jebelz/GEO/blob/main/metric/wigner/racah.py),
+     where products of kets (eigenstates of individual
      angular momentum/z-projection operators) are turned into sums
      over different kets (eigenstates of the total angular momentum
      and total z-projection). (This is truly dialed-in python, _Eds._)
@@ -461,7 +474,8 @@ The preliminary implementation of rank 3 (wigner/eckart/three.py) and
 
 Spherical decomposition of complete Cartesian tensors requires and
      understanding of isotropic tensors, which are available up to 
-     rank 6 in syzygy.py: these
+     rank 6 in
+     [syzygy.py](https://github.com/jebelz/GEO/blob/main/metric/euclid/syzygy.py): these
      are tensors that are independent of coordinate system, which for
      rank 2 and 3 are the familiar Kroncker Delta
      (geo.metric.euclid.tensor.DELTA) and Levi-Civitta Tensor
@@ -470,9 +484,11 @@ Spherical decomposition of complete Cartesian tensors requires and
      and they are not all linearaly independent.
 
 Additional tools for the alternating tensor, aka Levi-Civita (pseudo)-
-     tensor/symbol are in levi_civita.py. The
+     tensor/symbol are in
+     [levi_civita.py](https://github.com/jebelz/GEO/blob/main/metric/levi_civita.py). The
      [generalized Kronecker deltas](https://en.wikipedia.org/wiki/Kronecker_delta#Generalizations_of_the_Kronecker_delta)
-     can be computed in kronecker.py.
+     can be computed in
+     [kronecker.py](https://github.com/jebelz/GEO/blob/main/metric/kronecker.py).
      
 
 ## Schur-Weyl Duality
@@ -497,15 +513,18 @@ Rank-2 tensors have two subspaces closed under rotations which
      then relates irreducible
      representations of the symmetric group to
      [Young Tableaux](https://en.wikipedia.org/wiki/Young_tableau)
-     (young.py). They provides a
-     link to partitions of integers, which is taken up in pascal.py,
+     [young.py](https://github.com/jebelz/GEO/blob/main/metric/schur_weyl/young.py). They provides a
+     link to partitions of integers, which is taken up in
+     [pascal.py](https://github.com/jebelz/GEO/blob/main/metric/schur_weyl/pascal.py),
      which starts with Pochammer symbols and winds up with integer
      partitions. Additionaly, the number triangles are extended to
      many of the combinatoric polynomials, leading naturally to the
      computation of Jacobi
      polynomials, which are required for the Wigner D matrices.
      Also: since Young diagrams are like a multiset, a multiset object
-     is available in de_bruijn.py, but it's really just a hashable
+     is available in
+     [de_bruijn.py]((https://github.com/jebelz/GEO/blob/main/metric/schur_weyl/young.py)),
+     but it's really just a hashable
      [collections.Counter.](https://docs.python.org/2/library/collections.html#collections.Counter)
      
 The theory of conjugacy classes in finite
@@ -515,46 +534,50 @@ This subpackage also supports some results from the representation
      theory of finte groups, permutations, and combinatorics. The
      Young Tableaux formalism also has applications to the representation
      of Lie groups, which are commonly used to understand the quark
-     (and separately the gluon) structure of matter
-     (gelfand_tsetlin/__init__.py).
+     (and separately the gluon) structure of matter.
+     [gelfand_tsetlin/__init__.py)](https://github.com/jebelz/GEO/blob/main/metric/wigner/gelfand_tsetlin/__init__.py)
 
 ## Geo-Detic:
 
 #### Coordinates and Ellipsoids
  
-The geo.detic package implements geo.metric objects on the Earth
-     via the introduction of coordinates (coordinates.py), which can
+The [geo.detic](https://github.com/jebelz/GEO/tree/main/detic)
+package implements geo.metric objects on the Earth
+     via the introduction of coordinates
+(coordinates.py)[https://github.com/jebelz/GEO/blob/main/detic/coordinates.py], which can
      be represented in Earth Centered Earth Fixed
      (geo.detic.coordinates.ECEF), geodetic
      (geo.detic.coordinates.LLH), or local tangent plane
      (geo.detic.coordinates.LTP)
-     or sphere (geo.detic.coordinates.SCH) relative to a
+     or tangent sphere (geo.detic.coordinates.SCH) relative to a
      geo.detic.origins.PegPoint.
 
 The coordinates are[abstract](https://docs.python.org/2/library/abc.html),
      and only have [concrete](https://en.wikipedia.org/wiki/Class_(computer_programming)#Abstract_and_concrete)
      meaning with respect
-     to an ellipsoid (ellipsoid.py). 
+     to an ellipsoid (see: [ellipsoid.py](https://github.com/jebelz/GEO/blob/main/detic/newton/ellipsoid.py)). 
      Although preference is given to WGS84 (wgs84.py), a variety of
      historic ellipsoids are available (almanac.py), as well as user-defined
-     ellipsoids and others in the Solar System (copernicus.py).
+     ellipsoids and others in the Solar System
+     ([copernicus.py](https://github.com/jebelz/GEO/blob/main/detic/newton/copernicus.py)).
      
 Analytic computations of covariant and contravariant basis vectors
      linking LLH and SCH to their canonical Cartesian coordinates
-     systems (ECEF and LTP, respectively) are included (christoffel.py).
+     systems (ECEF and LTP, respectively) are included ([christoffel.py](https://github.com/jebelz/GEO/blob/main/detic/christoffel.py)).
      That is: you always have both the tangent basis vectors
-     (_e.g._, $
-     (\frac{\partial  \vec r}{\partial s},
-     \frac{\partial  \vec r}{\partial c},
-     \frac{\partial  \vec r}{\partial h})$
+     (_e.g._:
+$$(\frac{\partial  \vec r}{\partial s},\ 
+     \frac{\partial  \vec r}{\partial c},\ 
+     \frac{\partial  \vec r}{\partial h})$$
+     
 which are not-necessarity
      normailzed vectors running along the direction of change of s, c, and h,
      and the cotangent basis vectors
-     (_e.g._ $
-     {\bf\vec{\nabla}}s,
-     {\bf\vec{\nabla}}c,
-     {\bf\vec{\nabla}}h)
-     $), which are the gradients of the local coordinates (that is, they're
+     (_e.g._
+$$ {\bf\vec{\nabla}}s,\ 
+     {\bf\vec{\nabla}}c,\ 
+     {\bf\vec{\nabla}}h)$$)
+which are the gradients of the local coordinates (that is, they're
      normal to surfaces of constants s, c, and h--and likewise for latitude,
      longitude and height with resepct to ECEF).
      
