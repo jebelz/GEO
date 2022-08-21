@@ -8,7 +8,7 @@ The point of this package is to allow you to do manifestly covariant
      Earth-bound coordinates and abstract vectors can be done without
      regard to their coordinate system. Moreover, the operations do
      not depend on any array-like properties of your objects: operations
-     on single vectors or coordinates and the same as operations on multi-
+     on single vectors or coordinates are the same as operations on multi-
      dimensional arrays of coordinates: _The_ _code_ _you_
      _write_ _is_ _the_ _same_ _for_ _either_ _case_ .
 
