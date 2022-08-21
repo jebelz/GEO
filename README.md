@@ -133,7 +133,7 @@ Matrix __SO(3)__  (via tensor.py), quaternion __SU(2)__
 [hamilton.py](https://github.com/jebelz/GEO/blob/main/metric/euler/hamilton.py),
      transformations are implemented.
      Furthermore, various
-     representation of the charts on __SO(3)__ (charts.py) allow Euler-angle
+     representation of the charts on __SO(3)__ ([charts.py](https://github.com/jebelz/GEO/blob/main/metric/euler/charts.py) allow Euler-angle
      and Tait-Bryant angle based representations. Needless-to-say,
      transformation of vectors is independent of the representation
      of the transform, _T_:
@@ -152,7 +152,7 @@ correct method to transform its argument.
 ##### Transformations GL(3, R) (aka Aff(3))
 In the context of geo, an
      [affine transformation](https://en.wikipedia.org/wiki/Affine_transformation)is a general linear transformations from
-     R3 -> R3
+     ${\mathbb R}^3 \rightarrow {\mathbb R}^3$
 and are supported in affine.py. While __M__ can be any object that
      transforms vectors linearly, we are primarily concerned with rotations.
      The translation __b__ is always from the target space (which is trivial
@@ -202,7 +202,7 @@ interfaces to the Cartesian Vector: that is, when used in operations,
      convert back to their original coordinate system. That allows
      you to mix coordinates systems seemlessly, because a vector is a
      vector, regardless of the coordinate system in which it is expressed.
-     Hence \f$ \hat x \times \hat y = \hat z \f$ in any coordainte system:
+     Hence $ \hat x \times \hat y = \hat z $ in any coordainte system:
      
      
 	>>>print X.polar() ^ Y.cylinder()
@@ -262,7 +262,7 @@ $\mathbb C^3$ : they are the
      same vectors, but their sesqui-linear inner product is positive
      definite. The outer product is also complexified, making them
      the ideal tool for representing polarization density matrices
-     [faraday.py](https://github.com/jebelz/GEO/blob/main/magnetic/faraday.py).
+     ([faraday.py](https://github.com/jebelz/GEO/blob/main/magnetic/faraday.py)).
      
      >>>v = v.gibbs()  # same vector, now lives in a new space
      >>>print type(v)
@@ -410,7 +410,7 @@ Here we delve into a rather involved topic: the irreducible
      Thus, the _x_ or _xy_-like
      attributes are replaced by
      orbital and
-     azimuthal quantum numbers:$(l, m)$-- also knows as degree and order.
+     azimuthal quantum numbers: $(l, m)$ -- also knows as degree and order.
      The signifcance of these is that they are eigentensors of rotations
      about a fixed axis.
 
@@ -426,7 +426,7 @@ Here we delve into a rather involved topic: the irreducible
      of [spherical harmonics in Cartesian coordinates](https://en.wikipedia.org/wiki/Spherical_harmonics#Spherical_harmonics_in_Cartesian_form),
      and it gets complicated, fast. Nevertheless, geo goes there--though
      it requires and entirely complex subpackage
-     ([geo.metric.wigner](https://github.com/jebelz/GEO/blob/main/metric/wigner/).
+     ([geo.metric.wigner](https://github.com/jebelz/GEO/blob/main/metric/wigner/)).
 
 In geo's implementation, the elements of spherical tensors are not
      accessed by
@@ -468,8 +468,8 @@ The full transformation matrices associated with
      over different kets (eigenstates of the total angular momentum
      and total z-projection). (This is truly dialed-in python, _Eds._)
 
-The preliminary implementation of rank 3 (wigner/eckart/three.py) and
-     rank 4 (wigner/eckart/four.py) is underway; however, these are difficult
+The preliminary implementation of rank 3 ([wigner/eckart/three.py](https://github.com/jebelz/GEO/blob/main/metric/wigner/eckart/three.py)) and
+     rank 4 ([wigner/eckart/four.py](https://github.com/jebelz/GEO/blob/main/metric/wigner/eckart/three.py)) is underway; however, these are difficult
      (i.e., publishable) to implement.
 
 Spherical decomposition of complete Cartesian tensors requires and
@@ -544,7 +544,7 @@ This subpackage also supports some results from the representation
 The [geo.detic](https://github.com/jebelz/GEO/tree/main/detic)
 package implements geo.metric objects on the Earth
      via the introduction of coordinates
-(coordinates.py)[https://github.com/jebelz/GEO/blob/main/detic/coordinates.py], which can
+([coordinates.py](https://github.com/jebelz/GEO/blob/main/detic/coordinates.py)), which can
      be represented in Earth Centered Earth Fixed
      (geo.detic.coordinates.ECEF), geodetic
      (geo.detic.coordinates.LLH), or local tangent plane
@@ -552,32 +552,22 @@ package implements geo.metric objects on the Earth
      or tangent sphere (geo.detic.coordinates.SCH) relative to a
      geo.detic.origins.PegPoint.
 
-The coordinates are[abstract](https://docs.python.org/2/library/abc.html),
+The coordinates are [abstract](https://docs.python.org/2/library/abc.html),
      and only have [concrete](https://en.wikipedia.org/wiki/Class_(computer_programming)#Abstract_and_concrete)
      meaning with respect
      to an ellipsoid (see: [ellipsoid.py](https://github.com/jebelz/GEO/blob/main/detic/newton/ellipsoid.py)). 
      Although preference is given to WGS84 (wgs84.py), a variety of
-     historic ellipsoids are available (almanac.py), as well as user-defined
+     historic ellipsoids are available ([almanac.py](https://github.com/jebelz/GEO/blob/main/detic/newton/almanac.py)), as well as user-defined
      ellipsoids and others in the Solar System
      ([copernicus.py](https://github.com/jebelz/GEO/blob/main/detic/newton/copernicus.py)).
      
 Analytic computations of covariant and contravariant basis vectors
      linking LLH and SCH to their canonical Cartesian coordinates
      systems (ECEF and LTP, respectively) are included ([christoffel.py](https://github.com/jebelz/GEO/blob/main/detic/christoffel.py)).
-     That is: you always have both the tangent basis vectors
-     (_e.g._:
-$$(\frac{\partial  \vec r}{\partial s},\ 
-     \frac{\partial  \vec r}{\partial c},\ 
-     \frac{\partial  \vec r}{\partial h})$$
-     
-which are not-necessarity
+     That is: you always have both the tangent basis vector which are not-necessarity
      normailzed vectors running along the direction of change of s, c, and h,
      and the cotangent basis vectors
-     (_e.g._
-$$ {\bf\vec{\nabla}}s,\ 
-     {\bf\vec{\nabla}}c,\ 
-     {\bf\vec{\nabla}}h)$$)
-which are the gradients of the local coordinates (that is, they're
+     which are the gradients of the local coordinates (that is, they're
      normal to surfaces of constants s, c, and h--and likewise for latitude,
      longitude and height with resepct to ECEF).
      
@@ -668,8 +658,7 @@ This package is a fully polymorphic object oriented vector and coordinate
      package, focused on geo-location on an arbitrary oblate ellipsoid of
      revolution.
 
-It is for use with large data sets represented by [numpy.ndarrays]
-     (http://www.numpy.org)-
+It is for use with large data sets represented by [numpy.ndarrays](http://www.numpy.org)-
      or not- numpy is only required if you use it. (The numpy-interface
      is factored out into mix-in classes (arraylike.py), and functions
      chosen at import time (trig.py). (You do not need numpy installed
@@ -710,7 +699,7 @@ __EVER__.
     
 This is the point of OO, and it is strongly supported. The point is, you
      DO NOT need to know which kind of coordinate you have when using it. For
-     example if you have data, "platform" referenced to a coordinate system,
+     example if you have data, "platform", referenced to a coordinate system,
      and you NEED that data in geodetic coordinates (LLH), you just call the
      method:
 
@@ -718,7 +707,7 @@ This is the point of OO, and it is strongly supported. The point is, you
      
 It does not matter if "platform" is in LLH already, or in ECEF, or in SCH,
      or in a tangent plane coordinate system. Moreover, if you have another
-     point, "target"
+     point, "target",
 
      >>>platform - target
      
@@ -726,7 +715,7 @@ It does not matter if "platform" is in LLH already, or in ECEF, or in SCH,
 is the vector joining them: REGARDLESS OF THEIR COORDINATE SYSTEM-- you
      do not need to specify it-- the vector will be computed in the Cartesian
      coordinate system at platform's origin (even if the coordinate system is
-     not Cartesian). This because coordinates are treated elements of
+     not Cartesian). This is because coordinates are treated as elements of
      an affine space--
      vector spaces without an origin.
 
@@ -751,7 +740,7 @@ Why are their so few functions for coordinate transformations? Why are
 
 _Answer_:
 
-Transformation are 1st class object that permit arithmetic operations.
+Transformation are 1st class objects that permit composing operations.
      Hence, you build a a full 3-DoF rotation as a product of 3 simple 1-DoF
      rotations. With the affine transformation, you can build any 6-DoF
      coordinate transformation out of its building blocks-- and compose
@@ -765,10 +754,10 @@ With that, most coordinate transformations are 1 to 3 lines of code,
 Furthermore, the composition and inversion of transformations is
      handled with
      [operator overloading](https://docs.python.org/2/reference/datamodel.html#emulating-numeric-types)
-     of "\*" ("__mul__")and "~"
-     ("__invert__"),
+     of "\*" ("\_\_mul\_\_")and "~"
+     ("\_\_invert\_\_"),
      respectively, with some support for interpolating between transformations
-     via overloading "\*\*" ("__pow__") with non-integer exponents. (Python's
+     via overloading "\*\*" ("\_\_pow\_\_") with non-integer exponents. (Python's
      built-in [pow](https://docs.python.org/2/library/functions.html#pow)
      function has a 3 argument option, which implements
      [spherical linear](http://en.wikipedia.org/wiki/Slerp)
@@ -826,8 +815,8 @@ This is an important consideration. Tensors are not defined by their
 (Note that a vector can be a single vector, and still have non-singleton
      elements. Take for example, geo.metric.wigner.eckart.J(), which is
      indeed a single vector, yet it's components are Tensors, such that
-     $ e^{i{\bf\vec J\cdot{\hat n}}\phi} $ generates rotations
-     about a unit vector $ {\bf \hat n} $. Even worse is
+     $e^{i{\bf\vec J\cdot{\hat n}}\phi}$ generates rotations
+     about a unit vector ${\bf \hat n}$ . Even worse is
      geo.detic.pauli.J(). Here the vector's components are numpy matrices
      of dimension $2j+1$, represented internal-degrees of freedom.
      This is all implemented polymorphically without any conditionals
