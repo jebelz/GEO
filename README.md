@@ -452,7 +452,7 @@ The full transformation matrices associated with
      racah.py, where products of kets (eigenstates of individual
      angular momentum/z-projection operators) are turned into sums
      over different kets (eigenstates of the total angular momentum
-     and total z-projection). [This is truly dialed-in python, _Eds._]
+     and total z-projection). (This is truly dialed-in python, _Eds._)
 
 The preliminary implementation of rank 3 (wigner/eckart/three.py) and
      rank 4 (wigner/eckart/four.py) is underway; however, these are difficult
@@ -596,20 +596,20 @@ You'll also note SO3.py: it only has 2 lines of computation (2!),
      down the matrices that express the 2x2 matrices' commutations
      relations: boom, you have just derived the real adjoint
      representation, and those matrices ARE the generators of
-     infinitesimal rotations-- plop them into a \f$ \exp{i\ldots}
-     \f$, and you have rotation matrices. It's a little confusing,
+     infinitesimal rotations-- plop them into a $ \exp{i\ldots}
+     $, and you have rotation matrices. It's a little confusing,
      because the 2 component spinor are fundamental, while one would
-     think the \f$2^2-1=3\f$ are-- just because their are 3 generators
+     think the $2^2-1=3$ are-- just because their are 3 generators
      of the algebra.. it's the proliferation of "3"s that have
      totally different meanings that causes confusion (at least for me).
 
 Preliminary implementation of Lie algebras (lie.py), and SU(3)
      (gell_mann.py) are dubious, at best-- but you can convert the
      3-component fundamental representation (per the prior paragraph)
-     into the \f$3^2-1=8\f$ adjoint representation
+     into the $3^2-1=8$ adjoint representation
      (geo.desic.hilbert.gell_mann.EIGHTFOLD_WAY)
      and that is why
-     3-color charges need 8 gluons, while \f$ 2 \f$ (weak) isospins
+     3-color charges need 8 gluons, while $ 2 $ (weak) isospins
      need 3 pions (W bosons). (This package also makes clear the difference
      between fundamental and adjoint representations, which is a bit
      obtuse in the rotation group).
@@ -670,7 +670,7 @@ Array, sequence, container, and iterator properties are ALWAYS separated
 
 __EVER__.
 
-		 ....XXXXXXXX XX     XX XXXXXXXX XXXXXXXX  
+             ....XXXXXXXX XX     XX XXXXXXXX XXXXXXXX  
      		 XX       XX     XX XX       XX     XX 
      		 XX       XX     XX XX       XX     XX 
      		 XXXXXX   XX     XX XXXXXX   XXXXXXXX  
@@ -896,58 +896,58 @@ Fair enough, now we have a vector. What do you do with that? Well, you
      
 The following invoke magic methods:
      
-   +v = v.\_\_pos\_\_()
+   	+v = v.__pos__()
 
 Doesn't do anything.It returns "v", though it could return a copy of v.
 
-     -v = v.__neg__()
+     	-v = v.__neg__()
 
 
 Negation, implemented as negation of each component
 
-   	    v + v' = v.__add__(v')
+   	v + v' = v.__add__(v')
 
 vector addition [Note: no constants allowed]:
 
-     v + 7 = v.__add__(7)
+     	v + 7 = v.__add__(7)
 
 #raises a
      geo.utils.exceptions.NonCovariantOperation error (exceptions.py)]
 
-    v - v' = v.__sub__(v')
+    	v - v' = v.__sub__(v')
 
 vector subtraction 
 
 
-	v/4	  =  v.__div__(4)
-	v*0.25	  =  v.__mul__(0.25)    
-	0.25*v    =  v.__rmul__(0.25)
+		v/4	  =  v.__div__(4)
+		v*0.25	  =  v.__mul__(0.25)    
+		0.25*v    =  v.__rmul__(0.25)
 
 are all dilations. Reflected multiplication is the simplest, as it can
 _only_ be a dilations
 
-     v * v' = v.__mul__(v')
+     		v * v' = v.__mul__(v')
 
 Scalar product
 
-  v**2 = v.__pow__(2)
+  		v**2 = v.__pow__(2)
 
-spherical linear Interpolation:c"__pow__" takes any positive integer, though "2" is the only defensible
+spherical linear Interpolation:c"\_\_pow\_\_" takes any positive integer, though "2" is the only defensible
 argument
 
-	abs(v) = v.__abs__() -> ||v**2|| ->  v.L2norm() = v.norm(l=2)
+		abs(v) = v.__abs__() -> ||v**2|| ->  v.L2norm() = v.norm(l=2)
 
 all need to be defined, and some don't, like:
 
-        v ^ v' = v.__xor__(v')
+        	v ^ v' = v.__xor__(v')
 
 cross (wedge) product
 
- 	  v & v' = v.__and__(v')
+ 	  	v & v' = v.__and__(v')
 
 outer (dyad) product
 
-			~v   =  v.__invert__() = v / v*v
+		~v   =  v.__invert__() = v / v*v
 
 is a special case for converting covariant and contravariant vectors
     in local orthonormal bases and their conjugate global basses.
@@ -966,7 +966,7 @@ Respectively. (Projection, rejection, and reflection operations
         geo.metric.euclid.vector.Rej'\n
 	geo.metric.euclid.vector.Ref.\n
 
-Moreover, what about "__getitem__":
+Moreover, what about "\_\_getitem\_\_":
 
 
 	v[3]                = v.__getitem__(3)
@@ -1007,7 +1007,7 @@ Thus, if you iterate over a multidimensional (in the computer array sense)
 That Vectors can be more than singletons is not just a computer science
      convenience-- it's a fact of life. Consider the Pauli matrices (pauli.py).
      They can be combined into a single $\mathbb R^3$ vector,
-     $ {\bf \vec{\sigma} } $-- there is but one vector, but its components
+$ {\bf \vec{\sigma} } $ -- there is but one vector, but its components
      are 2 x 2 matrices, representing internal degrees of freedom-- the
      fundamental representation of SU(2). They could be spin up and the
      orthogonal
@@ -1046,11 +1046,11 @@ Cross Product: contract the dual with another Vector and make
       a Vector (There is no distinction between vectors and axial
       vectors)
 
-			v.outer(u)
+		v.outer(u)
 
-       Outer Product: with another Vector, make a dyad, that is a Matrix
+Outer Product: with another Vector, make a dyad, that is a Matrix
 
-    	     v.dilation(alpha)
+    	        v.dilation(alpha)
 
 change length with multiplication or division by a Scalar or number.
        There are also right_dilation and left_dilation method, if your
@@ -1279,7 +1279,7 @@ Vectors from Tensors:
 
 $$ \frac{1}{2}\epsilon_{ijk}T_{jk} $$
  
-     T.vector()
+     	T.vector()
 
 $$ \epsilon_{ijk}T_{jk} $$ 
 
@@ -1548,25 +1548,25 @@ which has AXES set to (z, y, x)-- so that you get a yaw rotation followed
 In the spirit of OO: you do need to know which object you have when
       performing transformation. If you have "T", then:
 
-     		 T(v)
+		T(v)
 
 Transforms v
 
-		  ~T
+		 ~T
 
 Inverts the transformation
 
 
-     	        T*T'
+ 		T*T'
 
 composes 2 transformations, so that
 
-    	       T*(~T)
+		T*(~T)
 
 is the identity transformation (for any rotation object). Specific forms
 of the rotation are as follows:
 
- 	  	T.dcm()
+		T.dcm()
 
 returns the equivalent direction cosine matrix (as a Tensor)
 
@@ -1753,7 +1753,7 @@ Of course, "\_\_add\_\_", inverts the whole thing: you can add a vector to a
 and p' will be in p's coordinates, with v interpreted relative to p's
       Cartesian coordinates.
       
-### TEP The Ellipsoid Problem
+### The Ellipsoid Problem
 The ellipsoid is defined by a semi-major axis, an inverse
       flattening, and and optional model name (ellipsoid.py)
      
@@ -1962,7 +1962,7 @@ and
 
 	>>>C = A.outer(B)
 
-$$ C_{ijkmn} = A_{ijk}B_{mn} $$.
+$$ C_{ijkmn} = A_{ijk}B_{mn} $$
 
 In the later case, the rank 5 tensor is created at run-time and added
       to the Zoo. An antisymmetric product is also possible:
@@ -1972,7 +1972,7 @@ In the later case, the rank 5 tensor is created at run-time and added
 
 which becomes:
       
-$$ C_{ijkln} = A_{ijk}\epsilon_{klm}B_{mn} $$.
+$$ C_{ijkln} = A_{ijk}\epsilon_{klm}B_{mn} $$
       
 (though this not a true wedge product-- use
       geo.desic.clifford for that).
@@ -2011,12 +2011,12 @@ The goal is highly cohesive code, with low coupling. The mathematical
       will depend on vector: they will always be coupled; like-wise for
       everything else.
 
-      @subsection abc Abstract Base Classes.
-      That so many mathematical object share behavior has lead to base
+## Abstract Base Classes.
+That so many mathematical object share behavior has lead to base
       classes (many base classes), where behavior is implemented once,
       abstractly, and the made concrete in the leaf classes. The python
-      <a href="https://docs.python.org/2/library/abc.html">abstract base
-      class</a> library is used extensively to signal to the developer:
+      [abstract base class](https://docs.python.org/2/library/abc.html)
+      library is used extensively to signal to the developer:
       this is an ABC. Moreover, the abstractproperty and abstractmethod
       decorators are used to indicate where a concrete class *must*
       implement a class attribute or method (for example "rank"). Tensors
@@ -2103,31 +2103,31 @@ Well, we don't have that in python, so this is what you get.
       read the next section. 
 
 
-      @section young Tensor Symmetries Revisited
-      We all know the symmetries of a rank 2 tensors:
-      \n\n
-      \f$ S_{ij} = \frac 1 2 [T_{ij} + T_{ji}] \f$
-      \n\n
-      \f$ S_{ij} = \frac 1 2 [T_{ij} - T_{ji}] \f$      
-      \n\n
-      are the symmetric and antisymmetric parts of the tensor, \f$ T_{ij}\f$.
+## Tensor Symmetries Revisited: Young Tableaux
+We all know the symmetries of a rank 2 tensors:
+      
+$$ S_{ij} = \frac 1 2 [T_{ij} + T_{ji}] $$
+     
+$$ S_{ij} = \frac 1 2 [T_{ij} - T_{ji}] $$      
+      
+are the symmetric and antisymmetric parts of the tensor, $T_{ij}$.
       They are not just (anti)symmetric under interchange of the indicies,
       they are closed under rotations. So the question is: how is this
       extended
       to higher rank tensors? What is the math?
 
-      Well, the math is a deep dive. The invariant subspaces,
-      aka irreducible representations (heretofore: irreps), of a rank \f$ N\f$
-      tensor are related to the symmetric group \f$ S_N\f$, which is the
-      group of permutation on \f$ N\f$-letter, via Schur-Weyl Duality (SWD). These
-      are computed from Young Tableuax with \f$ N\f$ boxes via the
+Well, the math is a deep dive. The invariant subspaces,
+      aka irreducible representations (heretofore: irreps), of a rank $ N $
+      tensor are related to the symmetric group $ S_N$, which is the
+      group of permutation on $N$-letter, via Schur-Weyl Duality (SWD). These
+      are computed from Young Tableuax with $N$ boxes via the
       Robinson-Schensted Correspondence (RSC) which in turn are related
-      to the integer partitions of \f$ N\f$. The following seciotn works through
+      to the integer partitions of $N$. The following seciotn works through
       the lowest nontrivial example, rank 3.
 
-      What are the integer paritions of \f$ N=3\f$? While you can work these out
+What are the integer paritions of $ N=3 $? While you can work these out
       by hand, the pascal.py package will do it for you:
-      \verbatim
+    
        >>>p = pascal.P(3)
 
        >>>print p
@@ -2139,210 +2139,210 @@ Well, we don't have that in python, so this is what you get.
        <class 'geo.metric.schur_weyl.pascal.Triangle'>,
        <type 'long'>,
        <type 'object'>]
-       \endverbatim
-       Note that the
-       <a href="http://mathworld.wolfram.com/PartitionFunctionP.html">
-       Parition Function \f$ P\f$</a> object is fact just an extended long
+       
+Note that the
+[Parition Function](http://mathworld.wolfram.com/PartitionFunctionP.html)
+       is fact just an extended long
        integer.
 
-       The geo.metric.schur_weyl.pascal.P.partitions() method generates
+The geo.metric.schur_weyl.pascal.P.partitions() method generates
        the paritions:
-       \verbatim
+       
+     
        >>>list(p.partitions())
        [[3], [2, 1], [1, 1, 1]]
-       \endverbatim
-       of which there are three.
+       
+of which there are three.
 
-       Each parition can be represented by a
-       geo.metric.schur_weyl.young.Diagram, respectively as follows:
-       \verbatim
+Each parition can be represented by a
+geo.metric.schur_weyl.young.Diagram, respectively as follows:
+     
        In [169]: for d in p.young():
      ...:     print unicode(d)
      ...:     print
      ...:     
-☐☐☐
+	☐☐☐
+	☐☐
+	☐
 
-☐☐
-☐
-
-☐
-☐
-☐
-	\endverbatim
-	Let's look at the seconds one (\f$ 3 = 2 + 1\f$):
-	\verbatim
-d = young.Diagram(2, 1)
-	\endverbatim
-	To get to the permutation group, one get a Standard Tableau
+	☐
+	☐
+	☐
+	
+Let's look at the seconds one 
+	
+	d = young.Diagram(2, 1)
+	
+To get to the permutation group, one get a Standard Tableau
 	corresponding to the diagram. A standard tableau has numbers from
-	\f$ 1, ..., N\f$ in the boxes, with each row and each column strictly
+	$ 1, \ldots, N$ in the boxes, with each row and each column strictly
 	increasing. There are 2 ways to fill the diagram that meet those
 	criteria:
-	\verbatim
->>>for t in d.standard_tableaux():
-     ...:     print t
-     ...:     print
-     ...:     
-[i][j]
-[k]
+	
+	>>>for t in d.standard_tableaux():
+	     ...:     print t
+	     ...:     print
+	     ...:     
+	[i][j]
+	[k]
 
-[i][k]
-[j]
-	\endverbatim
+	[i][k]
+	[j]
+	
 Note that I have filled the boxes not with number, but with ordered tensor
 indices _i_, _j_, and _k_.
-	Now we have to pick one of those tableaux:
-	\verbatim
->>>t = d.fill(0, 1 ,2)
+Now we have to pick one of those tableaux:
+	
+	>>>t = d.fill(0, 1 ,2)
 
->>>t
-Tableau_[[0, 1], [2]]
+	>>>t
+	Tableau_[[0, 1], [2]]
 
->>>print t
-[0][1]
-[2]
-	\endverbatim
-	(Note that the numeric representation starts at \f$ 0\f$, not \f$ 1\f$. This
+	>>>print t
+	[0][1]
+	[2]
+	
+(Note that the numeric representation starts at $ 0$, not $ f$. This
 	just makes it easier to work in a computer language that starts
 	its indexing at zero.)
 
-	At this point, we move into Schur-Weyl duality: what does this
+At this point, we move into Schur-Weyl duality: what does this
 	tableau have to do with the permutation group? Let start with the
 	symmetric group on 3 letters:
-	\verbatim
+	
 	>>>S3 = monte.Sym(3)
-	\endverbatim
-	It has 6 elements:
-	\verbatim
->>>:for count, perm in enumerate(S3):
-     ...:     print count, repr(perm)
-     ...:     
-0 
-1 (12)
-2 (01)
-3 (012)
-4 (021)
-5 (02)
-	\endverbatim
-	Each geo.metric.schur_weyl.monte.Perm permutation is represented
+	
+It has 6 elements:
+	
+	>>>:for count, perm in enumerate(S3):
+	     ...:     print count, repr(perm)
+	     ...:     
+	0 
+	1 (12)
+	2 (01)
+	3 (012)
+	4 (021)
+	5 (02)
+		
+Each geo.metric.schur_weyl.monte.Perm permutation is represented
 	by its cycle structure, which shows the orbit of an element. (Note:
 	the indentity, aka the nuetral elememt, is an empty cycle) They
 	can also be show in two-line-format. For the last permutation, that
 	is:
-	\verbatim
->>>perm
-(02)
+	
+	>>>perm
+	(02)
 
->>>print perm
- | (0, 1, 2) | 
- | (2, 1, 0) | 
-       \endverbatim
-       where the latter format shows the trajectory of each element.
+	>>>print perm
+	 | (0, 1, 2) | 
+ 	 | (2, 1, 0) | 
        
-       Note that the Young tableau represents a permutation:
-       \verbatim
->>>print monte.Perm.fromcycles(*t.cycles())
- | (0, 1, 2) | 
- | (1, 0, 2) | 
- \endverbatim
- But there is more. One can also consider the set of permutations
+where the latter format shows the trajectory of each element.
+       
+Note that the Young tableau represents a permutation:
+   
+	>>>print monte.Perm.fromcycles(*t.cycles())
+	 | (0, 1, 2) | 
+	 | (1, 0, 2) | 
+
+But there is more. One can also consider the set of permutations
  that don't mix the letters in different rows:
-\verbatim
->>>for count, perm in enumerate(t.Row()):
-...:     print count, repr(perm)
-...:     
-...:     
-0 
-1 (01)
-\endverbatim
+
+	>>>for count, perm in enumerate(t.Row()):
+	...:     print count, repr(perm)
+	...:     
+	...:     
+	0 
+	1 (01)
+	
 The Row method yields permutations.
 Likewise, one can consider the set of permutations that don't mix the
 colums; however, there is a twist: when collecting these, we must keep
 track of the parity of the permutation:
-\verbatim
->>>for count, perm in enumerate(t.Col()):
-...:     print count, repr(perm)
-...:     
-...:     
-0 (1, )
-1 (-1, (02))
-\endverbatim
+
+	>>>for count, perm in enumerate(t.Col()):
+	...:     print count, repr(perm)
+	...:     
+	...:     
+	0 (1, )
+	1 (-1, (02))
+
 The Col method yields 2-ples of (parity, permutation).
-The parity is either +1 or -1, and depends on the parity of the number of
+	The parity is either +1 or -1, and depends on the parity of the number of
 transpositions in the permutation.
 
 These two sets are called the Row and Column symmetrizers, respectively.
 The Young Symmetrizer for the tableeua is constructed my taking the
 product of these 2 sets (along with the parity):
-\verbatim
-for count, (parity, perm) in enumerate(t.S()):
-     ...:     print count, ":",  parity, repr(perm)
-     ...:     
-0: 1 
-1: 1 (01)
-2: -1 (02)
-3: -1 (021)
-\endverbatim
+
+	for count, (parity, perm) in enumerate(t.S()):
+	     ...:     print count, ":",  parity, repr(perm)
+	     ...:     
+	0: 1 
+	1: 1 (01)
+	2: -1 (02)
+	3: -1 (021)
+	
 Finally: if you apply those permutations to the tensor indices and
 add the results up, you get an irreducible subspace of the tensor, which
 can be show lexigraphically as follows:
-\verbatim
 
->>>t.lexigraphicS()
-'(+T.ijk +T.jik -T.kji -T.kij) / 3'
 
-\endverbatim
+	>>>t.lexigraphicS()
+	'(+T.ijk +T.jik -T.kji -T.kij) / 3'
+
+
 This represents a mixed symmetry iredducible subspace.
-\n
+
 There are several way to apply that symetrizer to a tensor. We can use
 the tableua's "syymetriz" method as follows:
-\n
+
 Start with a rank three tensor:
-\verbatim
->>>T = Three(*(3*arange(27.)**2))
->>>print T.broadcast(lambda x: str(int(x)).zfill(4)) # nice up for display
-[0000, 0003, 0012] [0243, 0300, 0363] [0972, 1083, 1200]
-[0027, 0048, 0075] [0432, 0507, 0588] [1323, 1452, 1587]
-[0108, 0147, 0192] [0675, 0768, 0867] [1728, 1875, 2028]
-\endverbatim
+
+	>>>T = Three(*(3*arange(27.)**2))
+	>>>print T.broadcast(lambda x: str(int(x)).zfill(4)) # nice up for display
+	[0000, 0003, 0012] [0243, 0300, 0363] [0972, 1083, 1200]
+	[0027, 0048, 0075] [0432, 0507, 0588] [1323, 1452, 1587]
+	[0108, 0147, 0192] [0675, 0768, 0867] [1728, 1875, 2028]
+
 and use the method:
-\verbatim
-q = t.symmetrize(T)
->>>print q.broadcast(lambda x: str(int(x)).zfill(3))  # again, nicen up
-[000, -88, -352] [088, 000, -264] [352, 264, 000]
-[000, -172, -520] [172, 000, -348] [520, 348, 000]
-[000, -256, -688] [256, 000, -432] [688, 432, 000]
-\endverbtim
+
+	q = t.symmetrize(T)
+	>>>print q.broadcast(lambda x: str(int(x)).zfill(3))  # again, nicen up
+	[000, -88, -352] [088, 000, -264] [352, 264, 000]
+	[000, -172, -520] [172, 000, -348] [520, 348, 000]
+	[000, -256, -688] [256, 000, -432] [688, 432, 000]
+
 OK. So how do we know that that is rotationally closed? Let's rotate it
 by an arbitrary axis:
-\verbatim
-R = roll(34)*pitch(12)*yaw(-56)
-qprime = R(q)
-\endverbatim
-Note that the versor \f$ R\f$ knows exactly how to rotate a rank 3 tensor--you,
+
+	R = roll(34)*pitch(12)*yaw(-56)
+	qprime = R(q)
+
+Note that the versor $R$ knows exactly how to rotate a rank 3 tensor--you,
 the user do not have be concerned with all the index gymnastics.
-\verbatim
->>>print qprime.broadcast(lambda x: round(x, 3))
-[0.0, 222.464, -877.141] [-222.464, 0.0, 281.535] [877.141, -281.535, 0.0]
-[-0.0, -86.987, 352.2] [86.987, 0.0, -113.674] [-352.2, 113.674, -0.0]
-[0.0, 70.665, -516.829] [-70.665, -0.0, 182.12] [516.829, -182.12, -0.0]
-\endverbatim
+
+	>>>print qprime.broadcast(lambda x: round(x, 3))
+	[0.0, 222.464, -877.141] [-222.464, 0.0, 281.535] [877.141, -281.535, 0.0]
+	[-0.0, -86.987, 352.2] [86.987, 0.0, -113.674] [-352.2, 113.674, -0.0]
+	[0.0, 70.665, -516.829] [-70.665, -0.0, 182.12] [516.829, -182.12, -0.0]
+
 So I guess that's closed? The zeros are in the same spot, and, e.g.
-\f$ q'_{yzx} = -q'_{xzy}\f$, but I am not convinced. Let's take the tensor
-\f$ q'\f$ $ and ask it to show us its non-zero modules:
-\verbatim
->>>qprime.show_modules()
-[i][j]
-[k] 
-w=1641.91108164 
-\endverbatim
-which matches the orginal \f$q\f$:
-\verbatim
->>>q.show_modules()
-[i][j]
-[k] 
-w=1641.91108164 
-\endverbatim
+$ q'_{yzx} = -q'_{xzy} $, but I am not convinced. Let's take the tensor
+$ q' $ and ask it to show us its non-zero modules:
+
+	>>>qprime.show_modules()
+	[i][j]
+	[k] 
+	w=1641.91108164 
+
+which matches the orginal$:
+
+	>>>q.show_modules()
+	[i][j]
+	[k] 
+	w=1641.91108164 
+
 
 Note that that procedure was deepy complicated. Neverthelss, it reduces
 to the simple stuff that we understand from lower rank tensors:
@@ -2352,44 +2352,43 @@ there
 is simply no index to permute. Meanwhile, vectors have one index, and
 the permutation group on 1 element is trivial.
 
-\f$N=2\f$ has two paritiotns (\f$2=2\f$ and \f$2=1+1\f$),
+$N=2$ has two paritiotns ($2=2$ and $2=1+1$),
 corresponding to the following diagrams:
-\verbatim
->>>p = pascal.P(2)
->>>for d in p.young():
-     ...:     print unicode(d)
-     ...:     print
-☐☐
 
-☐
-☐
-\endverbatim
+	>>>p = pascal.P(2)
+	>>>for d in p.young():
+	     ...:     print unicode(d)
+	     ...:     print
+	☐☐
+	☐
+	☐
+
 It should be easy to see that the first (last) diagram's Young symmetrizer
 is total (anti)symmetric, corresponding to the familiar symmetric and
 antisymetric tensors.
 
-Dimensionality
-==============
+## Dimensionality
+
 But wait, there is more. The Young diagrams have a remarkable formula,
 called the "Hook Length Formula". The hook length is computed from
 the arm and leg lengths. See:
-\n\n
-geo.metric.schur_weyl.young.Diagram.arm()\n
-geo.metric.schur_weyl.young.Diagram.leg()\n
-geo.metric.schur_weyl.young.Diagram.hook()\n
-\n\n
+
+	geo.metric.schur_weyl.young.Diagram.arm()\n
+	geo.metric.schur_weyl.young.Diagram.leg()\n
+	geo.metric.schur_weyl.young.Diagram.hook()\n
+
 for more. These formula can calculate the dimensions of the closed
 subspaces, for any rank of tensor, over _any_ field.
 
 Let's start with the basis diagram:
-\verbatim
->>>d = Diagram(1)
->>>print unicode(d)
-☐
 
-\endverbatim
+	>>>d = Diagram(1)
+	>>>print unicode(d)
+	☐
+
+
 It is just a box. We can assign it any dimension and meaning we want:
-\n\n
+
 \f$D = 2 \rightarrow \f$ spinor / spin 1/2 fermion \n
 \f$D = 3 \rightarrow \f$ Cartesian Vector, SU(3)-Flavor quark triplet \n
 \f$D = 4 \rightarrow \f$ Minkowski 4-Vector \n
